@@ -507,7 +507,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 </style>
 </head>
 <body>
-<div id="offline">⚡ Offline - changes are saved here and sync when reconnected</div>
+<div id="offline">⚡ Offline - keep this tab open and changes will sync when you reconnect</div>
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="saved" role="status">Saved ✓</div>
 
@@ -780,7 +780,7 @@ const DEMO_MODE=new URL(location.href).searchParams.get('demo')==='1';
 
 let db=null,auth=null,currentUid='',me=null,currentGroup='',allData={},memberProfiles={},groupNames=[...DNAMES],activeFilter='ALL',swapTab='need',personFilter='ALL',curTab='collection',entryMode='add',statusFilter='all';
 const openTeams=new Set();
-let feedItems=[],presence={},swapItems=[],dataLoaded=false,_groupListening=false,_achReady=false,_combo=0,_comboT=null,_prevRank=0,_searchTimer=null,_presenceTimer=null,_presenceRef=null,_tiltOn=false,_tiltHandler=null;
+let groupMeta=null,feedItems=[],presence={},swapItems=[],dataLoaded=false,_groupListening=false,_achReady=false,_combo=0,_comboT=null,_prevRank=0,_searchTimer=null,_presenceTimer=null,_presenceRef=null,_tiltOn=false,_tiltHandler=null;
 const MAX_COPIES=99;
 let _renderTimer=null;
 function scheduleRefresh(){clearTimeout(_renderTimer);_renderTimer=setTimeout(()=>{if(me)refresh();},140);}
@@ -801,6 +801,8 @@ function groupPath(path=''){return `groups/${currentGroup}${path?'/'+path:''}`;}
 function gref(path=''){return ref(db,groupPath(path));}
 function getNames(){return groupNames;}
 function displayName(id){return DEMO_MODE?id:(memberProfiles[id]?.displayName||'Collector');}
+function isGroupOwner(){return!DEMO_MODE&&!!groupMeta&&groupMeta.createdBy===currentUid;}
+function joinsOpen(){return!groupMeta||groupMeta.joinOpen!==false;}
 function memberAvatar(id){return DEMO_MODE?'':(memberProfiles[id]?.avatar||'');}
 function localNames(){try{return JSON.parse(localStorage.getItem(groupKey('names'))||'null')||[];}catch{return[];}}
 function setGroupNames(names){
@@ -1517,6 +1519,7 @@ function listenGroup(){
     if(e){e.textContent='Could not load that group yet. Check the invite code, or ask whoever created the group for a fresh invite link.';e.style.display='block';}
     ss('s-group');
   });
+  onValue(gref('meta'),snap=>{groupMeta=snap.val()||null;if(me&&curTab==='group')renderGroup();});
   onValue(gref('collections'),snap=>{allData=snap.val()||{};applyDoneSwaps();if(me)scheduleRefresh();});
   onValue(gref('feed'),snap=>{const v=snap.val()||{};feedItems=Object.values(v).filter(x=>x&&typeof x==='object'&&x.uid&&x.text&&typeof x.ts==='number').map(x=>({u:x.uid,t:x.text,ts:x.ts,displayName:x.displayName})).sort((a,b)=>b.ts-a.ts).slice(0,20);if(me&&curTab==='group')renderGroup();});
   onValue(gref('presence'),snap=>{presence=snap.val()||{};if(me&&curTab==='group')renderGroup();});
@@ -1551,11 +1554,12 @@ async function enterGroup(code,created=false){
   ss('s-load');
   try{
     if(created)await set(gref('meta'),{code:clean,createdAt:Date.now(),createdBy:currentUid,joinOpen:true,albumId:'public-980'});
-    if(!created){
-      const metaSnap=await get(gref('meta'));
-      if(!metaSnap.exists()||metaSnap.child('joinOpen').val()!==true)throw new Error('group-not-open');
-    }
     const snap=await get(gref(`members/${currentUid}`));
+    if(!created&&!snap.exists()){
+      const metaSnap=await get(gref('meta'));
+      if(!metaSnap.exists())throw new Error('group-not-found');
+      if(metaSnap.child('joinOpen').val()!==true)throw new Error('group-closed');
+    }
     if(snap.exists()){
       memberProfiles[currentUid]=snap.val()||{};
       me=currentUid;
@@ -1569,7 +1573,8 @@ async function enterGroup(code,created=false){
     }
   }catch(e){
     _groupListening=false;
-    if(err){err.textContent='Could not open that group. Check the invite code and try again.';err.style.display='block';}
+    const msg=e&&e.message==='group-closed'?'This group is closed to new members. Ask the group creator to open joins from Group settings.':'Could not open that group. Check the invite code and try again.';
+    if(err){err.textContent=msg;err.style.display='block';}
     ss('s-group');
   }
 }
@@ -1593,6 +1598,26 @@ window.shareStatus=async function(){
   if(navigator.share){try{await navigator.share({text});return;}catch(e){if(e?.name==='AbortError')return;}}
   try{await navigator.clipboard.writeText(text);toast('Group status copied 📣');}
   catch(e){prompt('Copy this',text);}
+};
+window.toggleJoinOpen=function(){
+  if(!isGroupOwner()||!db)return;
+  const next=!joinsOpen();
+  update(gref('meta'),{joinOpen:next}).then(()=>{
+    toast(next?'Group open - friends can join with the code':'Group closed - no new members can join');
+  }).catch(()=>toast('Could not update the group'));
+};
+window.removeMember=function(uid){
+  if(!isGroupOwner()||!db||uid===currentUid)return;
+  const name=displayName(uid);
+  if(!confirm(`Remove ${name} from this group? Their stickers, wishlist, and swaps in this group will be deleted. This cannot be undone.`))return;
+  const updates={};
+  ['members','collections','wish','presence'].forEach(p=>updates[`${p}/${uid}`]=null);
+  swapItems.filter(p=>p.from===uid||p.to===uid).forEach(p=>updates[`swaps/${p.id}`]=null);
+  update(gref(),updates).then(()=>{
+    delete memberProfiles[uid];delete allData[uid];
+    setGroupNames(getNames().filter(n=>n!==uid));
+    refresh();toast(name+' was removed from the group');
+  }).catch(()=>toast('Could not remove '+name));
 };
 window.leaveGroup=function(){
   if(!confirm('Leave this group on this device? Your sticker data stays in the group.'))return;
@@ -2092,7 +2117,9 @@ function groupSettingsHTML(){
       <div class="share-row"><button class="share-btn" onclick="copyInvite()">🔗 Invite link</button><button class="share-btn" onclick="shareStatus()">📣 Share status</button></div>
       <div class="share-row"><button class="share-btn" onclick="doSwitch()">👤 Profile</button></div>
       ${installHTML()}
+      ${isGroupOwner()?`<div class="share-row"><button class="share-btn" onclick="toggleJoinOpen()">${joinsOpen()?'🔓 Joins open - tap to close':'🔒 Joins closed - tap to open'}</button></div><div class="settings-copy" style="margin-bottom:10px">${joinsOpen()?'Anyone with the invite code can join. Close joins once your group is in.':'No one new can join, even with the code. Existing members are unaffected.'}</div>`:''}
       <div class="share-row"><button class="share-btn" onclick="leaveGroup()">Leave group</button><button class="share-btn danger" onclick="deleteMyData()">Delete my data</button>${DEMO_MODE?'<button class="share-btn" onclick="resetDemo()">Reset demo</button>':''}</div>
+      ${DEMO_MODE?'':'<div class="legal-note">Your book is tied to this device and browser. Clearing browser data removes access to it.</div>'}
       <div class="legal-note">Unofficial fan tool. Not affiliated with or endorsed by any sticker publisher, federation, or tournament.</div>
     </div>
   </details>`;
@@ -2146,7 +2173,7 @@ function renderGroup(){
     const face=userStickerSrc(s.n)?`<img class="g-face" src="${userStickerSrc(s.n)}" alt="${esc(displayName(s.n))}">`:`<span class="g-face-fallback">${s.av}</span>`;
     const badges=badgesFor(s.n),shownBadges=badges.slice(-3),hiddenBadges=badges.length-shownBadges.length;
     html+=`<div class="g-card${isMe?' me':''}">
-      <div class="g-top"><div class="g-name">${face}<span>${esc(displayName(s.n))}</span>${isOnline(s.n)?'<span class="dot-on"></span>':''}${isMe?'<span class="g-you">YOU</span>':''}${!s.started?'<span class="g-new">not started</span>':''}</div><div class="g-right">${!isMe&&s.started?`<button class="nudge-btn" onclick="nudge(decodeURIComponent('${enc(s.n)}'))" aria-label="Nudge ${esc(displayName(s.n))} to swap" title="Nudge to swap">👋</button>`:''}<div class="g-pct">${s.pct}%</div></div></div>
+      <div class="g-top"><div class="g-name">${face}<span>${esc(displayName(s.n))}</span>${isOnline(s.n)?'<span class="dot-on"></span>':''}${isMe?'<span class="g-you">YOU</span>':''}${!s.started?'<span class="g-new">not started</span>':''}</div><div class="g-right">${!isMe&&s.started?`<button class="nudge-btn" onclick="nudge(decodeURIComponent('${enc(s.n)}'))" aria-label="Nudge ${esc(displayName(s.n))} to swap" title="Nudge to swap">👋</button>`:''}${!isMe&&isGroupOwner()?`<button class="nudge-btn" onclick="removeMember(decodeURIComponent('${enc(s.n)}'))" title="Remove from group" aria-label="Remove ${esc(displayName(s.n))} from group">✖</button>`:''}<div class="g-pct">${s.pct}%</div></div></div>
       <div class="pbar"><div class="pfill" style="width:${s.pct}%"></div></div>
       <div class="g-stats">
         <div class="g-stat"><div class="g-sv o">${s.own}</div><div class="g-sl">In Book</div></div>
