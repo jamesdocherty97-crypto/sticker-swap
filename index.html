@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-title" content="Sticker Swap">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="Create a group, track your stickers, and find swaps with friends.">
+<!-- Owner note: social platforms need ABSOLUTE URLs for share images.
+     After deploying, change og:image / twitter:image to the full live URL,
+     e.g. https://your-site.example/og-share.png, and add og:url. -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sticker Swap">
 <meta property="og:description" content="Create a group. Track your stickers. Find swaps with friends.">
@@ -509,7 +512,8 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
     <div class="cfg-sub">Sticker Swap is not connected yet. The owner needs to finish setup before live groups can be used.</div>
     <div class="cfg-box">
       <div class="cfg-num">Demo is still available</div>
-      <p>You can test the interface with sample data by opening <code>quick-test.html</code>. No database is needed for demo mode.</p>
+      <p>You can try the full interface with a sample group right now. No database is needed for demo mode.</p>
+      <a class="btn-p" style="display:block;text-align:center;text-decoration:none" href="index.html?demo=1">Try the demo</a>
     </div>
     <div class="cfg-box">
       <div class="cfg-num">Live groups are paused</div>
@@ -534,6 +538,14 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
       <button class="btn-p" onclick="joinGroup()">Join group</button>
       <button class="btn-p" onclick="createGroup()" style="background:var(--accent);margin-top:8px">Create new group</button>
     </div>
+    <div class="guide-steps" style="text-align:left;max-width:340px;margin:14px auto 0">
+      <div class="guide-step"><span>1</span><div><b>Create or join</b> a group with friends.</div></div>
+      <div class="guide-step"><span>2</span><div><b>Add your name</b> so friends recognise you.</div></div>
+      <div class="guide-step"><span>3</span><div><b>Track your stickers</b> - tap once for in your book.</div></div>
+      <div class="guide-step"><span>4</span><div><b>Mark spares</b> - tap again for each spare copy.</div></div>
+      <div class="guide-step"><span>5</span><div><b>Find swaps</b> - the app spots the best trades.</div></div>
+    </div>
+    <div class="legal-note">Unofficial fan tool. Not affiliated with or endorsed by any sticker publisher, federation, or tournament.</div>
   </div>
 </div>
 
@@ -818,10 +830,66 @@ function startDemo(){
   allData=saved?.allData||{_names:groupNames,You:demoStickers(1),Sam:demoStickers(2),Ava:demoStickers(3),Mo:demoStickers(4)};
   swapItems=saved?.swapItems||[];
   wishData=saved?.wishData||{};
-  feedItems=saved?.feedItems||[{u:'Demo',t:'sample group ready to test',ts:Date.now()}];
+  feedItems=saved?.feedItems||[{u:'Sam',t:'sent you a swap offer 📨',ts:Date.now()-3600e3},{u:'Demo',t:'sample group ready to test',ts:Date.now()-7200e3}];
   dataLoaded=true;me=localStorage.getItem(groupKey('me'))||'You';
   if(!groupNames.includes(me))me='You';
+  if(!saved)seedDemoSwaps();
   launchApp();
+}
+// Seed the full swap lifecycle so the demo shows an incoming offer, an
+// outgoing offer, and an accepted swap where the other side already
+// confirmed the handover. Uses the actual demo collections, so every id
+// is consistent and promised spares are genuinely reserved.
+function demoTradeSlice(a,b,n){
+  const give=[],get=[];
+  for(const id of swapIds()){
+    if(give.length<n&&availableSparesFor(a,id)>0&&activeNeed(b,id))give.push(id);
+    else if(get.length<n&&availableSparesFor(b,id)>0&&activeNeed(a,id))get.push(id);
+    if(give.length>=n&&get.length>=n)break;
+  }
+  return{give,get};
+}
+// Demo partners respond on their own, so one device can experience the whole
+// loop: send offer → friend accepts → both confirm → books update.
+function demoAutoAccept(id,ms){
+  if(!DEMO_MODE)return;
+  setTimeout(()=>{
+    const p=swapItems.find(x=>x.id===id);
+    if(!p||p.status!=='proposed'||p.from!==me)return;
+    Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});
+    persistDemo();
+    queuePop({kicker:'Offer accepted',title:`${displayName(p.to)} said yes!`,sub:'Swap in person, then confirm',bg:'assets/10_incoming_offer_art.webp'});
+    toast(`${displayName(p.to)} accepted - swap in person, then confirm`);
+    updateBadge();if(curTab==='swaps')renderSwaps();
+  },ms||7000);
+}
+function demoPartnerConfirm(id,ms){
+  if(!DEMO_MODE)return;
+  setTimeout(()=>{
+    const p=swapItems.find(x=>x.id===id);
+    if(!p||p.status!=='accepted'||(p.from!==me&&p.to!==me))return;
+    const otherField=p.from===me?'toDone':'fromDone';
+    if(p[otherField])return;
+    p[otherField]=true;p.updatedAt=Date.now();
+    if(myDoneFor(p))p.status='done';
+    persistDemo();
+    if(p.status==='done')applyCompletedSwapToMine(p);
+    else toast(`${displayName(otherFor(p))} confirmed - your confirmation finishes the swap`);
+    if(curTab==='swaps')renderSwaps();
+  },ms||6000);
+}
+function seedDemoSwaps(){
+  try{
+    const now=Date.now();
+    const mk=(id,from,to,t,extra)=>({id,from,to,fromUid:from,toUid:to,fromName:from,toName:to,give:t.give,get:t.get,status:'proposed',createdAt:now-3600e3,updatedAt:now-3600e3,ts:now-3600e3,...extra});
+    const t1=demoTradeSlice('Sam','You',2);   // incoming offer for You
+    if(t1.give.length||t1.get.length)swapItems.push(mk('demo-seed-in','Sam','You',t1));
+    const t2=demoTradeSlice('You','Ava',2);   // outgoing offer from You
+    if(t2.give.length||t2.get.length)swapItems.push(mk('demo-seed-out','You','Ava',t2));
+    const t3=demoTradeSlice('Mo','You',1);    // accepted - Mo already confirmed his side
+    if(t3.give.length||t3.get.length)swapItems.push(mk('demo-seed-half','Mo','You',t3,{status:'accepted',acceptedTs:now-1800e3,fromDone:true,updatedAt:now-900e3}));
+    persistDemo();
+  }catch(e){}
 }
 
 /* ── DATA MODEL (copy counts; backward compatible: 'owned'=1, 'doubler'=2) ── */
@@ -1132,7 +1200,7 @@ window.proposeAll=function(){
     const t=tradeBetween(p.u,reserved);
     if(t.give.length||t.get.length){
       const item=makeSwapItem(p.u,t.give,t.get);
-      if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now()+'-'+n,...item});persistDemo();}
+      if(DEMO_MODE){const sid='demo-'+Date.now()+'-'+n;swapItems.push({id:sid,...item});persistDemo();if(n===0)demoAutoAccept(sid,8000);}
       else push(gref('swaps'),item);
       t.give.forEach(id=>reserved[id]=(reserved[id]||0)+1);
       n++;
@@ -1243,7 +1311,7 @@ window.proposeSwap=function(u){
   if(bad.length)return toast('Some spares are already promised');
   try{
     const item=makeSwapItem(u,t.give,t.get);
-    if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now(),...item});persistDemo();}
+    if(DEMO_MODE){const id='demo-'+Date.now();swapItems.push({id,...item});persistDemo();demoAutoAccept(id);}
     else push(gref('swaps'),item);
     toast('Swap proposed to '+displayName(u)+' 📨');renderSwaps();
   }catch(e){toast('Could not send');}
@@ -1256,7 +1324,7 @@ window.requestSticker=function(id){
   if(openSwaps().some(x=>((x.from===me&&x.to===holder.u)||(x.from===holder.u&&x.to===me))))return toast('You already have an open offer with '+displayName(holder.u));
   try{
     const item=makeSwapItem(holder.u,holder.offer,[id]);
-    if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now(),...item});persistDemo();}
+    if(DEMO_MODE){const sid='demo-'+Date.now();swapItems.push({id:sid,...item});persistDemo();demoAutoAccept(sid);}
     else push(gref('swaps'),item);
     toast('Request sent to '+displayName(holder.u)+' 📨');renderSwaps();
   }catch(e){toast('Could not send request');}
@@ -1267,9 +1335,9 @@ window.acceptSwap=function(id){
     const p=swapItems.find(x=>x.id===id);if(!p||p.to!==me||p.status!=='proposed')return swapUnlock(key);
     const bad=promiseIssuesFor(me,p.get||[],p.id);
     if(bad.length){toast('Review needed - spare already promised');return;}
-    if(DEMO_MODE){Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});persistDemo();}
+    if(DEMO_MODE){Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});persistDemo();demoPartnerConfirm(id,9000);}
     else update(gref('swaps/'+id),{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});
-    queuePop({kicker:'Swap locked in',title:'Swap in person, then confirm',bg:'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(`${displayName(p.from)} accepted - swap in person, then confirm`);renderSwaps();
+    queuePop({kicker:'Swap locked in',title:'Swap in person, then confirm',bg:'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(`You accepted ${displayName(p.from)}'s offer - swap in person, then confirm`);renderSwaps();
   }finally{setTimeout(()=>swapUnlock(key),1200);}
 };
 window.confirmSwap=function(id){
@@ -1281,7 +1349,7 @@ window.confirmSwap=function(id){
     if(bad.length){toast('Review needed - spare no longer available');return;}
     const patch=p.from===me?{fromDone:true,updatedAt:Date.now()}:{toDone:true,updatedAt:Date.now()};
     if(otherDoneFor(p))patch.status='done';
-    if(DEMO_MODE){Object.assign(p,patch);persistDemo();if(p.status==='done')applyCompletedSwapToMine(p);}
+    if(DEMO_MODE){Object.assign(p,patch);persistDemo();if(p.status==='done')applyCompletedSwapToMine(p);else demoPartnerConfirm(id,6000);}
     else update(gref('swaps/'+id),patch).then(()=>{if(patch.status==='done')applyCompletedSwapToMine({...p,...patch});});
     if(otherDoneFor(p))pushFeed(`completed a queued swap with ${displayName(otherFor(p))} 🤝`);
     queuePop({kicker:otherDoneFor(p)?'Swap complete!':'Handover confirmed',title:otherDoneFor(p)?'Swap complete':`Waiting for ${displayName(otherFor(p))}`,big:otherDoneFor(p),bg:otherDoneFor(p)?'assets/milestone-clean.webp':'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(otherDoneFor(p)?'Swap complete':'You confirmed - waiting for '+displayName(otherFor(p)));renderSwaps();
@@ -1392,7 +1460,7 @@ function listenGroup(){
     if(dataLoaded)return;
     _groupListening=false;
     const err=document.getElementById('group-err');
-    if(err){err.textContent='Could not load that group yet. Check the invite code or deploy the Firebase rules included with this project.';err.style.display='block';}
+    if(err){err.textContent='Could not load that group yet. Check the invite code, or ask whoever created the group for a fresh invite link.';err.style.display='block';}
     ss('s-group');
   },8000);
   onValue(gref('members'),snap=>{
@@ -1408,7 +1476,7 @@ function listenGroup(){
   },err=>{
     clearTimeout(loadTimer);_groupListening=false;
     const e=document.getElementById('group-err');
-    if(e){e.textContent='Could not load that group yet. Check the invite code or deploy the Firebase rules included with this project.';e.style.display='block';}
+    if(e){e.textContent='Could not load that group yet. Check the invite code, or ask whoever created the group for a fresh invite link.';e.style.display='block';}
     ss('s-group');
   });
   onValue(gref('collections'),snap=>{allData=snap.val()||{};applyDoneSwaps();if(me)scheduleRefresh();});
@@ -1463,7 +1531,7 @@ async function enterGroup(code,created=false){
     }
   }catch(e){
     _groupListening=false;
-    if(err){err.textContent='Could not open that group. Check the invite code and Firebase rules.';err.style.display='block';}
+    if(err){err.textContent='Could not open that group. Check the invite code and try again.';err.style.display='block';}
     ss('s-group');
   }
 }
@@ -1472,7 +1540,7 @@ window.createGroup=function(){enterGroup(randomGroup(),true);};
 window.joinGroup=function(){enterGroup(document.getElementById('group-input')?.value||'');};
 window.copyInvite=async function(){
   if(!currentGroup)return toast('Create or join a group first');
-  const text=`Join my Sticker Swap group (${currentGroup}): ${inviteUrl()}`;
+  const text=`Join my Sticker Swap group - we're tracking our albums and finding swaps together. Code ${currentGroup}: ${inviteUrl()}`;
   try{await navigator.clipboard.writeText(text);toast('Invite link copied');}
   catch(e){prompt('Copy this invite link',text);}
 };
