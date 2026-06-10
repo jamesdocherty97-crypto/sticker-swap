@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-title" content="Sticker Swap">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="Create a group, track your stickers, and find swaps with friends.">
+<!-- Owner note: social platforms need ABSOLUTE URLs for share images.
+     After deploying, change og:image / twitter:image to the full live URL,
+     e.g. https://your-site.example/og-share.png, and add og:url. -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sticker Swap">
 <meta property="og:description" content="Create a group. Track your stickers. Find swaps with friends.">
@@ -18,6 +21,7 @@
 <meta name="twitter:image" content="og-share.png">
 <title>Sticker Swap - Matchday Album Companion</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +32,7 @@ body.light{--navy:#f6f7fb;--navy2:#eef1f7;--navy3:#e3e8f2;--navy4:#cfd8e8;--whit
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;min-height:100%;overflow:hidden}
 body{background:var(--navy);color:var(--white);font-family:'DM Sans',sans-serif}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[role="button"]:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 body:before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 8%,rgba(14,165,233,.25),transparent 30%),radial-gradient(circle at 84% 0,rgba(245,200,66,.18),transparent 24%),linear-gradient(rgba(6,19,38,.58),rgba(6,19,38,.92)),url('assets/02_pwa_splash_background.webp') center/cover;z-index:-1}
 body:after{content:'';position:fixed;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 42%,rgba(255,255,255,.05) 48%,transparent 56%);will-change:transform;animation:sweep 14s ease-in-out infinite;z-index:-1}
 @keyframes sweep{0%,55%{transform:translateX(-75%)}100%{transform:translateX(75%)}}
@@ -80,7 +85,9 @@ body:after{content:'';position:fixed;inset:0;pointer-events:none;background:line
 #app.vis{display:flex}
 .topbar{flex-shrink:0;background:linear-gradient(90deg,rgba(6,19,38,.97),rgba(12,32,61,.92)),url('assets/02_pwa_splash_background.webp') center 44%/cover;backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,200,66,.14);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
 body.light .topbar{background:rgba(246,247,251,.96)}
+body.light .u-pill,body.light .icon-btn{background:#fff;box-shadow:0 4px 14px rgba(17,24,39,.08)}
 .t-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);letter-spacing:2px;text-shadow:0 1px 12px rgba(245,200,66,.22)}
+.demo-pill{display:none;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:1px;background:var(--accent);color:#fff;border-radius:8px;padding:2px 7px;vertical-align:2px;margin-left:6px}
 .t-right{display:flex;align-items:center;gap:6px}
 .u-pill{display:flex;align-items:center;gap:6px;background:var(--navy3);border:1px solid var(--border);border-radius:20px;padding:7px 12px 7px 8px;min-height:40px}
 .u-pill-a{font-size:1rem;display:grid;place-items:center;line-height:1}
@@ -92,6 +99,7 @@ body.light .topbar{background:rgba(246,247,251,.96)}
 .icon-btn:hover{color:var(--white)}
 /* TABS */
 .tabs{order:2;flex-shrink:0;display:flex;background:linear-gradient(180deg,rgba(6,19,38,.88),rgba(6,19,38,.98));border-top:1px solid var(--border);padding:6px 8px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -12px 28px rgba(0,0,0,.24)}
+body.light .tabs{background:rgba(255,255,255,.96);box-shadow:0 -12px 28px rgba(17,24,39,.12)}
 .tab{flex:1;min-height:54px;padding:8px 4px 7px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;border-radius:12px;transition:background .18s,color .18s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
 .tab svg{width:18px;height:18px;opacity:.5;transition:opacity .18s}
 .tab.active{color:var(--white);background:rgba(14,165,233,.16)}
@@ -112,6 +120,8 @@ body.light .topbar{background:rgba(246,247,251,.96)}
 .match-title{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;line-height:.95;letter-spacing:2px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
 .match-sub{font-size:.75rem;color:#d8e9ff;margin-top:4px;text-shadow:0 1px 8px rgba(0,0,0,.55)}
 .prog-card{background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(15,103,200,.12)),rgba(12,32,61,.88);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 14px 32px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(10px)}
+body.light .prog-card,body.light .g-card,body.light .plan-card,body.light .feed,body.light .swap-guide,body.light .sw-card,body.light .req-card,body.light .trade-sheet,body.light .ranked-row,body.light .settings-card,body.light .more-tools,body.light .hint{background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(245,200,66,.05)),#fff;border-color:rgba(17,24,39,.12);box-shadow:0 10px 24px rgba(17,24,39,.08)}
+body.light .stat{background:#f6f8fc}
 .spark-card{position:relative;overflow:hidden;border:1px solid rgba(245,200,66,.22);border-radius:var(--r);padding:14px;margin:-2px 0 12px;min-height:96px;background:radial-gradient(circle at 88% 20%,rgba(245,200,66,.18),transparent 24%),linear-gradient(115deg,rgba(6,19,38,.92),rgba(15,103,200,.34)),url('assets/07_spares_empty_state.webp') right center/cover,var(--card);box-shadow:0 16px 34px rgba(0,0,0,.22)}
 .spark-card:before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 36%,rgba(255,255,255,.16) 46%,transparent 58%);opacity:.45;animation:sparkSweep 5.8s ease-in-out infinite;pointer-events:none}
 @keyframes sparkSweep{0%,50%{transform:translateX(-85%)}100%{transform:translateX(85%)}}
@@ -160,6 +170,7 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
 /* TEAM BLOCK */
 .tblock{margin-bottom:9px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.1)}
 .thdr{display:flex;align-items:center;justify-content:space-between;padding:12px;background:linear-gradient(90deg,rgba(12,32,61,.98),rgba(15,103,200,.16));cursor:pointer;user-select:none;-webkit-user-select:none}
+body.light .thdr{background:linear-gradient(90deg,rgba(255,255,255,.98),rgba(14,165,233,.10))}
 .thdr:active{background:var(--navy3)}
 .tleft{display:flex;align-items:center;gap:9px}
 .tflag{font-size:1.45rem;line-height:1;filter:drop-shadow(0 2px 5px rgba(0,0,0,.24))}
@@ -172,9 +183,11 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
 .chev{font-size:.68rem;color:var(--muted);transition:transform .2s;margin-left:3px}
 .tblock.open .chev{transform:rotate(180deg)}
 .sgrid{display:none;padding:9px;background:linear-gradient(180deg,rgba(6,19,38,.96),rgba(11,29,56,.98));grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+body.light .sgrid{background:#eef3fb}
 .tblock.open .sgrid{display:grid}
 /* STICKER CARD */
 .sc{height:112px;border-radius:9px;padding:17px 5px 8px;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.08),transparent 42%),linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01)),var(--card);border:1.5px solid var(--border);cursor:pointer;text-align:center;user-select:none;-webkit-user-select:none;transition:transform .1s,border-color .15s,background .15s,box-shadow .15s;-webkit-touch-callout:none;position:relative;display:grid;grid-template-rows:auto 18px 32px;align-content:center;justify-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 5px 14px rgba(0,0,0,.16)}
+body.light .sc{background:radial-gradient(circle at 50% 0,rgba(14,165,233,.10),transparent 42%),#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 5px 14px rgba(17,24,39,.08)}
 .sc:active{transform:scale(.88)}
 .sc.bump{animation:bump .22s ease}
 @keyframes bump{0%,100%{transform:scale(1)}45%{transform:scale(.9) rotate(-1.5deg)}75%{transform:scale(1.04) rotate(1.5deg)}}
@@ -201,6 +214,9 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
 .toast-undo{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:4px 12px;margin-left:10px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer}
 /* SWAPS */
 .sw-hero{background:linear-gradient(135deg,rgba(6,19,38,.50),rgba(14,165,233,.24)),url('assets/09_best_move_card_art.webp') center/cover;border:1px solid rgba(242,247,255,.18);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 14px 30px rgba(0,0,0,.2)}
+body.light .sw-hero,body.light .best-move{background-image:linear-gradient(135deg,rgba(6,19,38,.76),rgba(14,165,233,.34)),url('assets/09_best_move_card_art.webp');color:#fff}
+body.light .sw-hero p,body.light .best-move .bm-sub,body.light .best-move .sw-count,body.light .meetup-note,body.light .req-note,body.light .ts-note,body.light .tip-note,body.light .guide-copy{color:#d8e9ff}
+body.light .best-move .bm-sub b,body.light .guide-step b{color:#fff}
 .sw-hero h2{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:2px;margin-bottom:3px}
 .sw-hero p{color:var(--muted);font-size:.82rem;line-height:1.5}
 .sw-tabs{display:flex;gap:6px;margin-bottom:12px}
@@ -458,7 +474,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 .crown-t{position:relative;font-size:.59rem;font-weight:800;color:var(--gold);line-height:1.15;min-height:1.35em}
 .crown-h{position:relative;font-size:.72rem;font-weight:700;color:var(--white);margin:3px 0 1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .crown-d{font-size:.56rem;color:var(--muted)}
-.wish-star{cursor:pointer;color:var(--navy4);margin-left:4px;font-size:.9rem;-webkit-user-select:none}
+.wish-star{cursor:pointer;color:var(--navy4);margin-left:4px;font-size:.9rem;-webkit-user-select:none;border:0;background:transparent;border-radius:7px;min-width:28px;min-height:28px;display:inline-grid;place-items:center;vertical-align:middle;font-family:'DM Sans',sans-serif}
 .wish-star.on{color:var(--gold);text-shadow:0 0 8px rgba(245,200,66,.6)}
 .rk-fin{font-size:.62rem;font-weight:800;color:var(--owned);background:rgba(34,197,94,.14);border-radius:7px;padding:1px 6px;margin-left:4px}
 .rk-fin.wish{color:var(--gold);background:rgba(245,200,66,.14)}
@@ -492,8 +508,8 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 </head>
 <body>
 <div id="offline">⚡ Offline - changes are saved here and sync when reconnected</div>
-<div id="toast"></div>
-<div id="saved">Saved ✓</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="saved" role="status">Saved ✓</div>
 
 <!-- LOADING -->
 <div id="s-load" class="screen vis">
@@ -509,7 +525,8 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
     <div class="cfg-sub">Sticker Swap is not connected yet. The owner needs to finish setup before live groups can be used.</div>
     <div class="cfg-box">
       <div class="cfg-num">Demo is still available</div>
-      <p>You can test the interface with sample data by opening <code>quick-test.html</code>. No database is needed for demo mode.</p>
+      <p>You can try the full interface with a sample group right now. No database is needed for demo mode.</p>
+      <a class="btn-p" style="display:block;text-align:center;text-decoration:none" href="index.html?demo=1">Try the demo</a>
     </div>
     <div class="cfg-box">
       <div class="cfg-num">Live groups are paused</div>
@@ -534,6 +551,14 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
       <button class="btn-p" onclick="joinGroup()">Join group</button>
       <button class="btn-p" onclick="createGroup()" style="background:var(--accent);margin-top:8px">Create new group</button>
     </div>
+    <div class="guide-steps" style="text-align:left;max-width:340px;margin:14px auto 0">
+      <div class="guide-step"><span>1</span><div><b>Create or join</b> a group with friends.</div></div>
+      <div class="guide-step"><span>2</span><div><b>Add your name</b> so friends recognise you.</div></div>
+      <div class="guide-step"><span>3</span><div><b>Track your stickers</b> - tap once for in your book.</div></div>
+      <div class="guide-step"><span>4</span><div><b>Mark spares</b> - tap again for each spare copy.</div></div>
+      <div class="guide-step"><span>5</span><div><b>Find swaps</b> - the app spots the best trades.</div></div>
+    </div>
+    <div class="legal-note">Unofficial fan tool. Not affiliated with or endorsed by any sticker publisher, federation, or tournament.</div>
   </div>
 </div>
 
@@ -555,14 +580,14 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 <!-- MAIN APP -->
 <div id="app">
   <div class="topbar">
-    <div class="t-logo">⚽ STICKER SWAP</div>
+    <div class="t-logo">⚽ STICKER SWAP<span class="demo-pill" id="demo-pill">DEMO</span></div>
     <div class="t-right">
       <div class="u-pill">
         <span class="u-pill-a" id="t-avi"></span>
         <span class="u-pill-n" id="t-name"></span>
       </div>
       <button class="icon-btn" onclick="enableTilt()" aria-label="Shiny mode" title="Shiny mode">✨</button>
-      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
+      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">☾</button>
     </div>
   </div>
   <div class="tabs">
@@ -625,7 +650,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
           <div class="leg"><div class="ld m"></div>Missing</div>
         </div>
         <div class="ribbon-panel">
-          <div class="frow" id="frow"><div class="chip active" onclick="setFilter('ALL',this)">All Teams</div></div>
+          <div class="frow" id="frow"><button type="button" class="chip active" onclick="setFilter('ALL',this)">All Teams</button></div>
           <div class="status-row">
             <button class="status-chip active" onclick="setStatusFilter('all',this)">All</button>
             <button class="status-chip" onclick="setStatusFilter('missing',this)">⬜ Missing</button>
@@ -818,10 +843,66 @@ function startDemo(){
   allData=saved?.allData||{_names:groupNames,You:demoStickers(1),Sam:demoStickers(2),Ava:demoStickers(3),Mo:demoStickers(4)};
   swapItems=saved?.swapItems||[];
   wishData=saved?.wishData||{};
-  feedItems=saved?.feedItems||[{u:'Demo',t:'sample group ready to test',ts:Date.now()}];
+  feedItems=saved?.feedItems||[{u:'Sam',t:'sent you a swap offer 📨',ts:Date.now()-3600e3},{u:'Demo',t:'sample group ready to test',ts:Date.now()-7200e3}];
   dataLoaded=true;me=localStorage.getItem(groupKey('me'))||'You';
   if(!groupNames.includes(me))me='You';
+  if(!saved)seedDemoSwaps();
   launchApp();
+}
+// Seed the full swap lifecycle so the demo shows an incoming offer, an
+// outgoing offer, and an accepted swap where the other side already
+// confirmed the handover. Uses the actual demo collections, so every id
+// is consistent and promised spares are genuinely reserved.
+function demoTradeSlice(a,b,n){
+  const give=[],get=[];
+  for(const id of swapIds()){
+    if(give.length<n&&availableSparesFor(a,id)>0&&activeNeed(b,id))give.push(id);
+    else if(get.length<n&&availableSparesFor(b,id)>0&&activeNeed(a,id))get.push(id);
+    if(give.length>=n&&get.length>=n)break;
+  }
+  return{give,get};
+}
+// Demo partners respond on their own, so one device can experience the whole
+// loop: send offer → friend accepts → both confirm → books update.
+function demoAutoAccept(id,ms){
+  if(!DEMO_MODE)return;
+  setTimeout(()=>{
+    const p=swapItems.find(x=>x.id===id);
+    if(!p||p.status!=='proposed'||p.from!==me)return;
+    Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});
+    persistDemo();
+    queuePop({kicker:'Offer accepted',title:`${displayName(p.to)} said yes!`,sub:'Swap in person, then confirm',bg:'assets/10_incoming_offer_art.webp'});
+    toast(`${displayName(p.to)} accepted - swap in person, then confirm`);
+    updateBadge();if(curTab==='swaps')renderSwaps();
+  },ms||7000);
+}
+function demoPartnerConfirm(id,ms){
+  if(!DEMO_MODE)return;
+  setTimeout(()=>{
+    const p=swapItems.find(x=>x.id===id);
+    if(!p||p.status!=='accepted'||(p.from!==me&&p.to!==me))return;
+    const otherField=p.from===me?'toDone':'fromDone';
+    if(p[otherField])return;
+    p[otherField]=true;p.updatedAt=Date.now();
+    if(myDoneFor(p))p.status='done';
+    persistDemo();
+    if(p.status==='done')applyCompletedSwapToMine(p);
+    else toast(`${displayName(otherFor(p))} confirmed - your confirmation finishes the swap`);
+    if(curTab==='swaps')renderSwaps();
+  },ms||6000);
+}
+function seedDemoSwaps(){
+  try{
+    const now=Date.now();
+    const mk=(id,from,to,t,extra)=>({id,from,to,fromUid:from,toUid:to,fromName:from,toName:to,give:t.give,get:t.get,status:'proposed',createdAt:now-3600e3,updatedAt:now-3600e3,ts:now-3600e3,...extra});
+    const t1=demoTradeSlice('Sam','You',2);   // incoming offer for You
+    if(t1.give.length||t1.get.length)swapItems.push(mk('demo-seed-in','Sam','You',t1));
+    const t2=demoTradeSlice('You','Ava',2);   // outgoing offer from You
+    if(t2.give.length||t2.get.length)swapItems.push(mk('demo-seed-out','You','Ava',t2));
+    const t3=demoTradeSlice('Mo','You',1);    // accepted - Mo already confirmed his side
+    if(t3.give.length||t3.get.length)swapItems.push(mk('demo-seed-half','Mo','You',t3,{status:'accepted',acceptedTs:now-1800e3,fromDone:true,updatedAt:now-900e3}));
+    persistDemo();
+  }catch(e){}
 }
 
 /* ── DATA MODEL (copy counts; backward compatible: 'owned'=1, 'doubler'=2) ── */
@@ -1111,6 +1192,10 @@ function partnersRanked(){
 let wishData={};
 function isWish(id){return!!(wishData[me]&&wishData[me][id]);}
 function wishedBy(name,id){return!!(wishData[name]&&wishData[name][id]);}
+function wishButtonHTML(id){
+  const on=isWish(id),label=`${on?'Remove from':'Add to'} wishlist: ${id.replace('-',' ')}`;
+  return`<button type="button" class="wish-star${on?' on':''}" aria-pressed="${on?'true':'false'}" aria-label="${esc(label)}" onclick="event.stopPropagation();toggleWish('${id}')">★</button>`;
+}
 window.toggleWish=function(id){
   if(!me||(!db&&!DEMO_MODE))return;const on=isWish(id);
   wishData[me]=wishData[me]||{};
@@ -1132,7 +1217,7 @@ window.proposeAll=function(){
     const t=tradeBetween(p.u,reserved);
     if(t.give.length||t.get.length){
       const item=makeSwapItem(p.u,t.give,t.get);
-      if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now()+'-'+n,...item});persistDemo();}
+      if(DEMO_MODE){const sid='demo-'+Date.now()+'-'+n;swapItems.push({id:sid,...item});persistDemo();if(n===0)demoAutoAccept(sid,8000);}
       else push(gref('swaps'),item);
       t.give.forEach(id=>reserved[id]=(reserved[id]||0)+1);
       n++;
@@ -1243,7 +1328,7 @@ window.proposeSwap=function(u){
   if(bad.length)return toast('Some spares are already promised');
   try{
     const item=makeSwapItem(u,t.give,t.get);
-    if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now(),...item});persistDemo();}
+    if(DEMO_MODE){const id='demo-'+Date.now();swapItems.push({id,...item});persistDemo();demoAutoAccept(id);}
     else push(gref('swaps'),item);
     toast('Swap proposed to '+displayName(u)+' 📨');renderSwaps();
   }catch(e){toast('Could not send');}
@@ -1256,7 +1341,7 @@ window.requestSticker=function(id){
   if(openSwaps().some(x=>((x.from===me&&x.to===holder.u)||(x.from===holder.u&&x.to===me))))return toast('You already have an open offer with '+displayName(holder.u));
   try{
     const item=makeSwapItem(holder.u,holder.offer,[id]);
-    if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now(),...item});persistDemo();}
+    if(DEMO_MODE){const sid='demo-'+Date.now();swapItems.push({id:sid,...item});persistDemo();demoAutoAccept(sid);}
     else push(gref('swaps'),item);
     toast('Request sent to '+displayName(holder.u)+' 📨');renderSwaps();
   }catch(e){toast('Could not send request');}
@@ -1267,9 +1352,9 @@ window.acceptSwap=function(id){
     const p=swapItems.find(x=>x.id===id);if(!p||p.to!==me||p.status!=='proposed')return swapUnlock(key);
     const bad=promiseIssuesFor(me,p.get||[],p.id);
     if(bad.length){toast('Review needed - spare already promised');return;}
-    if(DEMO_MODE){Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});persistDemo();}
+    if(DEMO_MODE){Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});persistDemo();demoPartnerConfirm(id,9000);}
     else update(gref('swaps/'+id),{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});
-    queuePop({kicker:'Swap locked in',title:'Swap in person, then confirm',bg:'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(`${displayName(p.from)} accepted - swap in person, then confirm`);renderSwaps();
+    queuePop({kicker:'Swap locked in',title:'Swap in person, then confirm',bg:'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(`You accepted ${displayName(p.from)}'s offer - swap in person, then confirm`);renderSwaps();
   }finally{setTimeout(()=>swapUnlock(key),1200);}
 };
 window.confirmSwap=function(id){
@@ -1281,7 +1366,7 @@ window.confirmSwap=function(id){
     if(bad.length){toast('Review needed - spare no longer available');return;}
     const patch=p.from===me?{fromDone:true,updatedAt:Date.now()}:{toDone:true,updatedAt:Date.now()};
     if(otherDoneFor(p))patch.status='done';
-    if(DEMO_MODE){Object.assign(p,patch);persistDemo();if(p.status==='done')applyCompletedSwapToMine(p);}
+    if(DEMO_MODE){Object.assign(p,patch);persistDemo();if(p.status==='done')applyCompletedSwapToMine(p);else demoPartnerConfirm(id,6000);}
     else update(gref('swaps/'+id),patch).then(()=>{if(patch.status==='done')applyCompletedSwapToMine({...p,...patch});});
     if(otherDoneFor(p))pushFeed(`completed a queued swap with ${displayName(otherFor(p))} 🤝`);
     queuePop({kicker:otherDoneFor(p)?'Swap complete!':'Handover confirmed',title:otherDoneFor(p)?'Swap complete':`Waiting for ${displayName(otherFor(p))}`,big:otherDoneFor(p),bg:otherDoneFor(p)?'assets/milestone-clean.webp':'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(otherDoneFor(p)?'Swap complete':'You confirmed - waiting for '+displayName(otherFor(p)));renderSwaps();
@@ -1359,6 +1444,27 @@ window.enableTilt=function(){
   else go();
 };
 
+/* ── PWA INSTALL ── */
+let _installEvt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_installEvt=e;if(me&&curTab==='group')renderGroup();});
+window.addEventListener('appinstalled',()=>{_installEvt=null;toast('Sticker Swap installed 📲');if(me&&curTab==='group')renderGroup();});
+function isStandalone(){return window.matchMedia?.('(display-mode: standalone)')?.matches||navigator.standalone===true;}
+function isIOS(){return/iphone|ipad|ipod/i.test(navigator.userAgent||'');}
+window.installApp=async function(){
+  if(!_installEvt)return toast('Use your browser menu to install');
+  const e=_installEvt;_installEvt=null;
+  e.prompt();
+  const r=await e.userChoice.catch(()=>null);
+  if(!(r&&r.outcome==='accepted'))_installEvt=e;
+  if(me&&curTab==='group')renderGroup();
+};
+function installHTML(){
+  if(isStandalone())return'';
+  if(_installEvt)return`<div class="share-row"><button class="share-btn" onclick="installApp()">📲 Install the app</button></div>`;
+  if(isIOS())return`<div class="settings-copy" style="margin-bottom:0">📲 Install: tap Share, then "Add to Home Screen".</div>`;
+  return'';
+}
+
 /* ── BOOT ── */
 function ensureAnonAuth(){
   return new Promise((resolve,reject)=>{
@@ -1392,7 +1498,7 @@ function listenGroup(){
     if(dataLoaded)return;
     _groupListening=false;
     const err=document.getElementById('group-err');
-    if(err){err.textContent='Could not load that group yet. Check the invite code or deploy the Firebase rules included with this project.';err.style.display='block';}
+    if(err){err.textContent='Could not load that group yet. Check the invite code, or ask whoever created the group for a fresh invite link.';err.style.display='block';}
     ss('s-group');
   },8000);
   onValue(gref('members'),snap=>{
@@ -1408,7 +1514,7 @@ function listenGroup(){
   },err=>{
     clearTimeout(loadTimer);_groupListening=false;
     const e=document.getElementById('group-err');
-    if(e){e.textContent='Could not load that group yet. Check the invite code or deploy the Firebase rules included with this project.';e.style.display='block';}
+    if(e){e.textContent='Could not load that group yet. Check the invite code, or ask whoever created the group for a fresh invite link.';e.style.display='block';}
     ss('s-group');
   });
   onValue(gref('collections'),snap=>{allData=snap.val()||{};applyDoneSwaps();if(me)scheduleRefresh();});
@@ -1463,7 +1569,7 @@ async function enterGroup(code,created=false){
     }
   }catch(e){
     _groupListening=false;
-    if(err){err.textContent='Could not open that group. Check the invite code and Firebase rules.';err.style.display='block';}
+    if(err){err.textContent='Could not open that group. Check the invite code and try again.';err.style.display='block';}
     ss('s-group');
   }
 }
@@ -1472,9 +1578,21 @@ window.createGroup=function(){enterGroup(randomGroup(),true);};
 window.joinGroup=function(){enterGroup(document.getElementById('group-input')?.value||'');};
 window.copyInvite=async function(){
   if(!currentGroup)return toast('Create or join a group first');
-  const text=`Join my Sticker Swap group (${currentGroup}): ${inviteUrl()}`;
+  const text=`Join my Sticker Swap group - we're tracking our albums and finding swaps together. Code ${currentGroup}: ${inviteUrl()}`;
+  if(navigator.share){try{await navigator.share({text});return;}catch(e){if(e?.name==='AbortError')return;}}
   try{await navigator.clipboard.writeText(text);toast('Invite link copied');}
   catch(e){prompt('Copy this invite link',text);}
+};
+// Viral loop: share what swapping could unlock for the whole group
+window.shareStatus=async function(){
+  if(!currentGroup)return toast('Create or join a group first');
+  const fill=getNames().length>1?computePlan().fill:0;
+  const text=fill>0
+    ?`Our Sticker Swap group has ${fill} swap${fill!==1?'s':''} waiting to fill our albums. Join us - code ${currentGroup}: ${inviteUrl()}`
+    :`Join my Sticker Swap group - we're tracking our albums and finding swaps together. Code ${currentGroup}: ${inviteUrl()}`;
+  if(navigator.share){try{await navigator.share({text});return;}catch(e){if(e?.name==='AbortError')return;}}
+  try{await navigator.clipboard.writeText(text);toast('Group status copied 📣');}
+  catch(e){prompt('Copy this',text);}
 };
 window.leaveGroup=function(){
   if(!confirm('Leave this group on this device? Your sticker data stays in the group.'))return;
@@ -1550,6 +1668,7 @@ function launchApp(){
   document.getElementById('t-avi').innerHTML=userAvatarMarkup(me,i>=0?i:0,'pill-avatar');
   document.getElementById('t-name').textContent=displayName(me);
   document.getElementById('app').classList.add('vis');
+  const dp=document.getElementById('demo-pill');if(dp)dp.style.display=DEMO_MODE?'inline-block':'none';
   applyTheme(localStorage.getItem('theme')||'dark');
   migrateWish();buildFilters();buildPersonFilter();refresh();renderHeatmap();startPresence();
   if(dataLoaded)baselineAch();
@@ -1570,8 +1689,8 @@ function render(tab){if(tab==='collection')renderCollection();else if(tab==='swa
 /* ── FILTERS ── */
 function buildFilters(){
   const row=document.getElementById('frow');
-  row.innerHTML='<div class="chip active" onclick="setFilter(\'ALL\',this)">All Teams</div>'+
-    [...ALL,...EXTRAS].map(t=>`<div class="chip" onclick="setFilter('${t.code}',this)">${t.flag} ${t.code}</div>`).join('');
+  row.innerHTML='<button type="button" class="chip active" onclick="setFilter(\'ALL\',this)">All Teams</button>'+
+    [...ALL,...EXTRAS].map(t=>`<button type="button" class="chip" onclick="setFilter('${t.code}',this)">${t.flag} ${t.code}</button>`).join('');
 }
 window.setFilter=function(code,el){activeFilter=code;document.querySelectorAll('#frow .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');if(code!=='ALL')openTeams.add(code);renderCollection();};
 window.expandAll=function(open){const sections=activeFilter==='ALL'?[...ALL,...EXTRAS]:[...ALL,...EXTRAS].filter(t=>t.code===activeFilter);sections.forEach(t=>{if(open)openTeams.add(t.code);else openTeams.delete(t.code);});renderCollection();};
@@ -1595,6 +1714,7 @@ function buildPersonFilter(){
   sel.value=keep;
 }
 window.setPersonFilter=function(v){personFilter=v;renderSwaps();};
+window.viewTrade=function(u){personFilter=u;const s=document.getElementById('person-filter');if(s)s.value=u;renderSwaps();const p=document.getElementById('panel-swaps');if(p)p.scrollTo({top:0,behavior:reduceMotion()?'auto':'smooth'});};
 window.setEntryMode=function(mode){
   entryMode=mode;
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
@@ -1635,7 +1755,7 @@ function buildBlock(team,q,isExtra){
     });
   }
   return`<div class="tblock${open?' open':''}${tOwn===tot?' complete':''}" id="tb-${team.code}">
-      <div class="thdr" onclick="toggleTeam('${team.code}')">
+      <div class="thdr" role="button" tabindex="0" aria-expanded="${open?'true':'false'}" onclick="toggleTeam('${team.code}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTeam('${team.code}')}">
         <div class="tleft"><span class="tflag">${team.flag}</span><div><div class="tname">${team.name}</div><div class="tmeta" id="tm-${team.code}">${tOwn}/${tot} in book · ${tDbl} spare${tDbl!==1?'s':''}</div></div></div>
         <div class="tright"><div class="team-actions"><button class="mark-team" onclick="markTeamState('${team.code}','owned',event)">Fill missing</button><button class="mark-team clear-team" onclick="markTeamState('${team.code}','missing',event)">Clear</button></div><span class="tpct" id="tp-${team.code}">${pct}%</span><div class="tmbar"><div class="tmfill" style="width:${pct}%"></div></div><span class="chev">▼</span></div>
       </div>
@@ -1850,7 +1970,7 @@ function tradeSheetHTML(u){
   const fin=teamsCompletedBy(t.get);
   let h=`<div class="trade-sheet"><div class="ts-top">${userAvatarMarkup(u,idx>=0?idx:0,'bm-face')}<span>You ↔ ${esc(displayName(u))}</span>${isOnline(u)?'<span class="dot-on"></span>':''}</div>`;
   if(fin.length)h+=`<div class="ts-fin">🏆 This swap finishes ${fin.map(x=>x.flag+' '+esc(x.name)).join(', ')}!</div>`;
-  h+=`<div class="ts-cols"><div class="ts-col"><div class="ts-h get">You get (${t.get.length})</div>${t.get.length?t.get.map(id=>`<div class="ts-id">${id.replace('-',' ')}<span class="wish-star${isWish(id)?' on':''}" onclick="event.stopPropagation();toggleWish('${id}')">★</span></div>`).join(''):'<div class="ts-none">-</div>'}</div><div class="ts-col"><div class="ts-h give">You give (${t.give.length})</div>${t.give.length?t.give.map(id=>`<div class="ts-id">${id.replace('-',' ')}${wishedBy(u,id)?'<span class="ts-want">⭐</span>':''}</div>`).join(''):'<div class="ts-none">-</div>'}</div></div>`;
+  h+=`<div class="ts-cols"><div class="ts-col"><div class="ts-h get">You get (${t.get.length})</div>${t.get.length?t.get.map(id=>`<div class="ts-id">${id.replace('-',' ')}${wishButtonHTML(id)}</div>`).join(''):'<div class="ts-none">-</div>'}</div><div class="ts-col"><div class="ts-h give">You give (${t.give.length})</div>${t.give.length?t.give.map(id=>`<div class="ts-id">${id.replace('-',' ')}${wishedBy(u,id)?'<span class="ts-want">⭐</span>':''}</div>`).join(''):'<div class="ts-none">-</div>'}</div></div>`;
   if(bal)h+=`<div class="ts-bal">${bal}</div>`;
   h+=`<div class="ts-note"><b>Send this as an offer.</b> Your friend can accept it in the app. Promised spares stay reserved until the offer is cancelled or the completed swap updates your book.</div>`;
   h+=`<div class="ts-btns">`;
@@ -1878,7 +1998,7 @@ function bestSwapHTML(){
     <div class="bm-name">${userAvatarMarkup(best.u,idx>=0?idx:0,'bm-face')}<span>You ↔ ${esc(displayName(best.u))}</span>${isOnline(best.u)?'<span class="dot-on"></span>':''}</div>
     <div class="bm-sub">You get <b>${t.get.length}</b>, give <b>${t.give.length}</b>${fin.length?` · finishes <b>${fin.map(x=>esc(x.name)).join(', ')}</b>`:''}${wish?` · <b>${wish}</b> wishlist`:''}</div>
     <div class="meetup-note"><b>Best offer to send.</b> It reserves your promised spares. If ${esc(displayName(best.u))} accepts, swap in person and both confirm.</div>
-    <div class="bm-actions">${open?`<button class="bm-btn" disabled>Offer pending...</button>`:`<button class="bm-btn" onclick="proposeSwap(decodeURIComponent('${enc(best.u)}'))">Send offer</button>`}</div>
+    <div class="bm-actions">${open?`<button class="bm-btn" disabled>Offer pending...</button>`:`<button class="bm-btn" onclick="proposeSwap(decodeURIComponent('${enc(best.u)}'))">Send offer</button>`}<button class="bm-btn ghost" onclick="viewTrade(decodeURIComponent('${enc(best.u)}'))">View trade</button></div>
   </div>`;
 }
 function renderSwaps(){
@@ -1908,7 +2028,7 @@ function renderSwaps(){
     if(!offers.length)html+=`<div class="empty"><span class="emo">🔍</span>No matches yet.<br>Nobody has spares of stickers you're missing. Invite friends or add more stickers to wake up the swap finder.</div>`;
     else{
       html+=`<p class="sw-count">${offers.length} sticker${offers.length!==1?'s':''} you need - someone has a spare · tap ★ to wishlist</p><div class="tip-note"><b>Tip:</b> Request a single sticker, or send a balanced offer from Best offers.</div>`;
-      offers.forEach(s=>{html+=`<div class="sw-card"><div><div class="sw-id">${s.flag} ${s.code} ${s.num} <span class="wish-star${isWish(s.id)?' on':''}" onclick="event.stopPropagation();toggleWish('${s.id}')">★</span></div><div class="sw-team">${esc(playerName(s.id))} · ${esc(s.tn)}</div></div><div class="sw-who"><div class="sw-wlbl">Has spare</div><div class="wtags">${s.whoHas.map(u=>personTag(u,'has')).join('')}</div><div class="sw-acts"><button class="swp-btn ask" onclick="requestSticker('${s.id}')">Request</button></div></div></div>`;});
+      offers.forEach(s=>{html+=`<div class="sw-card"><div><div class="sw-id">${s.flag} ${s.code} ${s.num} ${wishButtonHTML(s.id)}</div><div class="sw-team">${esc(playerName(s.id))} · ${esc(s.tn)}</div></div><div class="sw-who"><div class="sw-wlbl">Has spare</div><div class="wtags">${s.whoHas.map(u=>personTag(u,'has')).join('')}</div><div class="sw-acts"><button class="swp-btn ask" onclick="requestSticker('${s.id}')">Request</button></div></div></div>`;});
     }
     const mustFind=ids.filter(id=>!haveId(mine,id)&&!others.some(([u])=>u!==me&&availableSparesFor(u,id)>0)).length;
     if(mustFind)html+=`<div class="mustfind">🔎 <b>${mustFind}</b> you still need that nobody has spare yet</div>`;
@@ -1969,7 +2089,9 @@ function groupSettingsHTML(){
     <div class="settings-card-body">
       <div class="settings-code">${esc(currentGroup)}</div>
       <div class="settings-copy">${DEMO_MODE?'Demo data stays in this browser.':'Share this invite code with friends, then meet up to swap in person.'}</div>
-      <div class="share-row"><button class="share-btn" onclick="copyInvite()">🔗 Invite link</button><button class="share-btn" onclick="doSwitch()">👤 Profile</button></div>
+      <div class="share-row"><button class="share-btn" onclick="copyInvite()">🔗 Invite link</button><button class="share-btn" onclick="shareStatus()">📣 Share status</button></div>
+      <div class="share-row"><button class="share-btn" onclick="doSwitch()">👤 Profile</button></div>
+      ${installHTML()}
       <div class="share-row"><button class="share-btn" onclick="leaveGroup()">Leave group</button><button class="share-btn danger" onclick="deleteMyData()">Delete my data</button>${DEMO_MODE?'<button class="share-btn" onclick="resetDemo()">Reset demo</button>':''}</div>
       <div class="legal-note">Unofficial fan tool. Not affiliated with or endorsed by any sticker publisher, federation, or tournament.</div>
     </div>
@@ -2024,7 +2146,7 @@ function renderGroup(){
     const face=userStickerSrc(s.n)?`<img class="g-face" src="${userStickerSrc(s.n)}" alt="${esc(displayName(s.n))}">`:`<span class="g-face-fallback">${s.av}</span>`;
     const badges=badgesFor(s.n),shownBadges=badges.slice(-3),hiddenBadges=badges.length-shownBadges.length;
     html+=`<div class="g-card${isMe?' me':''}">
-      <div class="g-top"><div class="g-name">${face}<span>${esc(displayName(s.n))}</span>${isOnline(s.n)?'<span class="dot-on"></span>':''}${isMe?'<span class="g-you">YOU</span>':''}${!s.started?'<span class="g-new">not started</span>':''}</div><div class="g-right">${!isMe&&s.started?`<button class="nudge-btn" onclick="nudge(decodeURIComponent('${enc(s.n)}'))" title="Nudge to swap">👋</button>`:''}<div class="g-pct">${s.pct}%</div></div></div>
+      <div class="g-top"><div class="g-name">${face}<span>${esc(displayName(s.n))}</span>${isOnline(s.n)?'<span class="dot-on"></span>':''}${isMe?'<span class="g-you">YOU</span>':''}${!s.started?'<span class="g-new">not started</span>':''}</div><div class="g-right">${!isMe&&s.started?`<button class="nudge-btn" onclick="nudge(decodeURIComponent('${enc(s.n)}'))" aria-label="Nudge ${esc(displayName(s.n))} to swap" title="Nudge to swap">👋</button>`:''}<div class="g-pct">${s.pct}%</div></div></div>
       <div class="pbar"><div class="pfill" style="width:${s.pct}%"></div></div>
       <div class="g-stats">
         <div class="g-stat"><div class="g-sv o">${s.own}</div><div class="g-sl">In Book</div></div>

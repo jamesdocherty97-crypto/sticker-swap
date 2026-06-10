@@ -1,0 +1,17 @@
+{
+  "name": "sticker-swap-public-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static public MVP for Sticker Swap local QA.",
+  "scripts": {
+    "qa": "node scripts/qa-check.js",
+    "check:rules": "node scripts/qa-check.js rules",
+    "check:syntax": "node scripts/qa-check.js syntax",
+    "check:stale": "node scripts/qa-check.js stale",
+    "check:swaps": "node scripts/qa-check.js swaps",
+    "check:pwa": "node scripts/qa-check.js pwa",
+    "check:demo": "node scripts/qa-check.js demo",
+    "serve": "node scripts/serve.js",
+    "emulators": "firebase emulators:start --only auth,database"
+  }
+}

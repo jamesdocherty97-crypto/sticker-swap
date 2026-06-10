@@ -1,0 +1,7 @@
+# firebase-config.js IS tracked, but only as the safe null placeholder
+# (window.STICKER_SWAP_FIREBASE_CONFIG = null). The Firebase web config is
+# not an admin secret, but keep your real project values out of shared
+# source control until you intentionally deploy: if you paste a real
+# config locally, don't commit that change.
+.firebase/
+.firebaserc
