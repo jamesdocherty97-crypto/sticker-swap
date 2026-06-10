@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sticker-swap-public-v6';
+const CACHE_NAME = 'sticker-swap-public-v8';
 
 // App shell. index.html is fetched network-first (see below), so a redeploy
 // always reaches phones without needing this version string bumped.
@@ -7,6 +7,7 @@ const APP_SHELL = [
   './index.html',
   './firebase-config.js',
   './manifest.webmanifest',
+  './favicon.ico',
   './icon.svg',
   './icon-192.png',
   './icon-512.png',

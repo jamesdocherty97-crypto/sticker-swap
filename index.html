@@ -21,6 +21,7 @@
 <meta name="twitter:image" content="og-share.png">
 <title>Sticker Swap - Matchday Album Companion</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,6 +32,7 @@ body.light{--navy:#f6f7fb;--navy2:#eef1f7;--navy3:#e3e8f2;--navy4:#cfd8e8;--whit
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;min-height:100%;overflow:hidden}
 body{background:var(--navy);color:var(--white);font-family:'DM Sans',sans-serif}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[role="button"]:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 body:before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 8%,rgba(14,165,233,.25),transparent 30%),radial-gradient(circle at 84% 0,rgba(245,200,66,.18),transparent 24%),linear-gradient(rgba(6,19,38,.58),rgba(6,19,38,.92)),url('assets/02_pwa_splash_background.webp') center/cover;z-index:-1}
 body:after{content:'';position:fixed;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 42%,rgba(255,255,255,.05) 48%,transparent 56%);will-change:transform;animation:sweep 14s ease-in-out infinite;z-index:-1}
 @keyframes sweep{0%,55%{transform:translateX(-75%)}100%{transform:translateX(75%)}}
@@ -83,6 +85,7 @@ body:after{content:'';position:fixed;inset:0;pointer-events:none;background:line
 #app.vis{display:flex}
 .topbar{flex-shrink:0;background:linear-gradient(90deg,rgba(6,19,38,.97),rgba(12,32,61,.92)),url('assets/02_pwa_splash_background.webp') center 44%/cover;backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,200,66,.14);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
 body.light .topbar{background:rgba(246,247,251,.96)}
+body.light .u-pill,body.light .icon-btn{background:#fff;box-shadow:0 4px 14px rgba(17,24,39,.08)}
 .t-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);letter-spacing:2px;text-shadow:0 1px 12px rgba(245,200,66,.22)}
 .demo-pill{display:none;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:1px;background:var(--accent);color:#fff;border-radius:8px;padding:2px 7px;vertical-align:2px;margin-left:6px}
 .t-right{display:flex;align-items:center;gap:6px}
@@ -96,6 +99,7 @@ body.light .topbar{background:rgba(246,247,251,.96)}
 .icon-btn:hover{color:var(--white)}
 /* TABS */
 .tabs{order:2;flex-shrink:0;display:flex;background:linear-gradient(180deg,rgba(6,19,38,.88),rgba(6,19,38,.98));border-top:1px solid var(--border);padding:6px 8px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -12px 28px rgba(0,0,0,.24)}
+body.light .tabs{background:rgba(255,255,255,.96);box-shadow:0 -12px 28px rgba(17,24,39,.12)}
 .tab{flex:1;min-height:54px;padding:8px 4px 7px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;border-radius:12px;transition:background .18s,color .18s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
 .tab svg{width:18px;height:18px;opacity:.5;transition:opacity .18s}
 .tab.active{color:var(--white);background:rgba(14,165,233,.16)}
@@ -116,6 +120,8 @@ body.light .topbar{background:rgba(246,247,251,.96)}
 .match-title{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;line-height:.95;letter-spacing:2px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
 .match-sub{font-size:.75rem;color:#d8e9ff;margin-top:4px;text-shadow:0 1px 8px rgba(0,0,0,.55)}
 .prog-card{background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(15,103,200,.12)),rgba(12,32,61,.88);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 14px 32px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(10px)}
+body.light .prog-card,body.light .g-card,body.light .plan-card,body.light .feed,body.light .swap-guide,body.light .sw-card,body.light .req-card,body.light .trade-sheet,body.light .ranked-row,body.light .settings-card,body.light .more-tools,body.light .hint{background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(245,200,66,.05)),#fff;border-color:rgba(17,24,39,.12);box-shadow:0 10px 24px rgba(17,24,39,.08)}
+body.light .stat{background:#f6f8fc}
 .spark-card{position:relative;overflow:hidden;border:1px solid rgba(245,200,66,.22);border-radius:var(--r);padding:14px;margin:-2px 0 12px;min-height:96px;background:radial-gradient(circle at 88% 20%,rgba(245,200,66,.18),transparent 24%),linear-gradient(115deg,rgba(6,19,38,.92),rgba(15,103,200,.34)),url('assets/07_spares_empty_state.webp') right center/cover,var(--card);box-shadow:0 16px 34px rgba(0,0,0,.22)}
 .spark-card:before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 36%,rgba(255,255,255,.16) 46%,transparent 58%);opacity:.45;animation:sparkSweep 5.8s ease-in-out infinite;pointer-events:none}
 @keyframes sparkSweep{0%,50%{transform:translateX(-85%)}100%{transform:translateX(85%)}}
@@ -164,6 +170,7 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
 /* TEAM BLOCK */
 .tblock{margin-bottom:9px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.1)}
 .thdr{display:flex;align-items:center;justify-content:space-between;padding:12px;background:linear-gradient(90deg,rgba(12,32,61,.98),rgba(15,103,200,.16));cursor:pointer;user-select:none;-webkit-user-select:none}
+body.light .thdr{background:linear-gradient(90deg,rgba(255,255,255,.98),rgba(14,165,233,.10))}
 .thdr:active{background:var(--navy3)}
 .tleft{display:flex;align-items:center;gap:9px}
 .tflag{font-size:1.45rem;line-height:1;filter:drop-shadow(0 2px 5px rgba(0,0,0,.24))}
@@ -176,9 +183,11 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
 .chev{font-size:.68rem;color:var(--muted);transition:transform .2s;margin-left:3px}
 .tblock.open .chev{transform:rotate(180deg)}
 .sgrid{display:none;padding:9px;background:linear-gradient(180deg,rgba(6,19,38,.96),rgba(11,29,56,.98));grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+body.light .sgrid{background:#eef3fb}
 .tblock.open .sgrid{display:grid}
 /* STICKER CARD */
 .sc{height:112px;border-radius:9px;padding:17px 5px 8px;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.08),transparent 42%),linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01)),var(--card);border:1.5px solid var(--border);cursor:pointer;text-align:center;user-select:none;-webkit-user-select:none;transition:transform .1s,border-color .15s,background .15s,box-shadow .15s;-webkit-touch-callout:none;position:relative;display:grid;grid-template-rows:auto 18px 32px;align-content:center;justify-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 5px 14px rgba(0,0,0,.16)}
+body.light .sc{background:radial-gradient(circle at 50% 0,rgba(14,165,233,.10),transparent 42%),#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 5px 14px rgba(17,24,39,.08)}
 .sc:active{transform:scale(.88)}
 .sc.bump{animation:bump .22s ease}
 @keyframes bump{0%,100%{transform:scale(1)}45%{transform:scale(.9) rotate(-1.5deg)}75%{transform:scale(1.04) rotate(1.5deg)}}
@@ -205,6 +214,9 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
 .toast-undo{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:4px 12px;margin-left:10px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer}
 /* SWAPS */
 .sw-hero{background:linear-gradient(135deg,rgba(6,19,38,.50),rgba(14,165,233,.24)),url('assets/09_best_move_card_art.webp') center/cover;border:1px solid rgba(242,247,255,.18);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 14px 30px rgba(0,0,0,.2)}
+body.light .sw-hero,body.light .best-move{background-image:linear-gradient(135deg,rgba(6,19,38,.76),rgba(14,165,233,.34)),url('assets/09_best_move_card_art.webp');color:#fff}
+body.light .sw-hero p,body.light .best-move .bm-sub,body.light .best-move .sw-count,body.light .meetup-note,body.light .req-note,body.light .ts-note,body.light .tip-note,body.light .guide-copy{color:#d8e9ff}
+body.light .best-move .bm-sub b,body.light .guide-step b{color:#fff}
 .sw-hero h2{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:2px;margin-bottom:3px}
 .sw-hero p{color:var(--muted);font-size:.82rem;line-height:1.5}
 .sw-tabs{display:flex;gap:6px;margin-bottom:12px}
@@ -462,7 +474,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 .crown-t{position:relative;font-size:.59rem;font-weight:800;color:var(--gold);line-height:1.15;min-height:1.35em}
 .crown-h{position:relative;font-size:.72rem;font-weight:700;color:var(--white);margin:3px 0 1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .crown-d{font-size:.56rem;color:var(--muted)}
-.wish-star{cursor:pointer;color:var(--navy4);margin-left:4px;font-size:.9rem;-webkit-user-select:none}
+.wish-star{cursor:pointer;color:var(--navy4);margin-left:4px;font-size:.9rem;-webkit-user-select:none;border:0;background:transparent;border-radius:7px;min-width:28px;min-height:28px;display:inline-grid;place-items:center;vertical-align:middle;font-family:'DM Sans',sans-serif}
 .wish-star.on{color:var(--gold);text-shadow:0 0 8px rgba(245,200,66,.6)}
 .rk-fin{font-size:.62rem;font-weight:800;color:var(--owned);background:rgba(34,197,94,.14);border-radius:7px;padding:1px 6px;margin-left:4px}
 .rk-fin.wish{color:var(--gold);background:rgba(245,200,66,.14)}
@@ -575,7 +587,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
         <span class="u-pill-n" id="t-name"></span>
       </div>
       <button class="icon-btn" onclick="enableTilt()" aria-label="Shiny mode" title="Shiny mode">✨</button>
-      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
+      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">☾</button>
     </div>
   </div>
   <div class="tabs">
@@ -638,7 +650,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
           <div class="leg"><div class="ld m"></div>Missing</div>
         </div>
         <div class="ribbon-panel">
-          <div class="frow" id="frow"><div class="chip active" onclick="setFilter('ALL',this)">All Teams</div></div>
+          <div class="frow" id="frow"><button type="button" class="chip active" onclick="setFilter('ALL',this)">All Teams</button></div>
           <div class="status-row">
             <button class="status-chip active" onclick="setStatusFilter('all',this)">All</button>
             <button class="status-chip" onclick="setStatusFilter('missing',this)">⬜ Missing</button>
@@ -1180,6 +1192,10 @@ function partnersRanked(){
 let wishData={};
 function isWish(id){return!!(wishData[me]&&wishData[me][id]);}
 function wishedBy(name,id){return!!(wishData[name]&&wishData[name][id]);}
+function wishButtonHTML(id){
+  const on=isWish(id),label=`${on?'Remove from':'Add to'} wishlist: ${id.replace('-',' ')}`;
+  return`<button type="button" class="wish-star${on?' on':''}" aria-pressed="${on?'true':'false'}" aria-label="${esc(label)}" onclick="event.stopPropagation();toggleWish('${id}')">★</button>`;
+}
 window.toggleWish=function(id){
   if(!me||(!db&&!DEMO_MODE))return;const on=isWish(id);
   wishData[me]=wishData[me]||{};
@@ -1673,8 +1689,8 @@ function render(tab){if(tab==='collection')renderCollection();else if(tab==='swa
 /* ── FILTERS ── */
 function buildFilters(){
   const row=document.getElementById('frow');
-  row.innerHTML='<div class="chip active" onclick="setFilter(\'ALL\',this)">All Teams</div>'+
-    [...ALL,...EXTRAS].map(t=>`<div class="chip" onclick="setFilter('${t.code}',this)">${t.flag} ${t.code}</div>`).join('');
+  row.innerHTML='<button type="button" class="chip active" onclick="setFilter(\'ALL\',this)">All Teams</button>'+
+    [...ALL,...EXTRAS].map(t=>`<button type="button" class="chip" onclick="setFilter('${t.code}',this)">${t.flag} ${t.code}</button>`).join('');
 }
 window.setFilter=function(code,el){activeFilter=code;document.querySelectorAll('#frow .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');if(code!=='ALL')openTeams.add(code);renderCollection();};
 window.expandAll=function(open){const sections=activeFilter==='ALL'?[...ALL,...EXTRAS]:[...ALL,...EXTRAS].filter(t=>t.code===activeFilter);sections.forEach(t=>{if(open)openTeams.add(t.code);else openTeams.delete(t.code);});renderCollection();};
@@ -1739,7 +1755,7 @@ function buildBlock(team,q,isExtra){
     });
   }
   return`<div class="tblock${open?' open':''}${tOwn===tot?' complete':''}" id="tb-${team.code}">
-      <div class="thdr" onclick="toggleTeam('${team.code}')">
+      <div class="thdr" role="button" tabindex="0" aria-expanded="${open?'true':'false'}" onclick="toggleTeam('${team.code}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTeam('${team.code}')}">
         <div class="tleft"><span class="tflag">${team.flag}</span><div><div class="tname">${team.name}</div><div class="tmeta" id="tm-${team.code}">${tOwn}/${tot} in book · ${tDbl} spare${tDbl!==1?'s':''}</div></div></div>
         <div class="tright"><div class="team-actions"><button class="mark-team" onclick="markTeamState('${team.code}','owned',event)">Fill missing</button><button class="mark-team clear-team" onclick="markTeamState('${team.code}','missing',event)">Clear</button></div><span class="tpct" id="tp-${team.code}">${pct}%</span><div class="tmbar"><div class="tmfill" style="width:${pct}%"></div></div><span class="chev">▼</span></div>
       </div>
@@ -1954,7 +1970,7 @@ function tradeSheetHTML(u){
   const fin=teamsCompletedBy(t.get);
   let h=`<div class="trade-sheet"><div class="ts-top">${userAvatarMarkup(u,idx>=0?idx:0,'bm-face')}<span>You ↔ ${esc(displayName(u))}</span>${isOnline(u)?'<span class="dot-on"></span>':''}</div>`;
   if(fin.length)h+=`<div class="ts-fin">🏆 This swap finishes ${fin.map(x=>x.flag+' '+esc(x.name)).join(', ')}!</div>`;
-  h+=`<div class="ts-cols"><div class="ts-col"><div class="ts-h get">You get (${t.get.length})</div>${t.get.length?t.get.map(id=>`<div class="ts-id">${id.replace('-',' ')}<span class="wish-star${isWish(id)?' on':''}" onclick="event.stopPropagation();toggleWish('${id}')">★</span></div>`).join(''):'<div class="ts-none">-</div>'}</div><div class="ts-col"><div class="ts-h give">You give (${t.give.length})</div>${t.give.length?t.give.map(id=>`<div class="ts-id">${id.replace('-',' ')}${wishedBy(u,id)?'<span class="ts-want">⭐</span>':''}</div>`).join(''):'<div class="ts-none">-</div>'}</div></div>`;
+  h+=`<div class="ts-cols"><div class="ts-col"><div class="ts-h get">You get (${t.get.length})</div>${t.get.length?t.get.map(id=>`<div class="ts-id">${id.replace('-',' ')}${wishButtonHTML(id)}</div>`).join(''):'<div class="ts-none">-</div>'}</div><div class="ts-col"><div class="ts-h give">You give (${t.give.length})</div>${t.give.length?t.give.map(id=>`<div class="ts-id">${id.replace('-',' ')}${wishedBy(u,id)?'<span class="ts-want">⭐</span>':''}</div>`).join(''):'<div class="ts-none">-</div>'}</div></div>`;
   if(bal)h+=`<div class="ts-bal">${bal}</div>`;
   h+=`<div class="ts-note"><b>Send this as an offer.</b> Your friend can accept it in the app. Promised spares stay reserved until the offer is cancelled or the completed swap updates your book.</div>`;
   h+=`<div class="ts-btns">`;
@@ -2012,7 +2028,7 @@ function renderSwaps(){
     if(!offers.length)html+=`<div class="empty"><span class="emo">🔍</span>No matches yet.<br>Nobody has spares of stickers you're missing. Invite friends or add more stickers to wake up the swap finder.</div>`;
     else{
       html+=`<p class="sw-count">${offers.length} sticker${offers.length!==1?'s':''} you need - someone has a spare · tap ★ to wishlist</p><div class="tip-note"><b>Tip:</b> Request a single sticker, or send a balanced offer from Best offers.</div>`;
-      offers.forEach(s=>{html+=`<div class="sw-card"><div><div class="sw-id">${s.flag} ${s.code} ${s.num} <span class="wish-star${isWish(s.id)?' on':''}" onclick="event.stopPropagation();toggleWish('${s.id}')">★</span></div><div class="sw-team">${esc(playerName(s.id))} · ${esc(s.tn)}</div></div><div class="sw-who"><div class="sw-wlbl">Has spare</div><div class="wtags">${s.whoHas.map(u=>personTag(u,'has')).join('')}</div><div class="sw-acts"><button class="swp-btn ask" onclick="requestSticker('${s.id}')">Request</button></div></div></div>`;});
+      offers.forEach(s=>{html+=`<div class="sw-card"><div><div class="sw-id">${s.flag} ${s.code} ${s.num} ${wishButtonHTML(s.id)}</div><div class="sw-team">${esc(playerName(s.id))} · ${esc(s.tn)}</div></div><div class="sw-who"><div class="sw-wlbl">Has spare</div><div class="wtags">${s.whoHas.map(u=>personTag(u,'has')).join('')}</div><div class="sw-acts"><button class="swp-btn ask" onclick="requestSticker('${s.id}')">Request</button></div></div></div>`;});
     }
     const mustFind=ids.filter(id=>!haveId(mine,id)&&!others.some(([u])=>u!==me&&availableSparesFor(u,id)>0)).length;
     if(mustFind)html+=`<div class="mustfind">🔎 <b>${mustFind}</b> you still need that nobody has spare yet</div>`;
@@ -2130,7 +2146,7 @@ function renderGroup(){
     const face=userStickerSrc(s.n)?`<img class="g-face" src="${userStickerSrc(s.n)}" alt="${esc(displayName(s.n))}">`:`<span class="g-face-fallback">${s.av}</span>`;
     const badges=badgesFor(s.n),shownBadges=badges.slice(-3),hiddenBadges=badges.length-shownBadges.length;
     html+=`<div class="g-card${isMe?' me':''}">
-      <div class="g-top"><div class="g-name">${face}<span>${esc(displayName(s.n))}</span>${isOnline(s.n)?'<span class="dot-on"></span>':''}${isMe?'<span class="g-you">YOU</span>':''}${!s.started?'<span class="g-new">not started</span>':''}</div><div class="g-right">${!isMe&&s.started?`<button class="nudge-btn" onclick="nudge(decodeURIComponent('${enc(s.n)}'))" title="Nudge to swap">👋</button>`:''}<div class="g-pct">${s.pct}%</div></div></div>
+      <div class="g-top"><div class="g-name">${face}<span>${esc(displayName(s.n))}</span>${isOnline(s.n)?'<span class="dot-on"></span>':''}${isMe?'<span class="g-you">YOU</span>':''}${!s.started?'<span class="g-new">not started</span>':''}</div><div class="g-right">${!isMe&&s.started?`<button class="nudge-btn" onclick="nudge(decodeURIComponent('${enc(s.n)}'))" aria-label="Nudge ${esc(displayName(s.n))} to swap" title="Nudge to swap">👋</button>`:''}<div class="g-pct">${s.pct}%</div></div></div>
       <div class="pbar"><div class="pfill" style="width:${s.pct}%"></div></div>
       <div class="g-stats">
         <div class="g-stat"><div class="g-sv o">${s.own}</div><div class="g-sl">In Book</div></div>

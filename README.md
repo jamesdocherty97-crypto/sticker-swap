@@ -1,5 +1,7 @@
 # Sticker Swap
 
+![Sticker Swap demo flow](docs/demo.gif)
+
 **Create a group. Track your stickers. Find swaps with friends.**
 
 Sticker Swap is a mobile-first web app / PWA for small groups of football sticker
