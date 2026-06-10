@@ -84,6 +84,7 @@ body:after{content:'';position:fixed;inset:0;pointer-events:none;background:line
 .topbar{flex-shrink:0;background:linear-gradient(90deg,rgba(6,19,38,.97),rgba(12,32,61,.92)),url('assets/02_pwa_splash_background.webp') center 44%/cover;backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,200,66,.14);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
 body.light .topbar{background:rgba(246,247,251,.96)}
 .t-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);letter-spacing:2px;text-shadow:0 1px 12px rgba(245,200,66,.22)}
+.demo-pill{display:none;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:1px;background:var(--accent);color:#fff;border-radius:8px;padding:2px 7px;vertical-align:2px;margin-left:6px}
 .t-right{display:flex;align-items:center;gap:6px}
 .u-pill{display:flex;align-items:center;gap:6px;background:var(--navy3);border:1px solid var(--border);border-radius:20px;padding:7px 12px 7px 8px;min-height:40px}
 .u-pill-a{font-size:1rem;display:grid;place-items:center;line-height:1}
@@ -495,8 +496,8 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 </head>
 <body>
 <div id="offline">⚡ Offline - changes are saved here and sync when reconnected</div>
-<div id="toast"></div>
-<div id="saved">Saved ✓</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="saved" role="status">Saved ✓</div>
 
 <!-- LOADING -->
 <div id="s-load" class="screen vis">
@@ -567,7 +568,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 <!-- MAIN APP -->
 <div id="app">
   <div class="topbar">
-    <div class="t-logo">⚽ STICKER SWAP</div>
+    <div class="t-logo">⚽ STICKER SWAP<span class="demo-pill" id="demo-pill">DEMO</span></div>
     <div class="t-right">
       <div class="u-pill">
         <span class="u-pill-a" id="t-avi"></span>
@@ -1427,6 +1428,27 @@ window.enableTilt=function(){
   else go();
 };
 
+/* ── PWA INSTALL ── */
+let _installEvt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_installEvt=e;if(me&&curTab==='group')renderGroup();});
+window.addEventListener('appinstalled',()=>{_installEvt=null;toast('Sticker Swap installed 📲');if(me&&curTab==='group')renderGroup();});
+function isStandalone(){return window.matchMedia?.('(display-mode: standalone)')?.matches||navigator.standalone===true;}
+function isIOS(){return/iphone|ipad|ipod/i.test(navigator.userAgent||'');}
+window.installApp=async function(){
+  if(!_installEvt)return toast('Use your browser menu to install');
+  const e=_installEvt;_installEvt=null;
+  e.prompt();
+  const r=await e.userChoice.catch(()=>null);
+  if(!(r&&r.outcome==='accepted'))_installEvt=e;
+  if(me&&curTab==='group')renderGroup();
+};
+function installHTML(){
+  if(isStandalone())return'';
+  if(_installEvt)return`<div class="share-row"><button class="share-btn" onclick="installApp()">📲 Install the app</button></div>`;
+  if(isIOS())return`<div class="settings-copy" style="margin-bottom:0">📲 Install: tap Share, then "Add to Home Screen".</div>`;
+  return'';
+}
+
 /* ── BOOT ── */
 function ensureAnonAuth(){
   return new Promise((resolve,reject)=>{
@@ -1541,8 +1563,20 @@ window.joinGroup=function(){enterGroup(document.getElementById('group-input')?.v
 window.copyInvite=async function(){
   if(!currentGroup)return toast('Create or join a group first');
   const text=`Join my Sticker Swap group - we're tracking our albums and finding swaps together. Code ${currentGroup}: ${inviteUrl()}`;
+  if(navigator.share){try{await navigator.share({text});return;}catch(e){if(e?.name==='AbortError')return;}}
   try{await navigator.clipboard.writeText(text);toast('Invite link copied');}
   catch(e){prompt('Copy this invite link',text);}
+};
+// Viral loop: share what swapping could unlock for the whole group
+window.shareStatus=async function(){
+  if(!currentGroup)return toast('Create or join a group first');
+  const fill=getNames().length>1?computePlan().fill:0;
+  const text=fill>0
+    ?`Our Sticker Swap group has ${fill} swap${fill!==1?'s':''} waiting to fill our albums. Join us - code ${currentGroup}: ${inviteUrl()}`
+    :`Join my Sticker Swap group - we're tracking our albums and finding swaps together. Code ${currentGroup}: ${inviteUrl()}`;
+  if(navigator.share){try{await navigator.share({text});return;}catch(e){if(e?.name==='AbortError')return;}}
+  try{await navigator.clipboard.writeText(text);toast('Group status copied 📣');}
+  catch(e){prompt('Copy this',text);}
 };
 window.leaveGroup=function(){
   if(!confirm('Leave this group on this device? Your sticker data stays in the group.'))return;
@@ -1618,6 +1652,7 @@ function launchApp(){
   document.getElementById('t-avi').innerHTML=userAvatarMarkup(me,i>=0?i:0,'pill-avatar');
   document.getElementById('t-name').textContent=displayName(me);
   document.getElementById('app').classList.add('vis');
+  const dp=document.getElementById('demo-pill');if(dp)dp.style.display=DEMO_MODE?'inline-block':'none';
   applyTheme(localStorage.getItem('theme')||'dark');
   migrateWish();buildFilters();buildPersonFilter();refresh();renderHeatmap();startPresence();
   if(dataLoaded)baselineAch();
@@ -1663,6 +1698,7 @@ function buildPersonFilter(){
   sel.value=keep;
 }
 window.setPersonFilter=function(v){personFilter=v;renderSwaps();};
+window.viewTrade=function(u){personFilter=u;const s=document.getElementById('person-filter');if(s)s.value=u;renderSwaps();const p=document.getElementById('panel-swaps');if(p)p.scrollTo({top:0,behavior:reduceMotion()?'auto':'smooth'});};
 window.setEntryMode=function(mode){
   entryMode=mode;
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
@@ -1946,7 +1982,7 @@ function bestSwapHTML(){
     <div class="bm-name">${userAvatarMarkup(best.u,idx>=0?idx:0,'bm-face')}<span>You ↔ ${esc(displayName(best.u))}</span>${isOnline(best.u)?'<span class="dot-on"></span>':''}</div>
     <div class="bm-sub">You get <b>${t.get.length}</b>, give <b>${t.give.length}</b>${fin.length?` · finishes <b>${fin.map(x=>esc(x.name)).join(', ')}</b>`:''}${wish?` · <b>${wish}</b> wishlist`:''}</div>
     <div class="meetup-note"><b>Best offer to send.</b> It reserves your promised spares. If ${esc(displayName(best.u))} accepts, swap in person and both confirm.</div>
-    <div class="bm-actions">${open?`<button class="bm-btn" disabled>Offer pending...</button>`:`<button class="bm-btn" onclick="proposeSwap(decodeURIComponent('${enc(best.u)}'))">Send offer</button>`}</div>
+    <div class="bm-actions">${open?`<button class="bm-btn" disabled>Offer pending...</button>`:`<button class="bm-btn" onclick="proposeSwap(decodeURIComponent('${enc(best.u)}'))">Send offer</button>`}<button class="bm-btn ghost" onclick="viewTrade(decodeURIComponent('${enc(best.u)}'))">View trade</button></div>
   </div>`;
 }
 function renderSwaps(){
@@ -2037,7 +2073,9 @@ function groupSettingsHTML(){
     <div class="settings-card-body">
       <div class="settings-code">${esc(currentGroup)}</div>
       <div class="settings-copy">${DEMO_MODE?'Demo data stays in this browser.':'Share this invite code with friends, then meet up to swap in person.'}</div>
-      <div class="share-row"><button class="share-btn" onclick="copyInvite()">🔗 Invite link</button><button class="share-btn" onclick="doSwitch()">👤 Profile</button></div>
+      <div class="share-row"><button class="share-btn" onclick="copyInvite()">🔗 Invite link</button><button class="share-btn" onclick="shareStatus()">📣 Share status</button></div>
+      <div class="share-row"><button class="share-btn" onclick="doSwitch()">👤 Profile</button></div>
+      ${installHTML()}
       <div class="share-row"><button class="share-btn" onclick="leaveGroup()">Leave group</button><button class="share-btn danger" onclick="deleteMyData()">Delete my data</button>${DEMO_MODE?'<button class="share-btn" onclick="resetDemo()">Reset demo</button>':''}</div>
       <div class="legal-note">Unofficial fan tool. Not affiliated with or endorsed by any sticker publisher, federation, or tournament.</div>
     </div>
