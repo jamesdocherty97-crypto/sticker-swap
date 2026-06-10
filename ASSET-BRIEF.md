@@ -57,7 +57,8 @@ These assets were added after the public MVP creative audit on 10 June 2026.
 
 | Asset | Purpose | Where used now | Size |
 | --- | --- | --- | --- |
-| `og-share.png` | Social and invite-link preview image | Open Graph and Twitter preview meta tags | about 229 KB |
+| `og-share.jpg` | Social and invite-link preview image | Open Graph and Twitter preview meta tags | about 90 KB |
+| `assets/share-slide-background.webp` | Generated source/background for the social share image | Source asset for future share-card refreshes | about 58 KB |
 | `assets/empty-calm-state.webp` | Calm before-state for no stickers, no spares, no swaps | Empty states across Collection, Swaps, and Group | about 67 KB |
 | `assets/milestone-clean.webp` | Clean single-subject foil reward | Achievement, milestone, team-complete, and swap-complete pop-ups | about 62 KB |
 | `assets/onboard-portrait.webp` | Portrait-safe onboarding background | Create/join and profile setup screens | about 117 KB |

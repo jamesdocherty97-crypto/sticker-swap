@@ -53,7 +53,7 @@ This is a static app:
 - Do not deploy `firebase-config.example.js` as the live config.
 - Confirm `firebase-config.js` contains the public Firebase web config for the fresh public MVP project, not emulator config and never service-account JSON.
 - After Netlify deploy, test the live URL on iPhone Safari and Android Chrome before sharing with beta users.
-- After deploy, update the `og:image` and `twitter:image` meta tags in `index.html` to the absolute live URL (e.g. `https://your-site.example/og-share.png`) and add `og:url`, otherwise share previews will not show the image.
+- After deploy, update the `og:image` and `twitter:image` meta tags in `index.html` to the absolute live URL (e.g. `https://your-site.example/og-share.jpg`) and add `og:url`, otherwise share previews will not show the image.
 
 ## Suggested Owner Commands
 

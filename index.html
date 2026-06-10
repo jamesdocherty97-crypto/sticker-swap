@@ -10,15 +10,15 @@
 <meta name="description" content="Create a group, track your stickers, and find swaps with friends.">
 <!-- Owner note: social platforms need ABSOLUTE URLs for share images.
      After deploying, change og:image / twitter:image to the full live URL,
-     e.g. https://your-site.example/og-share.png, and add og:url. -->
+     e.g. https://your-site.example/og-share.jpg, and add og:url. -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sticker Swap">
 <meta property="og:description" content="Create a group. Track your stickers. Find swaps with friends.">
-<meta property="og:image" content="og-share.png">
+<meta property="og:image" content="og-share.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sticker Swap">
 <meta name="twitter:description" content="Create a group. Track your stickers. Find swaps with friends.">
-<meta name="twitter:image" content="og-share.png">
+<meta name="twitter:image" content="og-share.jpg">
 <title>Sticker Swap - Matchday Album Companion</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -40,7 +40,9 @@ body:after{content:'';position:fixed;inset:0;pointer-events:none;background:line
 .screen.vis{display:flex}
 /* LOADING */
 #s-load{align-items:center;justify-content:center;gap:14px;z-index:999}
-.logo-t{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--gold);letter-spacing:4px;line-height:1}
+.logo-t{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--white);letter-spacing:3px;line-height:1}
+.logo-t b,.t-logo b{font-weight:400;background:linear-gradient(105deg,#e8b73a 0%,#ffe9a3 26%,#f5c842 50%,#d9a52e 72%,#ffe066 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 8px rgba(245,200,66,.32))}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){.logo-t b,.t-logo b{background:none;color:var(--gold)}}
 .logo-s{color:var(--muted);font-size:.8rem;letter-spacing:2px;text-transform:uppercase}
 .spin{width:32px;height:32px;border:3px solid var(--navy3);border-top-color:var(--red);border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -48,6 +50,8 @@ body:after{content:'';position:fixed;inset:0;pointer-events:none;background:line
 #s-cfg{padding:24px 18px;align-items:stretch}
 #s-group{padding:24px 18px;align-items:stretch;background:linear-gradient(180deg,rgba(6,19,38,.20),rgba(6,19,38,.94) 68%),url('assets/onboard-portrait.webp') center top/cover no-repeat}
 .cfg-w{max-width:540px;width:100%;margin:0 auto}
+.brand-icon{width:48px;height:48px;border-radius:12px;object-fit:cover;box-shadow:0 10px 24px rgba(0,0,0,.24),0 0 0 1px rgba(245,200,66,.16)}
+.cfg-w>.brand-icon,.u-hero>.brand-icon{width:62px;height:62px;border-radius:16px;margin:0 auto 10px;display:block}
 .cfg-t{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold);letter-spacing:3px;margin-bottom:6px;margin-top:8px}
 .cfg-sub{color:var(--muted);font-size:.88rem;line-height:1.6;margin-bottom:20px}
 .cfg-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px}
@@ -86,7 +90,8 @@ body:after{content:'';position:fixed;inset:0;pointer-events:none;background:line
 .topbar{flex-shrink:0;background:linear-gradient(90deg,rgba(6,19,38,.97),rgba(12,32,61,.92)),url('assets/02_pwa_splash_background.webp') center 44%/cover;backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,200,66,.14);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
 body.light .topbar{background:rgba(246,247,251,.96)}
 body.light .u-pill,body.light .icon-btn{background:#fff;box-shadow:0 4px 14px rgba(17,24,39,.08)}
-.t-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);letter-spacing:2px;text-shadow:0 1px 12px rgba(245,200,66,.22)}
+.t-logo{display:flex;align-items:center;gap:8px;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--white);letter-spacing:1.4px;text-shadow:0 1px 12px rgba(245,200,66,.16);white-space:nowrap}
+.t-logo .brand-icon{width:32px;height:32px;border-radius:9px;flex:0 0 auto}
 .demo-pill{display:none;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:1px;background:var(--accent);color:#fff;border-radius:8px;padding:2px 7px;vertical-align:2px;margin-left:6px}
 .t-right{display:flex;align-items:center;gap:6px}
 .u-pill{display:flex;align-items:center;gap:6px;background:var(--navy3);border:1px solid var(--border);border-radius:20px;padding:7px 12px 7px 8px;min-height:40px}
@@ -513,14 +518,16 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 
 <!-- LOADING -->
 <div id="s-load" class="screen vis">
-  <div class="logo-t">STICKER SWAP</div>
-  <div class="logo-s">Group sticker tracker</div>
+  <img class="brand-icon" src="icon.svg" alt="">
+  <div class="logo-t">Sticker <b>Swap</b></div>
+  <div class="logo-s">Matchday album companion</div>
   <div class="spin"></div>
 </div>
 
 <!-- CONFIG -->
 <div id="s-cfg" class="screen">
   <div class="cfg-w">
+    <img class="brand-icon" src="icon.svg" alt="" style="margin-top:6px">
     <div class="cfg-t">App not configured</div>
     <div class="cfg-sub">Sticker Swap is not connected yet. The owner needs to finish setup before live groups can be used.</div>
     <div class="cfg-box">
@@ -539,7 +546,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 <!-- GROUP GATE -->
 <div id="s-group" class="screen">
   <div class="cfg-w" style="margin:auto;text-align:center">
-    <div style="font-size:2.6rem;margin-bottom:8px">⚽</div>
+    <img class="brand-icon" src="icon.svg" alt="">
     <div class="cfg-t" style="text-align:center">Start your sticker group</div>
     <div class="cfg-sub" style="text-align:center">Your friends already have the stickers you need. Sticker Swap finds the best trade.</div>
     <div class="cfg-box">
@@ -565,7 +572,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 <!-- USER SELECT -->
 <div id="s-user" class="screen">
   <div class="u-hero">
-    <div style="font-size:2.8rem;margin-bottom:10px">⚽</div>
+    <img class="brand-icon" src="icon.svg" alt="">
     <h1>YOUR PROFILE</h1>
     <p>Choose the name friends will see in this group</p>
   </div>
@@ -580,7 +587,7 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
 <!-- MAIN APP -->
 <div id="app">
   <div class="topbar">
-    <div class="t-logo">⚽ STICKER SWAP<span class="demo-pill" id="demo-pill">DEMO</span></div>
+    <div class="t-logo"><img class="brand-icon" src="icon.svg" alt="">Sticker <b>Swap</b><span class="demo-pill" id="demo-pill">DEMO</span></div>
     <div class="t-right">
       <div class="u-pill">
         <span class="u-pill-a" id="t-avi"></span>

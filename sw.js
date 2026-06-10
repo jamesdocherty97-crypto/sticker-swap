@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sticker-swap-public-v8';
+const CACHE_NAME = 'sticker-swap-public-v9';
 
 // App shell. index.html is fetched network-first (see below), so a redeploy
 // always reaches phones without needing this version string bumped.
@@ -13,7 +13,7 @@ const APP_SHELL = [
   './icon-512.png',
   './icon-180.png',
   './icon-maskable-512.png',
-  './og-share.png',
+  './og-share.jpg',
   './assets/01_app_icon.webp',
   './assets/02_pwa_splash_background.webp',
   './assets/03_landing_hero.webp',
@@ -29,6 +29,7 @@ const APP_SHELL = [
   './assets/13_completion_milestone_art.webp',
   './assets/14_social_share_card_background.webp',
   './assets/15_store_screenshot_background.webp',
+  './assets/share-slide-background.webp',
   './assets/empty-calm-state.webp',
   './assets/milestone-clean.webp',
   './assets/onboard-portrait.webp'
