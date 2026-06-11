@@ -1,11 +1,11 @@
 :root {
-  --ss-pitch-midnight: #07110f;
-  --ss-pitch-deep: #10231f;
-  --ss-pitch-line: #2f6f5c;
+  --ss-pitch-midnight: #07182e;
+  --ss-pitch-deep: #0d2c46;
+  --ss-pitch-line: #3f8f9c;
   --ss-paper-cream: #f7efd9;
   --ss-paper-warm: #eadfbd;
-  --ss-foil-gold: #f6d779;
-  --ss-foil-bright: #fff2b8;
-  --ss-swap-teal: #35d0be;
-  --ss-swap-coral: #ff7a5f;
+  --ss-foil-gold: #ffd24d;
+  --ss-foil-bright: #ffe7a0;
+  --ss-swap-teal: #2fe0cf;
+  --ss-swap-coral: #ff6a4d;
 }
