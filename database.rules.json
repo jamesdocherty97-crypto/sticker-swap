@@ -1,0 +1,72 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "groups": {
+      "$group": {
+        "meta": {
+          ".read": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/)",
+          ".write": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && !data.exists() && newData.child('createdBy').val() === auth.uid",
+          ".validate": "newData.hasChildren(['code', 'createdAt', 'createdBy', 'joinOpen', 'albumId']) && newData.child('code').val() === $group && newData.child('createdAt').isNumber() && newData.child('createdBy').val() === auth.uid && newData.child('joinOpen').isBoolean() && newData.child('albumId').isString() && newData.child('albumId').val().length <= 40"
+        },
+        "members": {
+          ".read": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+          "$uid": {
+            ".read": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && (auth.uid === $uid || root.child('groups').child($group).child('members').child(auth.uid).exists())",
+            ".write": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && auth.uid === $uid && (!newData.exists() || data.exists() || root.child('groups').child($group).child('meta').child('joinOpen').val() === true)",
+            ".validate": "!newData.exists() || (newData.hasChildren(['displayName', 'role', 'joinedAt', 'lastSeenAt']) && newData.child('displayName').isString() && newData.child('displayName').val().length >= 1 && newData.child('displayName').val().length <= 40 && newData.child('role').isString() && (newData.child('role').val() === 'member' || newData.child('role').val() === 'owner') && newData.child('joinedAt').isNumber() && newData.child('lastSeenAt').isNumber())"
+          }
+        },
+        "collections": {
+          ".read": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+          "$uid": {
+            ".write": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && auth.uid === $uid && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+            "$sticker": {
+              ".validate": "$sticker.matches(/^[A-Z0-9]{3,4}-[0-9]{1,2}$/) && (!newData.exists() || (newData.isNumber() && newData.val() >= 1 && newData.val() <= 99))"
+            }
+          }
+        },
+        "wish": {
+          ".read": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+          "$uid": {
+            ".write": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && auth.uid === $uid && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+            "$sticker": {
+              ".validate": "$sticker.matches(/^[A-Z0-9]{3,4}-[0-9]{1,2}$/) && (!newData.exists() || newData.val() === true)"
+            }
+          }
+        },
+        "presence": {
+          ".read": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+          "$uid": {
+            ".write": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && auth.uid === $uid && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+            ".validate": "!newData.exists() || (newData.isNumber() && newData.val() >= 1000000000000 && newData.val() <= 9999999999999)"
+          }
+        },
+        "feed": {
+          ".read": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+          "$feedId": {
+            ".write": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && root.child('groups').child($group).child('members').child(auth.uid).exists() && newData.child('uid').val() === auth.uid",
+            ".validate": "!newData.exists() || (newData.hasChildren(['uid', 'displayName', 'text', 'ts']) && newData.child('uid').val() === auth.uid && newData.child('displayName').isString() && newData.child('displayName').val().length >= 1 && newData.child('displayName').val().length <= 40 && newData.child('text').isString() && newData.child('text').val().length >= 1 && newData.child('text').val().length <= 160 && newData.child('ts').isNumber() && newData.child('ts').val() >= 1000000000000 && newData.child('ts').val() <= 9999999999999)"
+          }
+        },
+        "swaps": {
+          ".read": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && root.child('groups').child($group).child('members').child(auth.uid).exists()",
+          "$swapId": {
+            ".write": "auth != null && $group.matches(/^[A-Z0-9]{4,10}$/) && root.child('groups').child($group).child('members').child(auth.uid).exists() && ((!data.exists() && newData.exists() && newData.child('fromUid').val() === auth.uid && newData.child('status').val() === 'proposed') || (data.exists() && !newData.exists() && (data.child('fromUid').val() === auth.uid || data.child('toUid').val() === auth.uid)) || (data.exists() && newData.exists() && newData.child('fromUid').val() === data.child('fromUid').val() && newData.child('toUid').val() === data.child('toUid').val() && newData.child('createdAt').val() === data.child('createdAt').val() && newData.child('fromName').val() === data.child('fromName').val() && newData.child('toName').val() === data.child('toName').val() && ((data.child('status').val() === 'proposed' && newData.child('status').val() === 'accepted' && auth.uid === data.child('toUid').val()) || (data.child('status').val() === 'proposed' && newData.child('status').val() === 'declined' && auth.uid === data.child('toUid').val()) || ((data.child('status').val() === 'proposed' || data.child('status').val() === 'accepted') && newData.child('status').val() === 'cancelled' && (auth.uid === data.child('fromUid').val() || auth.uid === data.child('toUid').val())) || (data.child('status').val() === 'accepted' && auth.uid === data.child('fromUid').val() && data.child('fromDone').val() !== true && newData.child('fromDone').val() === true && newData.child('toDone').val() === data.child('toDone').val() && ((data.child('toDone').val() === true && newData.child('status').val() === 'done') || (data.child('toDone').val() !== true && newData.child('status').val() === 'accepted'))) || (data.child('status').val() === 'accepted' && auth.uid === data.child('toUid').val() && data.child('toDone').val() !== true && newData.child('toDone').val() === true && newData.child('fromDone').val() === data.child('fromDone').val() && ((data.child('fromDone').val() === true && newData.child('status').val() === 'done') || (data.child('fromDone').val() !== true && newData.child('status').val() === 'accepted'))) || (data.child('status').val() === 'done' && newData.child('status').val() === 'done' && newData.child('fromDone').val() === data.child('fromDone').val() && newData.child('toDone').val() === data.child('toDone').val() && ((auth.uid === data.child('fromUid').val() && data.child('fromApplied').val() !== true && newData.child('fromApplied').val() === true && newData.child('toApplied').val() === data.child('toApplied').val()) || (auth.uid === data.child('toUid').val() && data.child('toApplied').val() !== true && newData.child('toApplied').val() === true && newData.child('fromApplied').val() === data.child('fromApplied').val()))))))",
+            ".validate": "!newData.exists() || (newData.hasChildren(['fromUid', 'toUid', 'fromName', 'toName', 'give', 'get', 'status', 'createdAt', 'updatedAt']) && newData.child('fromUid').isString() && newData.child('toUid').isString() && newData.child('fromUid').val() !== newData.child('toUid').val() && newData.child('fromName').isString() && newData.child('fromName').val().length >= 1 && newData.child('fromName').val().length <= 40 && newData.child('toName').isString() && newData.child('toName').val().length >= 1 && newData.child('toName').val().length <= 40 && (newData.child('status').val() === 'proposed' || newData.child('status').val() === 'accepted' || newData.child('status').val() === 'done' || newData.child('status').val() === 'declined' || newData.child('status').val() === 'cancelled') && newData.child('createdAt').isNumber() && newData.child('createdAt').val() >= 1000000000000 && newData.child('createdAt').val() <= 9999999999999 && newData.child('updatedAt').isNumber() && newData.child('updatedAt').val() >= 1000000000000 && newData.child('updatedAt').val() <= 9999999999999)",
+            "give": {
+              "$idx": {
+                ".validate": "$idx.matches(/^[0-9]+$/) && newData.isString() && newData.val().matches(/^[A-Z0-9]{3,4}-[0-9]{1,2}$/)"
+              }
+            },
+            "get": {
+              "$idx": {
+                ".validate": "$idx.matches(/^[0-9]+$/) && newData.isString() && newData.val().matches(/^[A-Z0-9]{3,4}-[0-9]{1,2}$/)"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

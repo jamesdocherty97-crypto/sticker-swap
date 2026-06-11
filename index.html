@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07110f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sticker Swap">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Create a group, track your stickers, and find swaps with friends.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sticker Swap">
+<meta property="og:description" content="Create a group. Track your stickers. Find swaps with friends.">
+<meta property="og:image" content="og-share.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sticker Swap">
+<meta name="twitter:description" content="Create a group. Track your stickers. Find swaps with friends.">
+<meta name="twitter:image" content="og-share.png">
+<title>Sticker Swap - Matchday Foil Table</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pitch-midnight:#07110f;--pitch-deep:#10231f;--pitch-line:#2f6f5c;--paper-cream:#f7efd9;--paper-warm:#eadfbd;--foil-gold:#f6d779;--foil-bright:#fff2b8;--swap-teal:#35d0be;--swap-coral:#ff7a5f;--ink:#f7efd9;--muted:#9bb8aa;--owned:#34d399;--doubler:#f6d779;--accent:#35d0be;--danger:#ff7a5f;--danger2:#ff9b84;--card:#132822;--border:rgba(247,239,217,0.12);--r:14px;--navy:var(--pitch-midnight);--navy2:var(--pitch-deep);--navy3:#19342e;--navy4:#2f6f5c;--gold:var(--foil-gold);--gold2:var(--foil-bright);--white:var(--ink)}
+body.light{--pitch-midnight:#f8f3e6;--pitch-deep:#eee4cd;--pitch-line:#aac6b5;--ink:#17221f;--muted:#65766d;--card:#fffaf0;--border:rgba(23,34,31,0.13);--navy:var(--pitch-midnight);--navy2:var(--pitch-deep);--navy3:#e5d8bc;--navy4:#aac6b5;--white:var(--ink)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;min-height:100%;overflow:hidden}
+body{background:var(--navy);color:var(--white);font-family:'DM Sans',sans-serif}
+body:before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 8%,rgba(14,165,233,.25),transparent 30%),radial-gradient(circle at 84% 0,rgba(245,200,66,.18),transparent 24%),linear-gradient(rgba(6,19,38,.58),rgba(6,19,38,.92)),url('assets/02_pwa_splash_background.webp') center/cover;z-index:-1}
+body:after{content:'';position:fixed;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 42%,rgba(255,255,255,.05) 48%,transparent 56%);will-change:transform;animation:sweep 14s ease-in-out infinite;z-index:-1}
+@keyframes sweep{0%,55%{transform:translateX(-75%)}100%{transform:translateX(75%)}}
+.screen{position:fixed;inset:0;z-index:10;overflow-y:auto;background:var(--navy);display:none;flex-direction:column;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.screen.vis{display:flex}
+/* LOADING */
+#s-load{align-items:center;justify-content:center;gap:14px;z-index:999}
+.logo-t{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--gold);letter-spacing:4px;line-height:1}
+.logo-s{color:var(--muted);font-size:.8rem;letter-spacing:2px;text-transform:uppercase}
+.spin{width:32px;height:32px;border:3px solid var(--navy3);border-top-color:var(--danger);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* CONFIG */
+#s-cfg{padding:24px 18px;align-items:stretch}
+#s-group{padding:24px 18px;align-items:stretch;background:linear-gradient(180deg,rgba(6,19,38,.20),rgba(6,19,38,.94) 68%),url('assets/onboard-portrait.webp') center top/cover no-repeat}
+.cfg-w{max-width:540px;width:100%;margin:0 auto}
+.cfg-t{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold);letter-spacing:3px;margin-bottom:6px;margin-top:8px}
+.cfg-sub{color:var(--muted);font-size:.88rem;line-height:1.6;margin-bottom:20px}
+.cfg-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px}
+.cfg-num{font-size:.7rem;color:var(--danger);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:700}
+.cfg-box p{color:var(--muted);font-size:.86rem;line-height:1.65}
+.cfg-box a{color:var(--gold);text-decoration:none}
+.cfg-box code{background:var(--navy3);padding:1px 7px;border-radius:5px;font-size:.82rem;color:var(--gold2);font-family:monospace}
+.cfg-ins{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+.cfg-ins label{font-size:.75rem;color:var(--muted);font-weight:600;letter-spacing:.5px;margin-bottom:-5px}
+.cfg-ins input{background:var(--navy2);border:1.5px solid var(--border);border-radius:10px;padding:11px 13px;color:var(--white);font-family:monospace;font-size:.82rem;outline:none;transition:border-color .2s}
+.cfg-ins input:focus{border-color:var(--gold)}
+.cfg-ins input::placeholder{color:var(--muted)}
+.btn-p{background:var(--danger);border:none;border-radius:11px;padding:14px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;width:100%;margin-top:10px;transition:background .15s}
+.btn-p:active{background:var(--danger2)}
+.cfg-err{color:var(--danger2);font-size:.82rem;margin-top:8px;display:none;padding:8px 12px;background:rgba(255,122,95,.1);border-radius:8px;border:1px solid rgba(255,122,95,.2)}
+/* USER */
+#s-user{padding:calc(28px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));align-items:center;background:linear-gradient(180deg,rgba(6,19,38,.16),var(--navy) 62%),url('assets/onboard-portrait.webp') center top/cover no-repeat}
+.u-hero{text-align:center;margin-bottom:28px;margin-top:10px}
+.u-hero h1{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--white);letter-spacing:4px;line-height:1;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.u-hero p{color:#d8e9ff;margin-top:8px;font-size:.9rem;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+.u-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:420px}
+.u-btn{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),rgba(12,32,61,.88);border:2px solid rgba(255,255,255,.13);border-radius:15px;padding:8px 8px 12px;cursor:pointer;text-align:center;color:var(--white);font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;transition:all .18s;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.07);backdrop-filter:blur(10px)}
+.u-btn:hover,.u-btn:active{border-color:var(--gold);background:rgba(18,52,95,.92);transform:translateY(-1px)}
+.u-sticker{width:100%;aspect-ratio:3/4;border-radius:10px;object-fit:cover;display:block;margin-bottom:9px;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 18px rgba(0,0,0,.2)}
+.u-avi{font-size:1.9rem;margin-bottom:7px}
+.u-cnt{font-size:.68rem;color:var(--muted);font-weight:400;margin-top:2px}
+.add-row{display:flex;gap:8px;width:100%;max-width:420px;margin-top:14px}
+.add-row input{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none}
+.add-row input:focus{border-color:var(--gold)}
+.add-row input::placeholder{color:var(--muted)}
+.btn-add{background:var(--danger);border:none;border-radius:10px;padding:11px 18px;color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;font-size:.9rem}
+.sync-note{max-width:420px;color:var(--muted);font-size:.72rem;line-height:1.45;margin-top:10px;text-align:center}
+/* APP */
+#app{display:none;flex-direction:column;height:100%;min-height:100dvh;overflow:hidden}
+#app.vis{display:flex}
+.topbar{flex-shrink:0;background:linear-gradient(90deg,rgba(6,19,38,.97),rgba(12,32,61,.92)),url('assets/02_pwa_splash_background.webp') center 44%/cover;backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,200,66,.14);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
+body.light .topbar{background:rgba(246,247,251,.96)}
+.t-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);letter-spacing:2px;text-shadow:0 1px 12px rgba(245,200,66,.22);display:flex;align-items:center;gap:7px}
+.t-logo img{width:22px;height:22px;display:block}
+.gate-motif{display:block;margin:0 auto 10px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.38))}
+.t-right{display:flex;align-items:center;gap:6px}
+.u-pill{display:flex;align-items:center;gap:6px;background:var(--navy3);border:1px solid var(--border);border-radius:20px;padding:7px 12px 7px 8px;min-height:40px}
+.u-pill-a{font-size:1rem;display:grid;place-items:center;line-height:1}
+.pill-avatar{width:24px;height:24px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.2);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.u-pill-n{font-size:.78rem;font-weight:600;color:var(--white)}
+.btn-sw{background:transparent;border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer}
+.btn-sw:hover{color:var(--white)}
+.icon-btn{width:40px;height:40px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.035);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:1rem;cursor:pointer;display:grid;place-items:center}
+.icon-btn:hover{color:var(--white)}
+/* TABS */
+.tabs{order:2;flex-shrink:0;display:flex;background:linear-gradient(180deg,rgba(6,19,38,.88),rgba(6,19,38,.98));border-top:1px solid var(--border);padding:6px 8px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -12px 28px rgba(0,0,0,.24)}
+.tab{flex:1;min-height:54px;padding:8px 4px 7px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;border-radius:12px;transition:background .18s,color .18s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.tab svg{width:18px;height:18px;opacity:.5;transition:opacity .18s}
+.tab.active{color:var(--white);background:rgba(14,165,233,.16)}
+.tab.active svg{opacity:1}
+.t-badge{background:var(--danger);color:#fff;font-size:.58rem;font-weight:700;padding:1px 5px;border-radius:10px;line-height:1.5;min-width:16px;text-align:center}
+.panels{order:1;flex:1;overflow:hidden;position:relative}
+.panel{position:absolute;inset:0;overflow-y:auto;padding:14px 14px calc(120px + env(safe-area-inset-bottom));display:none;-webkit-overflow-scrolling:touch;scroll-padding-bottom:calc(140px + env(safe-area-inset-bottom))}
+.panel.active{display:block}
+.panel::-webkit-scrollbar{width:3px}
+.panel::-webkit-scrollbar-thumb{background:var(--navy4);border-radius:3px}
+/* COLLECTION */
+.match-hero,.page-hero{position:relative;overflow:hidden;border:1px solid rgba(242,247,255,.13);border-radius:var(--r);padding:16px;margin-bottom:12px;min-height:122px;display:flex;flex-direction:column;justify-content:flex-end;background-position:center;background-size:cover;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.match-hero{background-image:linear-gradient(135deg,rgba(6,19,38,.44),rgba(14,165,233,.20)),url('assets/06_collection_empty_state.webp')}
+.page-hero.swaps{background-image:linear-gradient(135deg,rgba(6,19,38,.48),rgba(14,165,233,.22)),url('assets/09_best_move_card_art.webp')}
+.page-hero.group{background-image:linear-gradient(135deg,rgba(6,19,38,.54),rgba(14,165,233,.22)),url('assets/12_group_progress_art.webp')}
+.match-hero:after,.page-hero:after{content:'';position:absolute;inset:auto 0 0 0;height:4px;background:linear-gradient(90deg,var(--accent),#fff,var(--accent),var(--gold))}
+.match-kicker{font-size:.64rem;font-weight:900;letter-spacing:1.8px;text-transform:uppercase;color:#d8e9ff;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+.match-title{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;line-height:.95;letter-spacing:2px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.match-sub{font-size:.75rem;color:#d8e9ff;margin-top:4px;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+.prog-card{background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(15,103,200,.12)),rgba(12,32,61,.88);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 14px 32px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(10px)}
+.spark-card{position:relative;overflow:hidden;border:1px solid rgba(245,200,66,.22);border-radius:var(--r);padding:14px;margin:-2px 0 12px;min-height:96px;background:radial-gradient(circle at 88% 20%,rgba(245,200,66,.18),transparent 24%),linear-gradient(115deg,rgba(6,19,38,.92),rgba(15,103,200,.34)),url('assets/07_spares_empty_state.webp') right center/cover,var(--card);box-shadow:0 16px 34px rgba(0,0,0,.22)}
+.spark-card:before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 36%,rgba(255,255,255,.16) 46%,transparent 58%);opacity:.45;animation:sparkSweep 5.8s ease-in-out infinite;pointer-events:none}
+@keyframes sparkSweep{0%,50%{transform:translateX(-85%)}100%{transform:translateX(85%)}}
+.spark-k{position:relative;font-size:.62rem;color:var(--gold);font-weight:900;letter-spacing:1.8px;text-transform:uppercase}
+.spark-t{position:relative;font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1.5px;line-height:.95;color:#fff;margin-top:4px;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.spark-s{position:relative;color:#d8e9ff;font-size:.75rem;margin-top:5px;max-width:62%;line-height:1.35;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+.prog-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.prog-lbl{font-size:.78rem;color:var(--muted)}
+.prog-num{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--gold);letter-spacing:1px}
+.pbar{height:7px;background:var(--navy3);border-radius:4px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .4s ease}
+.stat-row{display:flex;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;gap:6px}
+.stat{flex:1;text-align:center;background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:9px;padding:8px 4px}
+.sv{font-weight:900;font-size:1.04rem}
+.sv.g{color:var(--owned)}.sv.y{color:var(--doubler)}.sv.m{color:var(--muted)}
+.sl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:9px;padding:0 2px}
+.leg{display:flex;align-items:center;gap:5px;font-size:.73rem;color:var(--muted)}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.ld.o{background:var(--owned)}.ld.d{background:var(--doubler)}.ld.m{background:var(--navy4);border:1px solid var(--border)}
+.hint{font-size:.71rem;color:var(--muted);margin-bottom:10px;padding:8px 11px;background:var(--card);border-radius:8px;border:1px solid var(--border);line-height:1.55}
+.entry-card{position:sticky;top:0;z-index:4;background:linear-gradient(135deg,rgba(15,103,200,.24),rgba(245,200,66,.11)),rgba(12,32,61,.9);border:1px solid rgba(242,247,255,.16);border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:0 14px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}
+body.light .entry-card{background:rgba(255,255,255,.92)}
+.entry-title{font-size:.68rem;color:var(--gold);font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.entry-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mode-btn{min-height:44px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+.mode-btn.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(245,200,66,.2),0 8px 20px rgba(0,0,0,.16)}
+.mode-btn.owned.active{background:rgba(34,197,94,.18);color:var(--owned)}
+.mode-btn.doubler.active{background:rgba(245,200,66,.18);color:var(--gold)}
+.mode-btn.missing.active{background:rgba(139,167,200,.12);color:var(--muted)}
+.quick-row{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
+.quick-btn{border:1px solid var(--border);border-radius:9px;background:rgba(255,255,255,.03);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;padding:9px 7px;cursor:pointer}
+.sbox{position:relative;margin-bottom:10px}
+.sbox input{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:10px 42px 10px 38px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s}
+.sbox input:focus{border-color:var(--gold)}
+.sbox input::placeholder{color:var(--muted)}
+.sico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.95rem;pointer-events:none}
+.s-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;border-radius:9px;background:rgba(255,255,255,.06);color:var(--muted);font-size:.9rem;font-weight:800;cursor:pointer;display:none}
+.sbox.has-text .s-clear{display:grid;place-items:center}
+.s-clear:active{transform:translateY(-50%) scale(.92)}
+.frow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:10px;margin-bottom:4px}
+.frow::-webkit-scrollbar{display:none}
+.list-end{height:calc(72px + env(safe-area-inset-bottom))}
+.chip{flex-shrink:0;min-height:36px;padding:8px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.74rem;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;white-space:nowrap}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+/* TEAM BLOCK */
+.tblock{margin-bottom:9px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.1)}
+.thdr{display:flex;align-items:center;justify-content:space-between;padding:12px;background:linear-gradient(90deg,rgba(12,32,61,.98),rgba(15,103,200,.16));cursor:pointer;user-select:none;-webkit-user-select:none}
+.thdr:active{background:var(--navy3)}
+.tleft{display:flex;align-items:center;gap:9px}
+.tmark{width:22px;height:30px;border-radius:5px;background:linear-gradient(145deg,var(--paper-cream),var(--paper-warm));border:2px solid rgba(246,215,121,.72);box-shadow:0 4px 12px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.55);flex:0 0 22px}
+.tname{font-weight:800;font-size:.92rem;line-height:1.2}
+.tmeta{font-size:.67rem;color:var(--muted);margin-top:1px}
+.tright{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.tpct{font-size:.74rem;color:var(--muted)}
+.tmbar{width:38px;height:4px;background:var(--navy3);border-radius:2px;overflow:hidden}
+.tmfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .3s}
+.chev{font-size:.68rem;color:var(--muted);transition:transform .2s;margin-left:3px}
+.tblock.open .chev{transform:rotate(180deg)}
+.sgrid{display:none;padding:9px;background:linear-gradient(180deg,rgba(6,19,38,.96),rgba(11,29,56,.98));grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tblock.open .sgrid{display:grid}
+/* STICKER CARD */
+.sc{height:112px;border-radius:9px;padding:17px 5px 8px;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.08),transparent 42%),linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01)),var(--card);border:1.5px solid var(--border);cursor:pointer;text-align:center;user-select:none;-webkit-user-select:none;transition:transform .1s,border-color .15s,background .15s,box-shadow .15s;-webkit-touch-callout:none;position:relative;display:grid;grid-template-rows:auto 18px 32px;align-content:center;justify-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 5px 14px rgba(0,0,0,.16)}
+.sc:active{transform:scale(.88)}
+.sc.bump{animation:bump .22s ease}
+@keyframes bump{0%,100%{transform:scale(1)}45%{transform:scale(.9) rotate(-1.5deg)}75%{transform:scale(1.04) rotate(1.5deg)}}
+.sc.owned{border-color:var(--owned);background:linear-gradient(160deg,rgba(34,197,94,.18),rgba(34,197,94,.05)),var(--card)}
+.sc.doubler{border-color:var(--doubler);background:linear-gradient(135deg,rgba(245,200,66,.24),rgba(255,255,255,.08) 42%,rgba(15,103,200,.18)),var(--card);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px rgba(245,200,66,.08),0 8px 18px rgba(245,200,66,.08)}
+.sc.doubler:before{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(115deg,transparent 0 35%,rgba(255,255,255,.22) 46%,transparent 57%);opacity:.55;pointer-events:none}
+.sc-n{font-family:'Bebas Neue',sans-serif;font-size:1.04rem;color:var(--muted);line-height:1;letter-spacing:.8px}
+.sc.owned .sc-n{color:var(--owned)}.sc.doubler .sc-n{color:var(--doubler)}
+.sc-i{font-size:.86rem;line-height:18px;min-height:18px}
+.sc-p{font-size:.61rem;color:var(--muted);line-height:1.12;margin-top:1px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;padding:0 1px;width:100%;max-width:100%;min-height:28px;word-break:normal;overflow-wrap:anywhere}
+.sc-state{position:absolute;top:4px;right:4px;font-size:.52rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;border-radius:5px;padding:1px 4px;background:var(--navy3);color:var(--muted)}
+.sc.owned .sc-state{background:rgba(34,197,94,.18);color:var(--owned)}
+.sc.doubler .sc-state{background:rgba(245,200,66,.18);color:var(--gold)}
+.team-actions{display:flex;gap:8px}
+.mark-team{border:1px solid rgba(245,200,66,.25);background:rgba(245,200,66,.08);color:var(--gold);border-radius:7px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:700;cursor:pointer;white-space:nowrap}
+.clear-team{color:var(--muted);background:rgba(255,255,255,.03);margin-left:6px}
+.mark-team:active{background:rgba(245,200,66,.16)}
+.bulk-row{display:flex;gap:8px;margin-bottom:10px}
+.bulk-btn{flex:1;border:1px solid var(--border);border-radius:9px;background:rgba(255,255,255,.03);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:700;padding:9px 8px;cursor:pointer}
+.bulk-btn:active{background:var(--navy3)}
+.status-row{display:flex;gap:6px;margin-bottom:8px}
+.status-chip{flex:1;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:700;padding:9px 6px;cursor:pointer}
+.status-chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.toast-undo{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:4px 12px;margin-left:10px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer}
+/* SWAPS */
+.sw-hero{background:linear-gradient(135deg,rgba(6,19,38,.50),rgba(14,165,233,.24)),url('assets/09_best_move_card_art.webp') center/cover;border:1px solid rgba(242,247,255,.18);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 14px 30px rgba(0,0,0,.2)}
+.sw-hero h2{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:2px;margin-bottom:3px}
+.sw-hero p{color:var(--muted);font-size:.82rem;line-height:1.5}
+.sw-tabs{display:flex;gap:6px;margin-bottom:12px}
+.sw-tab{flex:1;padding:9px 8px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;text-align:center;transition:all .15s}
+.sw-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.swap-tools{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tool-btn{flex:1 1 31%;min-width:92px;padding:9px 8px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;text-align:center}
+.person-filter{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:9px 11px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;margin-bottom:12px}
+.swap-guide{background:linear-gradient(135deg,rgba(15,103,200,.16),rgba(245,200,66,.08)),var(--card);border:1px solid rgba(245,200,66,.22);border-radius:var(--r);padding:12px;margin-bottom:12px}
+.guide-title{font-size:.76rem;font-weight:900;color:var(--gold);letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px}
+.guide-copy{font-size:.78rem;color:#d8e9ff;line-height:1.5}
+.guide-steps{display:grid;gap:6px;margin-top:9px}
+.guide-step{display:flex;gap:8px;align-items:flex-start;font-size:.74rem;color:var(--muted);line-height:1.45}
+.guide-step b{color:var(--white)}
+.guide-step span{display:grid;place-items:center;flex:0 0 20px;height:20px;border-radius:50%;background:rgba(245,200,66,.14);color:var(--gold);font-size:.66rem;font-weight:900}
+.meetup-note,.req-note,.ts-note,.tip-note{font-size:.72rem;color:#d8e9ff;line-height:1.45;background:rgba(15,103,200,.12);border:1px solid rgba(255,255,255,.10);border-radius:9px;padding:8px 9px;margin-top:8px}
+.meetup-note b,.req-note b,.ts-note b,.tip-note b{color:var(--gold)}
+.sw-card{background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(15,103,200,.06)),var(--card);border:1px solid var(--border);border-radius:11px;padding:12px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;box-shadow:0 8px 20px rgba(0,0,0,.13)}
+.sw-id{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--gold);letter-spacing:1px}
+.sw-pname{font-size:.82rem;color:var(--white);margin-top:1px}
+.sw-team{font-size:.7rem;color:var(--muted);margin-top:2px}
+.sw-who{text-align:right;flex-shrink:0}
+.sw-wlbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.wtags{display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.wtag{font-size:.75rem;font-weight:600;padding:3px 8px;border-radius:7px;display:flex;align-items:center;gap:5px}
+.tag-face{width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.16)}
+.wtag.has{color:var(--owned);background:rgba(34,197,94,.12)}
+.wtag.needs{color:var(--danger2);background:rgba(255,122,95,.12)}
+.empty{text-align:center;padding:32px 16px;color:#d8e9ff;font-size:.86rem;line-height:1.65;background:linear-gradient(135deg,rgba(6,19,38,.78),rgba(12,32,61,.66)),url('assets/empty-calm-state.webp') center/cover;border:1px dashed rgba(242,247,255,.18);border-radius:var(--r);margin-bottom:12px;box-shadow:0 12px 28px rgba(0,0,0,.18)}
+.empty .emo{display:grid;place-items:center;margin:0 auto 10px;width:58px;height:44px}
+.empty .emo img{max-width:58px;max-height:44px;display:block}
+/* GROUP */
+.g-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);letter-spacing:3px;margin-bottom:12px}
+.squad-strip{display:grid;grid-template-columns:repeat(5,minmax(78px,1fr));gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.squad-strip::-webkit-scrollbar{display:none}
+.squad-card{min-width:78px;border:1px solid var(--border);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01)),var(--card);padding:6px;text-align:center;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+.squad-card img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:7px;display:block;margin-bottom:5px}
+.squad-name{font-size:.62rem;color:var(--white);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-card{background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(15,103,200,.08)),var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:9px;box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.g-card.me{border-color:rgba(245,200,66,.35)}
+.g-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.g-name{font-weight:700;font-size:.98rem;display:flex;align-items:center;gap:7px}
+.g-face{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.16);box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.g-face-fallback{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--navy3);border:1px solid var(--border);font-size:1rem;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.g-you{font-size:.63rem;background:var(--gold);color:var(--navy);padding:1px 6px;border-radius:10px;font-weight:700;letter-spacing:.5px}
+.g-pct{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:1px}
+.g-stats{display:flex;margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
+.g-stat{flex:1;text-align:center}
+.g-sv{font-weight:700;font-size:.95rem}
+.g-sv.o{color:var(--owned)}.g-sv.d{color:var(--doubler)}.g-sv.m{color:var(--muted)}
+.g-sl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.pairs-t{font-size:.7rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin:18px 0 8px;padding-left:2px}
+.pair{background:linear-gradient(135deg,rgba(245,200,66,.06),rgba(255,122,95,.06));border:1px solid rgba(245,200,66,.18);border-radius:11px;padding:13px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center}
+.pair-n{font-weight:700;font-size:.9rem}
+.pair-s{font-size:.7rem;color:var(--muted);margin-top:3px}
+.pair-c{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);line-height:1;text-align:right}
+.pair-cl{font-size:.62rem;color:var(--muted);text-align:right}
+/* TOAST + OFFLINE */
+#toast{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(10px);background:rgba(22,31,51,.97);border:1px solid var(--border);padding:9px 18px;border-radius:20px;font-size:.82rem;color:var(--white);opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:9999;backdrop-filter:blur(8px)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#offline{display:none;position:fixed;top:0;left:0;right:0;background:var(--danger);text-align:center;padding:calc(5px + env(safe-area-inset-top)) 8px 6px;font-size:.76rem;font-weight:700;z-index:9999;letter-spacing:.5px}
+@media(min-width:600px){.u-grid{grid-template-columns:repeat(3,1fr)}.sgrid{grid-template-columns:repeat(5,1fr)}}
+/* COUNT MODEL + POLISH */
+.entry-modes.two{grid-template-columns:repeat(2,1fr)}
+.entry-hint{font-size:.7rem;color:var(--muted);line-height:1.5;margin-top:8px}
+body.clear-mode .entry-card{border-color:rgba(239,68,68,.42);box-shadow:0 0 0 1px rgba(239,68,68,.16),0 16px 32px rgba(239,68,68,.08)}
+body.clear-mode .entry-title:after{content:' - REMOVE MODE';color:var(--danger2);font-size:.64rem;letter-spacing:.8px}
+.sc-badge{position:absolute;top:4px;left:4px;font-size:.55rem;font-weight:800;color:var(--gold);background:rgba(245,200,66,.18);border-radius:5px;padding:0 4px;line-height:1.5}
+.sc-badge:empty{display:none}
+#saved{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom));right:16px;background:rgba(34,197,94,.95);color:#05210f;font-weight:800;font-size:.76rem;padding:6px 12px;border-radius:14px;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;z-index:9998}
+#saved.show{opacity:1;transform:translateY(0)}
+#heatmap{display:block;width:100%;height:auto;margin:0 0 12px;border:1px solid var(--border);border-radius:10px;background:var(--card);padding:4px;cursor:pointer}
+.best-move{background:linear-gradient(135deg,rgba(6,19,38,.82),rgba(15,103,200,.35)),url('assets/09_best_move_card_art.webp') center/cover;border:1px solid rgba(245,200,66,.36);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 16px 36px rgba(0,0,0,.24)}
+.bm-top{font-size:.66rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.bm-name{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.05rem}
+.bm-face{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.bm-sub{font-size:.82rem;color:var(--muted);margin:4px 0 10px}.bm-sub b{color:var(--white)}
+.bm-btn{width:100%;border:none;border-radius:10px;background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.84rem;padding:10px;cursor:pointer}
+.bm-btn:disabled{opacity:.58;cursor:default}
+.bm-actions{display:flex;gap:7px;margin-top:10px}.bm-actions .bm-btn{flex:1}
+.bm-btn.ghost{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--white)}
+.sw-count{font-size:.73rem;color:var(--muted);margin-bottom:10px}
+.sw-qty{font-size:.7rem;color:var(--gold)}
+.swp-btn{margin-top:8px;border:1px solid rgba(34,197,94,.4);background:rgba(34,197,94,.12);color:var(--owned);border-radius:8px;padding:6px 10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.72rem;cursor:pointer}
+.race{position:relative;height:64px;margin:2px 0 14px;border:1px solid var(--border);border-radius:var(--r);background:linear-gradient(180deg,rgba(15,103,200,.12),var(--card));overflow:hidden}
+.race-line{position:absolute;top:50%;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,var(--navy4) 0 8px,transparent 8px 16px)}
+.runner{position:absolute;top:50%;transform:translate(-50%,-50%);transition:left .7s ease;z-index:2}
+.runner img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.runner span{font-size:1.3rem}
+.race-finish{position:absolute;right:8px;top:14px;bottom:14px;width:6px;border-radius:4px;background:repeating-linear-gradient(180deg,var(--paper-cream) 0 7px,var(--pitch-line) 7px 14px)}
+.plan-card{background:linear-gradient(135deg,rgba(15,103,200,.18),rgba(245,200,66,.1)),var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;text-align:center}
+.plan-h{font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold)}
+.plan-big{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--white);line-height:1;margin:4px 0}
+.plan-sub{font-size:.78rem;color:var(--muted);margin-bottom:10px}
+.plan-bar{height:9px;border-radius:5px;background:var(--navy3);overflow:hidden;display:flex}
+.plan-have{height:100%;background:var(--accent)}.plan-gain{height:100%;background:var(--gold)}
+.plan-pcts{font-size:.78rem;color:var(--muted);margin-top:6px}.plan-pcts b{color:var(--gold)}
+.g-title2{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--gold);letter-spacing:2px;margin:6px 0 10px}
+.g-new{font-size:.6rem;background:var(--navy3);color:var(--muted);padding:1px 6px;border-radius:10px}
+.dot-on{width:8px;height:8px;border-radius:50%;background:var(--owned);box-shadow:0 0 6px var(--owned);display:inline-block}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
+.badge{font-size:.64rem;background:rgba(245,200,66,.12);border:1px solid rgba(245,200,66,.25);color:var(--gold);border-radius:20px;padding:3px 8px}
+.badge-more{background:rgba(255,255,255,.04);border-color:var(--border);color:var(--muted)}
+.hunt{display:flex;flex-wrap:wrap;gap:6px}
+.hunt-chip{font-size:.72rem;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 9px;display:flex;align-items:center;gap:6px}
+.hunt-chip i{font-style:normal;background:var(--danger);color:#fff;border-radius:8px;font-size:.62rem;padding:0 5px;font-weight:700}
+.feed{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:12px}
+.feed-item{font-size:.76rem;color:var(--muted);padding:3px 0}.feed-item b{color:var(--white)}.feed-item i{font-style:normal;color:var(--navy4);font-size:.68rem}
+body.tilt .sc.doubler:before{background:linear-gradient(115deg,transparent 0 calc(var(--shine,50%) - 18%),rgba(255,255,255,.55) var(--shine,50%),transparent calc(var(--shine,50%) + 18%))}
+/* FINAL FLAIR PASS */
+.matchday-strip{position:relative;overflow:hidden;border:1px solid rgba(245,200,66,.24);border-radius:12px;margin:-2px 0 12px;padding:9px 0;background:linear-gradient(90deg,rgba(6,19,38,.90),rgba(15,103,200,.38),rgba(6,19,38,.90)),repeating-linear-gradient(90deg,rgba(255,255,255,.045) 0 1px,transparent 1px 28px),url('assets/12_group_progress_art.webp') center 62%/cover,var(--card);box-shadow:0 12px 28px rgba(0,0,0,.22)}
+.matchday-track{display:flex;gap:10px;width:max-content;animation:marquee 24s linear infinite;padding-left:10px}
+.matchday-pill{display:flex;align-items:center;gap:7px;white-space:nowrap;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(6,19,38,.62);padding:5px 10px;color:#eef6ff;font-size:.72rem;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.matchday-pill img{width:22px;height:22px;border-radius:50%;object-fit:cover;border:1px solid rgba(245,200,66,.5)}
+.matchday-pill b{color:var(--gold);font-weight:900}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.ribbon-panel{position:relative;overflow:hidden;background:radial-gradient(circle at 90% 0,rgba(245,200,66,.12),transparent 26%),linear-gradient(90deg,rgba(6,19,38,.88),rgba(15,103,200,.18)),var(--card);border:1px solid rgba(245,200,66,.18);border-radius:12px;padding:9px;margin-bottom:10px;box-shadow:0 12px 24px rgba(0,0,0,.18)}
+.ribbon-panel .frow,.ribbon-panel .status-row,.ribbon-panel .bulk-row{margin-bottom:0}
+.tblock.complete{border-color:rgba(245,200,66,.42);box-shadow:0 0 0 1px rgba(245,200,66,.12),0 12px 28px rgba(245,200,66,.08)}
+.tblock.complete .thdr{background:linear-gradient(90deg,rgba(245,200,66,.16),rgba(15,103,200,.18)),var(--card)}
+.tblock.complete .tname:after{content:'  Saved';color:var(--gold)}
+.sc:after{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 28%,transparent 70%,rgba(15,103,200,.1));pointer-events:none;opacity:.42}
+.sc.owned:after,.sc.doubler:after{opacity:.68}
+.sc.owned .sc-state,.sc.doubler .sc-state{box-shadow:0 0 10px currentColor}
+.settings-card{background-image:linear-gradient(135deg,rgba(6,19,38,.82),rgba(12,32,61,.82)),url('assets/12_group_progress_art.webp');background-position:center;background-size:cover}
+.plan-card,.feed{background-image:linear-gradient(135deg,rgba(6,19,38,.86),rgba(12,32,61,.80)),url('assets/12_group_progress_art.webp');background-position:center;background-size:cover}
+.race{background-image:linear-gradient(90deg,rgba(6,19,38,.78),rgba(15,103,200,.24),rgba(6,19,38,.78)),repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 32px),url('assets/12_group_progress_art.webp');background-position:center;background-size:cover}
+.page-hero,.match-hero,.spark-card{isolation:isolate}
+.page-hero:before,.match-hero:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 82% 12%,rgba(245,200,66,.22),transparent 28%);pointer-events:none;z-index:0}
+.match-hero>* ,.page-hero>*{position:relative;z-index:1}
+.pfill{position:relative;overflow:hidden}
+.pfill:after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);transform:translateX(-120%);animation:pfillSheen 3s ease-in-out infinite}
+@keyframes pfillSheen{0%{transform:translateX(-120%)}55%,100%{transform:translateX(220%)}}
+.panel.active{animation:panelIn .26s ease}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.best-move{animation:bmPulse 2.6s ease-in-out infinite}
+@keyframes bmPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,0)}50%{box-shadow:0 0 0 3px rgba(245,200,66,.13)}}
+.tab{position:relative}
+.tab.active:before{content:'';position:absolute;bottom:-1px;left:50%;width:22px;height:2px;background:var(--accent);border-radius:2px;transform:translateX(-50%);box-shadow:0 0 8px var(--accent)}
+/* SWAP REQUESTS / TRADE SHEET / RANKED / EXPORTS / ACHIEVEMENTS */
+.req-card{background:linear-gradient(135deg,rgba(15,103,200,.2),rgba(245,200,66,.08)),var(--card);border:1px solid rgba(245,200,66,.32);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.req-card.ok{border-color:rgba(34,197,94,.42)}
+.req-top{font-size:.8rem;font-weight:800;margin-bottom:6px}
+.req-line{font-size:.76rem;color:var(--muted);margin:2px 0}.req-line b{color:var(--white)}
+.req-btns{display:flex;gap:8px;margin-top:9px}
+.req-yes{flex:1;border:none;border-radius:9px;background:var(--owned);color:#05210f;font-weight:800;font-family:'DM Sans',sans-serif;font-size:.8rem;padding:9px;cursor:pointer}
+.req-yes:disabled{opacity:.58;cursor:default}
+.req-no{border:1px solid var(--border);border-radius:9px;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.8rem;padding:9px 12px;cursor:pointer}
+.trade-warn{font-size:.72rem;line-height:1.45;color:#ffd7d7;background:rgba(255,122,95,.14);border:1px solid rgba(255,122,95,.35);border-radius:9px;padding:8px 9px;margin-top:8px}.trade-warn b{color:#fff}
+.trade-sheet{background:linear-gradient(135deg,rgba(245,200,66,.14),rgba(15,103,200,.14)),var(--card);border:1px solid rgba(245,200,66,.28);border-radius:var(--r);padding:13px;margin-bottom:12px}
+.ts-top{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.02rem;margin-bottom:10px}
+.ts-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ts-col{background:rgba(0,0,0,.16);border:1px solid var(--border);border-radius:10px;padding:8px;min-height:54px}
+.ts-h{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.ts-h.get{color:var(--owned)}.ts-h.give{color:var(--gold)}
+.ts-id{font-size:.74rem;color:var(--white);padding:1px 0}
+.ts-none{font-size:.74rem;color:var(--muted)}
+.ts-bal{text-align:center;font-size:.72rem;color:var(--gold);margin:8px 0 2px;font-weight:700}
+.ts-btns{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.ts-btn{flex:1;min-width:88px;border:none;border-radius:9px;background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-weight:800;font-size:.78rem;padding:10px 8px;cursor:pointer}
+.ts-btn.ghost{background:rgba(255,255,255,.06);color:var(--white);border:1px solid var(--border)}
+.ts-btn:disabled{opacity:.55}
+.ranked{margin-bottom:12px}
+.ranked-h{font-size:.66rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.ranked-row{width:100%;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:11px;padding:9px 11px;margin-bottom:6px;cursor:pointer;color:var(--white);font-family:'DM Sans',sans-serif}
+.rk-face{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.rk-name{font-weight:700;font-size:.88rem}
+.rk-stat{margin-left:auto;font-size:.7rem;color:var(--muted)}
+.rk-tot{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);min-width:24px;text-align:right}
+.mustfind{font-size:.74rem;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 11px;margin-top:8px}.mustfind b{color:var(--danger2)}
+.mini-action{margin-left:8px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--gold);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:700;padding:2px 8px;cursor:pointer}
+.share-row{display:flex;gap:8px;margin:0 0 12px}
+.share-btn{flex:1;min-height:44px;border:1px solid rgba(245,200,66,.3);background:rgba(245,200,66,.08);color:var(--gold);border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:.76rem;padding:10px 8px;cursor:pointer}
+.settings-card{background:linear-gradient(135deg,rgba(15,103,200,.18),rgba(245,200,66,.1)),var(--card);border:1px solid rgba(245,200,66,.2);border-radius:var(--r);padding:0;margin-bottom:12px;overflow:hidden}
+.settings-card summary{list-style:none;cursor:pointer;padding:14px 15px;font-size:.78rem;font-weight:900;color:var(--gold);display:flex;justify-content:space-between;align-items:center;text-transform:uppercase;letter-spacing:.8px}
+.settings-card summary::-webkit-details-marker{display:none}
+.settings-card summary small{font-size:.7rem;color:var(--muted);font-weight:800;letter-spacing:1.6px}
+.settings-card summary:after{content:'+';font-size:1rem;color:var(--muted);margin-left:8px}
+.settings-card[open] summary:after{content:'-'}
+.settings-card-body{padding:0 14px 14px}
+.legal-note{font-size:.68rem;line-height:1.45;color:var(--muted);margin-top:10px;text-align:center}
+.settings-code{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;letter-spacing:2px;color:var(--white);line-height:1;text-align:center;margin:0 0 6px}
+.settings-copy{text-align:center;font-size:.78rem;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.share-btn.danger{border-color:rgba(255,122,95,.34);background:rgba(255,122,95,.08);color:#ff9aa5}
+.more-tools{border:1px solid var(--border);border-radius:12px;background:rgba(12,32,61,.56);margin:0 0 12px;overflow:hidden}
+.more-tools summary{list-style:none;cursor:pointer;padding:11px 13px;font-size:.78rem;font-weight:900;color:var(--gold);display:flex;justify-content:space-between;align-items:center}
+.more-tools summary::-webkit-details-marker{display:none}
+.more-tools summary:after{content:'+';font-size:1rem;color:var(--muted)}
+.more-tools[open] summary:after{content:'-'}
+.more-tools[open]{padding-bottom:10px}
+.more-tools .share-row,.more-tools .quick-row,.more-tools .spark-card,.more-tools #heatmap,.more-tools .legend,.more-tools .ribbon-panel{margin-left:10px;margin-right:10px}
+.more-tools .spark-card{margin-top:0}
+.closest-h{font-size:.66rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--gold);margin:2px 0 6px}
+.closest-row{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin-bottom:12px}
+.closest-row::-webkit-scrollbar{display:none}
+.closest-chip{flex-shrink:0;white-space:nowrap;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.1);color:var(--white);border-radius:20px;padding:7px 12px;font-family:'DM Sans',sans-serif;font-size:.76rem;cursor:pointer}
+.closest-chip b{color:var(--owned)}
+.extras-prog{text-align:center;font-size:.78rem;color:var(--muted);margin:0 0 12px}.extras-prog b{color:var(--gold2)}.extras-prog:empty{display:none}
+.extras-divider{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:2px;color:var(--gold2);margin:14px 0 8px;padding-top:10px;border-top:1px dashed var(--border)}
+.hunt-chip.ghost{background:transparent;color:var(--muted);border-style:dashed}
+.badge{cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.badge img{width:18px;height:18px;border-radius:50%;object-fit:cover;box-shadow:0 0 10px rgba(245,200,66,.24);flex-shrink:0}
+#ach{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;z-index:100000;opacity:0;transition:opacity .25s}
+#ach.show{opacity:1}
+.ach-card{--ach-bg:url('assets/milestone-clean.webp');position:relative;overflow:hidden;text-align:center;background:linear-gradient(160deg,rgba(12,32,61,.58),rgba(6,19,38,.90)),var(--ach-bg) center/cover;border:1.5px solid var(--gold);border-radius:20px;padding:26px 30px 24px;box-shadow:0 28px 70px rgba(0,0,0,.58),0 0 0 1px rgba(245,200,66,.28),0 0 46px rgba(245,200,66,.22);transform:scale(.58) translateY(16px);transition:transform .35s cubic-bezier(.2,1.4,.4,1);width:min(390px,calc(100vw - 32px));min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+#ach.show .ach-card:before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 34%,rgba(255,255,255,.24) 45%,transparent 58%);animation:achShine 1.8s ease .1s both;pointer-events:none}
+@keyframes achShine{from{transform:translateX(-120%)}to{transform:translateX(120%)}}
+#ach.show .ach-card{transform:scale(1) translateY(0)}
+.ach-glow{position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent,rgba(245,200,66,.28),transparent 40%);animation:achSpin 3.2s linear infinite;pointer-events:none}
+@keyframes achSpin{to{transform:rotate(360deg)}}
+.ach-ic{font-size:2.6rem;position:relative}
+.ach-ic img{width:74px;height:74px;border-radius:50%;object-fit:cover;box-shadow:0 0 28px rgba(245,200,66,.44),0 8px 26px rgba(0,0,0,.36)}
+.ach-k{position:relative;font-size:.64rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:800;margin-top:4px}
+.ach-t{position:relative;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#fff;letter-spacing:1px;margin-top:3px;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+.ach-squad{position:relative;display:flex;justify-content:center;gap:4px;margin-top:12px}
+.ach-squad img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid rgba(245,200,66,.45);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.ach-vis{position:relative;display:inline-block;margin-bottom:2px}
+.ach-portrait{width:120px;height:auto;aspect-ratio:3/4;object-fit:cover;border-radius:14px;border:2px solid var(--gold);box-shadow:0 0 36px rgba(245,200,66,.5),0 10px 30px rgba(0,0,0,.45);animation:achPortrait .6s cubic-bezier(.2,1.5,.4,1)}
+@keyframes achPortrait{0%{transform:scale(.4) rotate(-8deg);opacity:0}60%{transform:scale(1.08) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.ach-medal{position:absolute;right:-12px;bottom:-12px;width:50px;height:50px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.55));animation:achMedal .55s .18s both cubic-bezier(.2,1.6,.4,1)}
+@keyframes achMedal{0%{transform:scale(0) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
+.ach-rays{position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg,rgba(245,200,66,.12) 0deg 8deg,transparent 8deg 16deg);animation:achSpin 9s linear infinite reverse;pointer-events:none;opacity:.45}
+.ach-sub{position:relative;font-size:.78rem;color:#d8e9ff;margin-top:6px;text-shadow:0 1px 10px rgba(0,0,0,.55)}
+.sc.flash{box-shadow:0 0 0 2px var(--gold),0 0 22px rgba(245,200,66,.55)!important}
+/* FOIL stickers (emblems + intro + history) - holographic shine */
+.sc.foil{border-color:rgba(245,200,66,.55);background:radial-gradient(circle at 50% 0,rgba(255,255,255,.14),transparent 46%),linear-gradient(160deg,rgba(245,200,66,.12),rgba(15,103,200,.14)),var(--card)}
+.sc.foil .sc-n{color:var(--gold2)}
+.sc.foil .sc-state,.sc.foil .sc-badge,.sc.foil .sc-n,.sc.foil .sc-i,.sc.foil .sc-p{position:relative;z-index:2}
+.foil-fx{position:absolute;inset:0;border-radius:8px;pointer-events:none;overflow:hidden;z-index:1}
+.foil-fx:before{content:'';position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.42) 44%,rgba(99,200,255,.34) 49%,rgba(180,120,255,.28) 53%,rgba(245,200,66,.36) 58%,rgba(255,120,170,.28) 64%,transparent 78%);background-size:260% 100%;mix-blend-mode:screen;animation:none;opacity:.28}
+.foil-fx:after{content:'';position:absolute;inset:0;background:conic-gradient(from 210deg,rgba(99,200,255,.10),rgba(245,200,66,.10),rgba(255,120,170,.10),rgba(99,200,255,.10));mix-blend-mode:screen;opacity:.5}
+@keyframes foilSweep{0%{background-position:170% 0}100%{background-position:-70% 0}}
+.sc.foil.owned,.sc.foil.doubler{box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 0 0 1px rgba(245,200,66,.3),0 8px 22px rgba(245,200,66,.2)}
+.sc.foil:active .foil-fx:before{animation-duration:.6s}
+/* Deferred promo-card shine styles */
+.sc.xtra{border-color:rgba(255,255,255,.25)}
+.xtra-fx{position:absolute;inset:0;border-radius:8px;pointer-events:none;overflow:hidden;z-index:1}
+.xtra-fx:before{content:'';position:absolute;inset:-44%;background-size:280% 100%;mix-blend-mode:soft-light;animation:none;opacity:.28}
+.xtra-fx:after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.10),transparent 46%),linear-gradient(135deg,rgba(255,255,255,.035),transparent 38%,rgba(255,255,255,.045));opacity:.72}
+.sc.xtra .sc-state,.sc.xtra .sc-badge,.sc.xtra .sc-n,.sc.xtra .sc-i,.sc.xtra .sc-p{position:relative;z-index:2}
+.sc.cce{border-color:rgba(255,122,95,.38);background:radial-gradient(circle at 50% 0,rgba(255,255,255,.10),transparent 46%),linear-gradient(160deg,rgba(255,122,95,.12),rgba(255,255,255,.035)),var(--card)}
+.sc.cce .xtra-fx:before{background-image:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.36) 45%,rgba(255,90,110,.28) 51%,rgba(255,255,255,.30) 58%,transparent 76%)}
+.sc.cce .sc-n{color:var(--danger2)}
+.sc.xtr{border-color:rgba(245,200,66,.48);background:radial-gradient(circle at 50% 0,rgba(255,255,255,.11),transparent 46%),linear-gradient(160deg,rgba(245,200,66,.13),rgba(255,120,200,.045)),var(--card)}
+.sc.xtr .xtra-fx:before{background-image:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.34) 44%,rgba(245,200,66,.32) 51%,rgba(255,120,200,.22) 59%,transparent 77%)}
+.sc.xtr .sc-n{color:var(--gold2)}
+.sc.xtra.owned,.sc.xtra.doubler{box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 0 0 1px rgba(255,255,255,.18),0 8px 22px rgba(0,0,0,.22)}
+.sc.shine-live .foil-fx:before{animation:foilSweep 4.8s cubic-bezier(.45,0,.25,1) 1;opacity:.72}
+.sc.shine-live .xtra-fx:before{animation:foilSweep 7.2s cubic-bezier(.45,0,.25,1) 1;animation-delay:var(--shine-delay,0s);opacity:.52}
+body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!important;opacity:.22}
+.crowns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:12px}
+.crown{position:relative;overflow:hidden;text-align:center;background:radial-gradient(circle at 50% -10%,rgba(245,200,66,.18),transparent 46%),linear-gradient(160deg,rgba(245,200,66,.1),rgba(12,32,61,.6));border:1px solid var(--border);border-radius:12px;padding:8px 5px 9px;min-width:0}
+.crown:before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.1) 42%,transparent 58%);opacity:.35;pointer-events:none}
+.crown.mine{border-color:var(--gold);box-shadow:0 0 0 1px rgba(245,200,66,.25),0 8px 20px rgba(245,200,66,.12)}
+.crown-medal{position:relative;width:32px;height:32px;border-radius:50%;object-fit:cover;margin:0 auto 3px;filter:drop-shadow(0 3px 8px rgba(0,0,0,.4))}
+.crown-t{position:relative;font-size:.59rem;font-weight:800;color:var(--gold);line-height:1.15;min-height:1.35em}
+.crown-h{position:relative;font-size:.72rem;font-weight:700;color:var(--white);margin:3px 0 1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crown-d{font-size:.56rem;color:var(--muted)}
+.wish-star{cursor:pointer;color:var(--navy4);margin-left:4px;font-size:.9rem;-webkit-user-select:none}
+.wish-star.on{color:var(--gold);text-shadow:0 0 8px rgba(245,200,66,.6)}
+.rk-fin{font-size:.62rem;font-weight:800;color:var(--owned);background:rgba(34,197,94,.14);border-radius:7px;padding:1px 6px;margin-left:4px}
+.rk-fin.wish{color:var(--gold);background:rgba(245,200,66,.14)}
+.ts-fin{font-size:.74rem;font-weight:700;color:var(--owned);background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);border-radius:9px;padding:7px 10px;margin-bottom:9px}
+.req-card.pend{border-color:var(--border);opacity:.92}
+.hist-row{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--muted);padding:6px 2px;border-bottom:1px solid var(--border)}
+.hist-w{flex:1;color:var(--white)}
+.hist-n{background:rgba(245,200,66,.14);color:var(--gold);border-radius:7px;padding:1px 7px;font-weight:700}
+.hist-t{font-size:.66rem;color:var(--navy4)}
+.sw-acts{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.swp-btn.ask{border-color:rgba(245,200,66,.4);background:rgba(245,200,66,.12);color:var(--gold)}
+.g-right{display:flex;align-items:center;gap:8px}
+.nudge-btn{border:1px solid var(--border);background:rgba(255,255,255,.05);border-radius:8px;font-size:.95rem;padding:3px 9px;cursor:pointer;line-height:1}
+.nudge-btn:active{background:var(--navy3);transform:scale(.9)}
+.matchday-pill.kick{background:linear-gradient(135deg,rgba(255,122,95,.55),rgba(15,103,200,.55))}
+.matchday-pill.kick b{color:#fff}
+.rk-fin.tw{color:var(--accent);background:rgba(15,103,200,.16)}
+.ts-want{margin-left:5px;font-size:.62rem;color:var(--gold)}
+.loop{background:linear-gradient(135deg,rgba(15,103,200,.12),rgba(245,200,66,.08)),var(--card);border:1px solid var(--border);border-radius:11px;padding:11px;margin-bottom:7px}
+.loop.mine{border-color:rgba(245,200,66,.4)}
+.loop-line{font-weight:800;font-size:.9rem}
+.loop-d{font-size:.7rem;color:var(--muted);margin-top:4px}
+#combo{position:fixed;top:calc(64px + env(safe-area-inset-top));left:50%;transform:translateX(-50%) scale(1);background:linear-gradient(135deg,var(--danger),var(--gold));color:#1a1200;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;font-size:1.2rem;padding:6px 16px;border-radius:20px;box-shadow:0 8px 22px rgba(0,0,0,.35);opacity:0;pointer-events:none;z-index:99999;transition:opacity .15s}
+#combo.show{opacity:1;animation:comboPop .4s ease}
+@keyframes comboPop{0%{transform:translateX(-50%) scale(.6)}60%{transform:translateX(-50%) scale(1.15)}100%{transform:translateX(-50%) scale(1)}}
+.req-card{position:relative;overflow:hidden;background-image:radial-gradient(circle at 92% 8%,rgba(245,200,66,.14),transparent 24%),linear-gradient(135deg,rgba(6,19,38,.90),rgba(12,32,61,.88));background-position:right center;background-size:cover}
+.trade-sheet{position:relative;overflow:hidden;background-image:linear-gradient(135deg,rgba(6,19,38,.88),rgba(12,32,61,.84)),url('assets/11_confirm_handover_art.webp');background-position:right center;background-size:cover}
+.req-card>* ,.trade-sheet>*{position:relative;z-index:1}
+@media(prefers-reduced-motion:reduce){body:after,.spark-card:before,.matchday-track,.pfill:after,.best-move,.panel.active,.ach-glow,.ach-rays,.ach-portrait,.ach-medal,#combo.show,#ach.show .ach-card:before,.foil-fx:before,.xtra-fx:before{animation:none}}
+</style>
+</head>
+<body>
+<div id="offline"> Offline - changes are saved here and sync when reconnected</div>
+<div id="toast"></div>
+<div id="saved">Saved Saved</div>
+
+<!-- LOADING -->
+<div id="s-load" class="screen vis">
+  <div class="logo-t">STICKER SWAP</div>
+  <div class="logo-s">Group sticker tracker</div>
+  <div class="spin"></div>
+</div>
+
+<!-- CONFIG -->
+<div id="s-cfg" class="screen">
+  <div class="cfg-w">
+    <div class="cfg-t">App not configured</div>
+    <div class="cfg-sub">Sticker Swap is not connected yet. The owner needs to finish setup before live groups can be used.</div>
+    <div class="cfg-box">
+      <div class="cfg-num">Demo is still available</div>
+      <p>You can test the interface with sample data by opening <code>quick-test.html</code>. No database is needed for demo mode.</p>
+    </div>
+    <div class="cfg-box">
+      <div class="cfg-num">Live groups are paused</div>
+      <p>If you expected this to work already, ask the app owner to finish the launch checklist.</p>
+    </div>
+    <div class="legal-note">Unofficial fan tool. Not affiliated with or endorsed by any sticker publisher, federation, or tournament.</div>
+  </div>
+</div>
+
+<!-- GROUP GATE -->
+<div id="s-group" class="screen">
+  <div class="cfg-w" style="margin:auto;text-align:center">
+    <img class="gate-motif" src="public/assets/motifs/pack.svg" alt="" width="58" height="58">
+    <div class="cfg-t" style="text-align:center">Start your sticker group</div>
+    <div class="cfg-sub" style="text-align:center">Your friends already have the stickers you need. Sticker Swap finds the best trade.</div>
+    <div class="cfg-box">
+      <div class="cfg-ins">
+        <label>Invite code</label>
+        <input id="group-input" type="text" inputmode="text" placeholder="ABC123" autocomplete="off" spellcheck="false" style="text-align:center;letter-spacing:3px;font-size:1.15rem;text-transform:uppercase" onkeydown="if(event.key==='Enter')joinGroup()">
+      </div>
+      <div class="cfg-err" id="group-err">Enter a valid group code.</div>
+      <button class="btn-p" onclick="joinGroup()">Join group</button>
+      <button class="btn-p" onclick="createGroup()" style="background:var(--accent);margin-top:8px">Create new group</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER SELECT -->
+<div id="s-user" class="screen">
+  <div class="u-hero">
+    <img class="gate-motif" src="public/assets/motifs/sticker-edge.svg" alt="" width="62" height="62">
+    <h1>YOUR PROFILE</h1>
+    <p>Choose the name friends will see in this group</p>
+  </div>
+  <div class="u-grid" id="u-grid"></div>
+  <div class="add-row">
+    <input id="new-name" type="text" placeholder="Nickname..." maxlength="20" onkeydown="if(event.key==='Enter')doAddUser()">
+    <button class="btn-add" onclick="doAddUser()">Start</button>
+  </div>
+  <div class="sync-note">You can edit this later from Group settings. Your nickname is just a label for friends.</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="t-logo"><img src="public/assets/motifs/swap-arrows.svg" alt="" width="22" height="22"> STICKER SWAP</div>
+    <div class="t-right">
+      <div class="u-pill">
+        <span class="u-pill-a" id="t-avi"></span>
+        <span class="u-pill-n" id="t-name"></span>
+      </div>
+      <button class="icon-btn" onclick="enableTilt()" aria-label="Shiny mode" title="Shiny mode">S</button>
+      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">D</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" id="tab-collection" onclick="showTab('collection')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      My Book
+    </button>
+    <button class="tab" id="tab-swaps" onclick="showTab('swaps')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+      Swaps&nbsp;<span class="t-badge" id="sw-badge" style="display:none">0</span>
+    </button>
+    <button class="tab" id="tab-group" onclick="showTab('group')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      The Group
+    </button>
+  </div>
+  <div class="panels">
+    <div class="panel active" id="panel-collection">
+      <div class="match-hero">
+        <div class="match-kicker">Matchday album</div>
+        <div class="match-title">Finish the book</div>
+        <div class="match-sub">Track your album, mark spares, and let the group do the rest.</div>
+      </div>
+      <div class="matchday-strip"><div class="matchday-track" id="matchday-track"></div></div>
+      <div class="prog-card">
+        <div class="prog-row"><span class="prog-lbl">My album progress</span><span class="prog-num" id="p-count">0 / 980</span></div>
+        <div class="pbar"><div class="pfill" id="p-fill" style="width:0%"></div></div>
+        <div class="stat-row">
+          <div class="stat"><div class="sv g" id="s-owned">0</div><div class="sl">In Book</div></div>
+          <div class="stat"><div class="sv y" id="s-dbl">0</div><div class="sl">Spares</div></div>
+          <div class="stat"><div class="sv m" id="s-miss">980</div><div class="sl">Missing</div></div>
+        </div>
+      </div>
+      <div id="extras-prog" class="extras-prog"></div>
+      <div class="entry-card">
+        <div class="entry-title">Tap stickers to count copies</div>
+        <div class="entry-modes two">
+          <button class="mode-btn owned active" id="mode-add" onclick="setEntryMode('add')">Add Add / spare</button>
+          <button class="mode-btn missing" id="mode-clear" onclick="setEntryMode('clear')">Remove Remove</button>
+        </div>
+        <div class="entry-hint" id="entry-hint">Tap once = in your book. Tap again for each spare you have.</div>
+      </div>
+      <div class="sbox" id="sbox"><span class="sico"></span><input type="text" id="s-input" placeholder="Search section or code..." oninput="onSearch()" autocomplete="off"><button class="s-clear" onclick="clearSearch()" aria-label="Clear search">×</button></div>
+      <div id="closest"></div>
+      <details class="more-tools">
+        <summary>More tools</summary>
+        <div class="quick-row">
+          <button class="quick-btn" onclick="importListAs('owned')">Paste in-book list</button>
+          <button class="quick-btn" onclick="importListAs('doubler')">Paste spares</button>
+        </div>
+        <div class="spark-card" id="spark-card">
+          <div class="spark-k">Pack luck</div>
+          <div class="spark-t" id="spark-title">Table ready</div>
+          <div class="spark-s" id="spark-sub">Open your book and start the swap table.</div>
+        </div>
+        <canvas id="heatmap" title="Your album - tap a region to jump"></canvas>
+        <div class="legend">
+          <div class="leg"><div class="ld o"></div>In my book</div>
+          <div class="leg"><div class="ld d"></div>Spare to swap</div>
+          <div class="leg"><div class="ld m"></div>Missing</div>
+        </div>
+        <div class="ribbon-panel">
+          <div class="frow" id="frow"><div class="chip active" onclick="setFilter('ALL',this)">All Sections</div></div>
+          <div class="status-row">
+            <button class="status-chip active" onclick="setStatusFilter('all',this)">All</button>
+            <button class="status-chip" onclick="setStatusFilter('missing',this)">Missing Missing</button>
+            <button class="status-chip" onclick="setStatusFilter('doubler',this)"> My spares</button>
+          </div>
+          <div class="bulk-row"><button class="bulk-btn" onclick="expandAll(true)">+ Expand all</button><button class="bulk-btn" onclick="expandAll(false)">- Collapse all</button></div>
+        </div>
+      </details>
+      <div id="s-list"></div>
+    </div>
+    <div class="panel" id="panel-swaps">
+      <div class="sw-hero">
+        <h2>BEST TRADE FINDER</h2>
+        <p>Your friends already have the stickers you need. Send the offer, swap in person, then confirm.</p>
+      </div>
+      <div class="swap-guide">
+        <div class="guide-title">In-app swap offers</div>
+        <div class="guide-copy">Sticker Swap looks across your group for useful trades, then keeps each offer clear until the real stickers change hands.</div>
+        <div class="guide-steps">
+          <div class="guide-step"><span>1</span><div><b>Find a match.</b> Best offer shows the most useful friend to swap with.</div></div>
+          <div class="guide-step"><span>2</span><div><b>Send an offer.</b> Propose a balanced swap or request one sticker from someone who has it spare.</div></div>
+          <div class="guide-step"><span>3</span><div><b>Agree in app.</b> The offer stays queued and reserves promised spares.</div></div>
+          <div class="guide-step"><span>4</span><div><b>Confirm handover.</b> Each person confirms their side after the physical swap.</div></div>
+        </div>
+      </div>
+      <div class="sw-tabs">
+        <button class="sw-tab active" id="sft-need" onclick="setSwapTab('need')"> I need these</button>
+        <button class="sw-tab" id="sft-give" onclick="setSwapTab('give')"> I can give these</button>
+      </div>
+      <div class="swap-tools">
+        <button class="tool-btn" onclick="proposeAll()">Propose best offers</button>
+        <button class="tool-btn" onclick="importDoublers()">Import spares</button>
+      </div>
+      <select class="person-filter" id="person-filter" onchange="setPersonFilter(this.value)">
+        <option value="ALL">Everyone in the group</option>
+      </select>
+      <div id="sw-content"></div>
+    </div>
+    <div class="panel" id="panel-group">
+      <div class="page-hero group">
+        <div class="match-kicker">Group table</div>
+        <div class="match-title">Who’s winning?</div>
+        <div class="match-sub">Progress, spares, and best swap pairings.</div>
+      </div>
+      <div class="g-title">YOUR GROUP</div>
+      <div id="g-content"></div>
+    </div>
+  </div>
+</div>
+
+<script src="./firebase-config.js"></script>
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getDatabase,ref,set,update,remove,onValue,get,push,onDisconnect,connectDatabaseEmulator}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import{getAuth,signInAnonymously,onAuthStateChanged,connectAuthEmulator}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+/* ── DATA ── */
+/* -- FICTIONAL PUBLIC-SAFE ALBUM DATA --
+   Keep this album generic: no official competitions, publishers, national sides, flags,
+   badges, kit references, sponsors, real people, or copied checklist structure. */
+const SECTIONS=[
+  {code:'SPC',name:'Foil Specials',players:['Foil Edge Card','Light Sweep Card','Cream Paper Card','Table Glow Card','Swap Pair Card','Pack Spark Card','Album Corner Card','Final Shine Card']},
+  {code:'S01',name:'North Stand',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S02',name:'South Stand',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S03',name:'East Terrace',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S04',name:'West Terrace',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S05',name:'Floodlight Row',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S06',name:'Midnight Pitch',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S07',name:'Cream Paper',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S08',name:'Foil Shelf',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S09',name:'Swap Table',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S10',name:'Corner Stack',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S11',name:'Sticker Lane',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S12',name:'Table Edge',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S13',name:'Pocket Page',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S14',name:'Pack Line',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S15',name:'Halfway Strip',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S16',name:'Collector Bench',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S17',name:'Night Queue',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S18',name:'Local Pitch',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S19',name:'Back Page',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S20',name:'First Trade',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S21',name:'Spare Pile',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S22',name:'Album Lane',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S23',name:'Paper Cut',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S24',name:'Shine Row',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S25',name:'Teal Arrow',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S26',name:'Gold Arrow',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S27',name:'Meetup Spot',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S28',name:'Kitchen Table',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S29',name:'Open Pack',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S30',name:'Quiet Corner',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S31',name:'Sticker Run',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S32',name:'Final Slot',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S33',name:'Under Lights',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S34',name:'Table Talk',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S35',name:'Foil Trail',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S36',name:'Binder Row',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S37',name:'Page Turn',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S38',name:'Match Night',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S39',name:'Swap Circle',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S40',name:'Fresh Pull',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S41',name:'Rare Shine',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S42',name:'Top Sleeve',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S43',name:'Side Pocket',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S44',name:'Group Stack',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S45',name:'Pitch Shadow',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S46',name:'Cream Border',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S47',name:'Lucky Slot',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'S48',name:'Last Page',players:['Opening Card','Keeper Card','Back Line Card','Wide Left Card','Wide Right Card','Anchor Card','Pass Card','Press Card','Runner Card','Playmaker Card','Set Piece Card','Match Night Card','Table Swap Card','Spare Stack Card','Foil Detail Card','Album Slot Card','Pack Pull Card','Crowd Glow Card','Final Gap Card','Complete Row Card']},
+  {code:'TBL',name:'Table Moments',players:['First Pack Card','Fresh Pull Card','Spare Stack Card','Trade Offer Card','Friend Match Card','Album Gap Card','Foil Find Card','Page Turn Card','Table Circle Card','Handover Card','Complete Slot Card']}
+];
+
+const TOTAL_STICKERS = 980;
+const INTRO_SEC = {code:'OPN',name:'Opening Sticker',players:['Sticker Swap Opening Card']};
+const ALL=[INTRO_SEC,...SECTIONS];
+const EXTRAS=[];
+// Verify: 1 opening + 8 foil specials + 48 fictional sections * 20 + 11 table moments = 980
+
+const AVIS=['A','B','C','D','E','F','G','H','I','J','K','L'];
+const DNAMES=[];
+const USER_STICKERS={};
+const BADGE_ART={};
+
+const DEMO_MODE=new URL(location.href).searchParams.get('demo')==='1';
+
+let db=null,auth=null,currentUid='',me=null,currentGroup='',allData={},memberProfiles={},groupNames=[...DNAMES],activeFilter='ALL',swapTab='need',personFilter='ALL',curTab='collection',entryMode='add',statusFilter='all';
+const openTeams=new Set();
+let feedItems=[],presence={},swapItems=[],dataLoaded=false,_groupListening=false,_achReady=false,_combo=0,_comboT=null,_prevRank=0,_searchTimer=null,_presenceTimer=null,_presenceRef=null,_tiltOn=false,_tiltHandler=null;
+const MAX_COPIES=99;
+let _renderTimer=null;
+function scheduleRefresh(){clearTimeout(_renderTimer);_renderTimer=setTimeout(()=>{if(me)refresh();},140);}
+let _lightRAF=0;
+function scheduleLight(){if(_lightRAF)return;_lightRAF=requestAnimationFrame(()=>{_lightRAF=0;renderHeatmap();renderSparkCard();});}
+// Animated count-up for stat numbers (cheap: tweens a single text node)
+function tweenNum(el,to,fmt){if(!el)return;fmt=fmt||(v=>''+v);const from=parseInt(el.dataset.v||'0')||0;el.dataset.v=to;if(from===to){el.textContent=fmt(to);return;}const d=420,s=performance.now();function step(now){const k=Math.min(1,(now-s)/d);const v=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));el.textContent=fmt(v);if(k<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+
+/* ── UTIL ── */
+function ss(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('vis'));if(id)document.getElementById(id).classList.add('vis');}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function enc(s){return encodeURIComponent(s);}
+function cleanName(n){return n.trim().replace(/[.#$/[\]]/g,'').replace(/\s+/g,' ').slice(0,20);}
+function mergeNames(names){return [...new Set((Array.isArray(names)?names:[]).map(cleanName).filter(Boolean))];}
+function normalizeGroup(code){return String(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);}
+function groupKey(suffix){return currentGroup?`${suffix}_${currentGroup}`:suffix;}
+function groupPath(path=''){return `groups/${currentGroup}${path?'/'+path:''}`;}
+function gref(path=''){return ref(db,groupPath(path));}
+function getNames(){return groupNames;}
+function displayName(id){return DEMO_MODE?id:(memberProfiles[id]?.displayName||'Collector');}
+function memberAvatar(id){return DEMO_MODE?'':(memberProfiles[id]?.avatar||'');}
+function localNames(){try{return JSON.parse(localStorage.getItem(groupKey('names'))||'null')||[];}catch{return[];}}
+function setGroupNames(names){
+  if(DEMO_MODE){groupNames=mergeNames(names);return;}
+  groupNames=[...new Set((Array.isArray(names)?names:[]).filter(n=>typeof n==='string'&&n))];
+}
+function saveNames(names){if(!DEMO_MODE){setGroupNames(names);return;}setGroupNames(names);localStorage.setItem(groupKey('names'),JSON.stringify(groupNames));allData._names=groupNames;persistDemo();}
+function getCfg(){const cfg=window.STICKER_SWAP_FIREBASE_CONFIG||null;return cfg&&cfg.apiKey&&cfg.databaseURL&&cfg.projectId?cfg:null;}
+function wantsEmulator(cfg){return!!(cfg?.emulators||new URL(location.href).searchParams.get('emulator')==='1');}
+function connectLocalEmulators(cfg){
+  const emu=cfg.emulators||{};
+  const authHost=emu.authHost||'127.0.0.1';
+  const authPort=emu.authPort||9099;
+  const dbHost=emu.databaseHost||'127.0.0.1';
+  const dbPort=emu.databasePort||9000;
+  connectAuthEmulator(auth,`http://${authHost}:${authPort}`,{disableWarnings:true});
+  connectDatabaseEmulator(db,dbHost,dbPort);
+}
+function getMine(){return allData[me]||{};}
+function userEntries(){return Object.entries(allData).filter(([user,stickers])=>user!=='_names'&&stickers&&typeof stickers==='object'&&!Array.isArray(stickers));}
+function persistDemo(){if(!DEMO_MODE)return;try{localStorage.setItem('demo_state',JSON.stringify({allData,groupNames,swapItems,wishData,feedItems}));}catch(e){}}
+function setDemoSticker(st,id,c){if(c>0)st[id]=c;}
+function demoStickers(seed){
+  const st={};
+  allIds().forEach((id,i)=>{
+    const n=(i+seed*17)%31;
+    if(n<10)setDemoSticker(st,id,1);
+    else if(n===10||n===11)setDemoSticker(st,id,2);
+  });
+  ['S01','S09','S18','S28','SPC'].forEach((code,j)=>{
+    const team=TEAM_BY_CODE[code];if(!team)return;
+    team.players.forEach((_,i)=>{const id=`${code}-${i+1}`;if((i+seed+j)%4!==0)setDemoSticker(st,id,1+(((i+seed+j)%13===0)?1:0));});
+  });
+  return st;
+}
+function startDemo(){
+  currentGroup='DEMO';
+  const saved=(()=>{try{return JSON.parse(localStorage.getItem('demo_state')||'null');}catch{return null;}})();
+  groupNames=saved?.groupNames?.length?saved.groupNames:['You','Sam','Ava','Mo'];
+  allData=saved?.allData||{_names:groupNames,You:demoStickers(1),Sam:demoStickers(2),Ava:demoStickers(3),Mo:demoStickers(4)};
+  swapItems=saved?.swapItems||[];
+  wishData=saved?.wishData||{};
+  feedItems=saved?.feedItems||[{u:'Demo',t:'sample group ready to test',ts:Date.now()}];
+  dataLoaded=true;me=localStorage.getItem(groupKey('me'))||'You';
+  if(!groupNames.includes(me))me='You';
+  launchApp();
+}
+
+/* ── DATA MODEL (copy counts; backward compatible: 'owned'=1, 'doubler'=2) ── */
+function copiesOf(v){if(v==='owned')return 1;if(v==='doubler')return 2;if(typeof v==='number'&&v>0)return Math.floor(v);return 0;}
+function copiesIn(st,id){return copiesOf((st||{})[id]);}
+function haveId(st,id){return copiesOf((st||{})[id])>=1;}
+function sparesOf(v){return Math.max(0,copiesOf(v)-1);}
+function teamStarted(st,team){return team.players.some((_,i)=>copiesOf((st||{})[`${team.code}-${i+1}`])>=1);}
+const TEAM_BY_CODE=Object.fromEntries([...ALL,...EXTRAS].map(t=>[t.code,t]));
+const _ALLIDS=(()=>{const a=[];ALL.forEach(t=>t.players.forEach((_,i)=>a.push(`${t.code}-${i+1}`)));return a;})();
+const _EXTRAIDS=(()=>{const a=[];EXTRAS.forEach(t=>t.players.forEach((_,i)=>a.push(`${t.code}-${i+1}`)));return a;})();
+const _SWAPIDS=_ALLIDS.concat(_EXTRAIDS);
+function swapIds(){return _SWAPIDS;}
+function teamForAnySticker(id){const code=String(id||'').split('-')[0];return TEAM_BY_CODE[code]||null;}
+function extrasTotal(){return _EXTRAIDS.length;}
+function extrasOwned(st){let n=0;_EXTRAIDS.forEach(id=>{if(copiesOf((st||{})[id])>=1)n++;});return n;}
+function allIds(){return _ALLIDS;} // memoized - ALL is static
+function playerName(id){const p=id.split('-');const t=TEAM_BY_CODE[p[0]];const n=parseInt(p[1]);return(t&&t.players[n-1])||'';}
+function activeNeed(user,id){const st=allData[user]||{};if(haveId(st,id))return false;const team=TEAM_BY_CODE[id.split('-')[0]];return!!(team&&teamStarted(st,team));}
+function cardMeta(c){return c<=0?{cls:'',ico:'',lbl:'Need',badge:''}:c===1?{cls:'owned',ico:'',lbl:'Have',badge:''}:{cls:'doubler',ico:'',lbl:'Spare',badge:'×'+c};}
+function teamOwn(code){const mine=getMine();const team=TEAM_BY_CODE[code];if(!team)return 0;let own=0;team.players.forEach((_,i)=>{if(haveId(mine,`${code}-${i+1}`))own++;});return own;}
+function myOwnedTotal(){let n=0;const mine=getMine();allIds().forEach(id=>{if(haveId(mine,id))n++;});return n;}
+
+/* ── SAVED INDICATOR ── */
+let _savedTimer=null;
+function showSaved(){const e=document.getElementById('saved');if(!e)return;e.classList.add('show');clearTimeout(_savedTimer);_savedTimer=setTimeout(()=>e.classList.remove('show'),1100);}
+
+/* ── CONFETTI (celebration colours) ── */
+function confetti(){
+  let cv=document.getElementById('fx');
+  if(!cv){cv=document.createElement('canvas');cv.id='fx';cv.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:99999';document.body.appendChild(cv);}
+  const ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
+  const cols=['#0f67c8','#ffffff','#f5c842'];
+  const P=Array.from({length:130},()=>({x:innerWidth*(.3+Math.random()*.4),y:innerHeight*.32,vx:(Math.random()-.5)*13,vy:Math.random()*-13-3,g:.38+Math.random()*.3,c:cols[Math.random()*cols.length|0],s:4+Math.random()*5,a:1,r:Math.random()*6,vr:(Math.random()-.5)*.4}));
+  let t=0;
+  (function anim(){t++;ctx.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.a-=.011;ctx.globalAlpha=Math.max(0,p.a);ctx.fillStyle=p.c;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore();});if(t<95)requestAnimationFrame(anim);else ctx.clearRect(0,0,cv.width,cv.height);})();
+}
+// Small celebratory burst for single wins (e.g. completing a swap)
+function confettiMini(){
+  let cv=document.getElementById('fx');
+  if(!cv){cv=document.createElement('canvas');cv.id='fx';cv.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:99999';document.body.appendChild(cv);}
+  const ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
+  const cols=['#22c55e','#f5c842','#ffffff'];
+  const P=Array.from({length:46},()=>({x:innerWidth/2,y:innerHeight*.62,vx:(Math.random()-.5)*9,vy:Math.random()*-10-3,g:.4+Math.random()*.25,c:cols[Math.random()*cols.length|0],s:3+Math.random()*4,a:1,r:Math.random()*6,vr:(Math.random()-.5)*.4}));
+  let t=0;
+  (function anim(){t++;ctx.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.a-=.018;ctx.globalAlpha=Math.max(0,p.a);ctx.fillStyle=p.c;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore();});if(t<60)requestAnimationFrame(anim);else ctx.clearRect(0,0,cv.width,cv.height);})();
+}
+function reduceMotion(){return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches||localStorage.getItem('perf_lite')==='1';}
+let _lastFullFx=0,_lastMiniFx=0;
+function maybeConfetti(kind='mini'){
+  if(reduceMotion())return;
+  const now=performance.now();
+  if(kind==='full'){if(now-_lastFullFx<2500)return;_lastFullFx=now;confetti();}
+  else{if(now-_lastMiniFx<1000)return;_lastMiniFx=now;confettiMini();}
+}
+function buzz(pattern){if(!reduceMotion()&&navigator.vibrate)navigator.vibrate(pattern);}
+function shineCardOnce(card){
+  if(!card||reduceMotion())return;
+  card.classList.add('shine-live');
+  setTimeout(()=>card.classList.remove('shine-live'),7600);
+}
+function userStickerSrc(n){return memberAvatar(n)||USER_STICKERS[n]||'';}
+function userAvatarMarkup(n,i,cls){
+  const src=userStickerSrc(n);
+  return src?`<img class="${cls}" src="${src}" alt="${esc(displayName(n))}">`:`<span>${AVIS[i%AVIS.length]}</span>`;
+}
+function personTag(name,type){
+  const src=userStickerSrc(name);
+  const img=src?`<img class="tag-face" src="${src}" alt="${esc(displayName(name))}">`:'';
+  return`<span class="wtag ${type}">${img}${esc(displayName(name))}</span>`;
+}
+function badgeArtSrc(label){return BADGE_ART[label]||'';}
+function badgeMarkup(label){
+  const src=badgeArtSrc(label);
+  const img=src?`<img src="${src}" alt="${esc(label)}">`:'';
+  return`<span class="badge" onclick="achievementPop(decodeURIComponent('${enc(label)}'))">${img}<span>${esc(label)}</span></span>`;
+}
+function achievementSquadMarkup(){
+  const imgs=getNames().filter(userStickerSrc).slice(0,5).map(n=>`<img src="${userStickerSrc(n)}" alt="${esc(displayName(n))}">`).join('');
+  return imgs?`<div class="ach-squad">${imgs}</div>`:'';
+}
+function applyTheme(theme){document.body.classList.toggle('light',theme==='light');document.body.classList.toggle('perf-lite',localStorage.getItem('perf_lite')==='1');document.getElementById('theme-btn')?.replaceChildren(theme==='light'?'L':'D');document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='light'?'#f6f7fb':'#07110f');}
+window.toggleTheme=function(){const next=document.body.classList.contains('light')?'dark':'light';localStorage.setItem('theme',next);applyTheme(next);};
+
+let _tt=null;
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),1800);}
+function toastAction(m,label,fn){
+  const e=document.getElementById('toast');e.textContent=m+' ';
+  const b=document.createElement('button');b.className='toast-undo';b.textContent=label;
+  b.onclick=()=>{e.classList.remove('show');fn();};
+  e.appendChild(b);e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),5000);
+}
+
+/* ── OPTIMIZER (max group fill, team-aware, count-aware) ── */
+function bestPartner(){
+  const mine=getMine();let best=null;
+  getNames().forEach(u=>{if(u===me)return;const s=allData[u]||{};let iGet=0,theyGet=0;
+    swapIds().forEach(id=>{if(!haveId(mine,id)&&availableSparesFor(u,id)>0)iGet++;if(availableSparesFor(me,id)>0&&activeNeed(u,id))theyGet++;});
+    const score=iGet+theyGet;if(score>0&&(!best||score>best.score))best={u,iGet,theyGet,score};
+  });
+  return best;
+}
+function computePlan(){
+  const names=getNames();let fill=0;const handoffs={};
+  allIds().forEach(id=>{
+    const givers=[];names.forEach(u=>{for(let k=0;k<availableSparesFor(u,id);k++)givers.push(u);});
+    if(!givers.length)return;
+    const needers=names.filter(u=>activeNeed(u,id));
+    const k=Math.min(givers.length,needers.length);
+    for(let i=0;i<k;i++){fill++;const key=givers[i]+'|'+needers[i];(handoffs[key]=handoffs[key]||[]).push(id);}
+  });
+  return{fill,handoffs};
+}
+function groupOwnedTotal(){let n=0;getNames().forEach(u=>{const st=allData[u]||{};allIds().forEach(id=>{if(haveId(st,id))n++;});});return n;}
+function huntList(){
+  const names=getNames();const out=[];
+  allIds().forEach(id=>{const spares=names.reduce((a,u)=>a+availableSparesFor(u,id),0);if(spares>0)return;const needers=names.filter(u=>activeNeed(u,id)).length;if(needers>0)out.push({id,needers});});
+  out.sort((a,b)=>b.needers-a.needers);return out;
+}
+function badgesFor(name){
+  const st=allData[name]||{};const b=[];
+  let fullTeams=0;ALL.forEach(t=>{if(t.players.every((_,i)=>haveId(st,`${t.code}-${i+1}`)))fullTeams++;});
+  let own=0,spares=0;allIds().forEach(id=>{if(haveId(st,id))own++;spares+=sparesOf(st[id]);});
+  const teamFull=code=>{const t=TEAM_BY_CODE[code];return t&&t.players.every((_,i)=>haveId(st,`${code}-${i+1}`));};
+  const swaps=swapItems.filter(x=>x.status==='done'&&(x.from===name||x.to===name)).length;
+  // collection milestones
+  if(own>=1)b.push('Started');
+  if(own>=10)b.push(' Double figures');
+  if(own>=50)b.push('Half-century');
+  if(own>=100)b.push('100 Club');
+  if(own>=250)b.push('250 Club');
+  if(own>=500)b.push('500 Club');
+  if(own>=750)b.push('750 Club');
+  if(own===TOTAL_STICKERS)b.push('Album complete');
+  // teams
+  if(fullTeams>=1)b.push('First full section');
+  if(fullTeams>=5)b.push('5 sections done');
+  if(fullTeams>=10)b.push('10 sections done');
+  if(fullTeams>=25)b.push('25 sections done');
+  // special sections
+  if(teamFull('SPC'))b.push('Foil specials complete');
+  if(teamFull('TBL'))b.push('Table moments complete');
+  // swapping
+  if(spares>=20)b.push('Super swapper');
+  if(spares>=50)b.push('Spare stacker');
+  if(swaps>=1)b.push('First swap');
+  if(swaps>=10)b.push('Swap regular');
+  return b;
+}
+// Live competitive standings + crowns (only one holder each, ties allowed)
+function groupStandings(){
+  return getNames().map(n=>{const s=allData[n]||{};let own=0,sp=0,full=0;ALL.forEach(t=>{let c=0;for(let i=0;i<t.players.length;i++){const v=copiesOf(s[`${t.code}-${i+1}`]);if(v>=1)c++;sp+=Math.max(0,v-1);}if(c===t.players.length)full++;own+=c;});return{n,own,sp,full};});
+}
+function crownsFor(name){
+  const st=groupStandings();const out=[];
+  const lead=(key,label)=>{const m=Math.max(0,...st.map(x=>x[key]));if(m>0&&st.some(x=>x.n===name&&x[key]===m))out.push(label);};
+  lead('own','Group leader');lead('sp','Spare stacker');lead('full','Section finisher');
+  return out;
+}
+
+/* ── ACHIEVEMENTS (animated pop-up when you earn a new badge) ── */
+// Baseline once we actually have data, so existing badges don't all fire but new ones do.
+function baselineAch(){if(_achReady||!me)return;_achReady=true;localStorage.setItem('badges_'+me,JSON.stringify(badgesFor(me)));localStorage.setItem('crowns_'+me,JSON.stringify(crownsFor(me)));}
+function checkAchievements(){
+  if(!me||!_achReady)return;
+  const key='badges_'+me, now=badgesFor(me);
+  let seen;try{seen=new Set(JSON.parse(localStorage.getItem(key)||'[]'));}catch{seen=new Set();}
+  const fresh=now.filter(b=>!seen.has(b));
+  if(fresh.length)fresh.forEach(b=>queuePop({kicker:'Sticker moment unlocked',title:b,medal:badgeArtSrc(b),bg:'assets/milestone-clean.webp'}));
+  if(fresh.length||now.length!==seen.size)localStorage.setItem(key,JSON.stringify(now));
+  // Competitive crowns - pop when you take a title
+  const ck='crowns_'+me, nowC=crownsFor(me);
+  let seenC;try{seenC=new Set(JSON.parse(localStorage.getItem(ck)||'[]'));}catch{seenC=new Set();}
+  const freshC=nowC.filter(c=>!seenC.has(c));
+  if(freshC.length)freshC.forEach(c=>queuePop({kicker:'New group title!',title:c,medal:badgeArtSrc(c),bg:'assets/12_group_progress_art.webp'}));
+  localStorage.setItem(ck,JSON.stringify(nowC));
+}
+
+/* ── CELEBRATION POPUPS - your custom sticker is the star ── */
+let _popQ=[],_popBusy=false;
+function queuePop(d){_popQ.push(d);if(!_popBusy)nextPop();}
+function nextPop(){
+  if(!_popQ.length){_popBusy=false;return;}
+  _popBusy=true;const d=_popQ.shift();
+  let el=document.getElementById('ach');
+  if(!el){el=document.createElement('div');el.id='ach';document.body.appendChild(el);}
+  const portrait=userStickerSrc(me);
+  const bg=d.bg||'assets/milestone-clean.webp';
+  const vis=`<div class="ach-vis">${portrait?`<img class="ach-portrait" src="${portrait}" alt="">`:`<div class="ach-ic">${d.emoji||''}</div>`}${d.medal?`<img class="ach-medal" src="${d.medal}" alt="">`:''}</div>`;
+  el.innerHTML=`<div class="ach-card" style="--ach-bg:url('${bg}')"><div class="ach-glow"></div><div class="ach-rays"></div>${vis}<div class="ach-k">${esc(d.kicker)}</div><div class="ach-t">${esc(d.title)}</div>${d.sub?`<div class="ach-sub">${esc(d.sub)}</div>`:''}</div>`;
+  el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+  maybeConfetti(d.big?'full':'mini');buzz(d.big?[12,40,14,40,22]:[10,24,10]);
+  clearTimeout(el._t);el._t=setTimeout(()=>{el.classList.remove('show');setTimeout(nextPop,400);},2600);
+}
+function achievementPop(label){queuePop({kicker:'Sticker moment unlocked',title:label,medal:badgeArtSrc(label),bg:'assets/milestone-clean.webp'});}
+// Progress celebrations (works for single tap, "Own all", and swaps)
+function snapshotProgress(){
+  const mine=getMine();let own=0;const teams={};
+  ALL.forEach(t=>{let c=0;for(let i=0;i<t.players.length;i++){if(haveId(mine,`${t.code}-${i+1}`))c++;}if(c===t.players.length)teams[t.code]=1;own+=c;});
+  EXTRAS.forEach(t=>{let c=0;for(let i=0;i<t.players.length;i++){if(haveId(mine,`${t.code}-${i+1}`))c++;}if(c===t.players.length)teams[t.code]=1;});
+  return{own,teams};
+}
+function celebrate(before){
+  const after=snapshotProgress();
+  const newTeams=Object.keys(after.teams).filter(c=>!before.teams[c]);
+  let popped=false;
+  if(newTeams.length){const t=TEAM_BY_CODE[newTeams[0]];queuePop({kicker:'Section complete!',title:`${t.name}`,sub:newTeams.length>1?`+${newTeams.length-1} more done`:'Slot filled',big:true,bg:'assets/milestone-clean.webp'});pushFeed(`completed ${t.name}`);popped=true;}
+  const ms=[];for(let f=10;f<=100;f+=10)ms.push(Math.round(f/100*TOTAL_STICKERS));
+  const hit=ms.find(m=>before.own<m&&after.own>=m);
+  if(hit){const pct=Math.round(hit/TOTAL_STICKERS*100);queuePop({kicker:'Milestone unlocked',title:`${pct}% of the book`,sub:`${after.own} / ${TOTAL_STICKERS} in the album`,big:true,bg:'assets/milestone-clean.webp'});if(!newTeams.length)pushFeed(`reached ${pct}% of the album `);popped=true;}
+  // Climbing the table - celebrate overtaking a friend
+  const order=groupStandings().filter(s=>s.own>0).sort((a,b)=>b.own-a.own);
+  const myRank=order.findIndex(s=>s.n===me)+1;
+  if(myRank>0){
+    if(_prevRank&&myRank<_prevRank){const passed=order[myRank];queuePop({kicker:'Table charge!',title:myRank===1?'Top of the group!':`Up to #${myRank}`,sub:passed?`passed ${displayName(passed.n)}`:'',bg:'assets/12_group_progress_art.webp'});popped=true;}
+    _prevRank=myRank;
+  }
+  return popped;
+}
+// Tiny sparkle burst at a point (its own canvas so it never fights confetti)
+function sparkleAt(x,y){
+  if(reduceMotion())return;
+  let cv=document.getElementById('fxs');
+  if(!cv){cv=document.createElement('canvas');cv.id='fxs';cv.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:99998';document.body.appendChild(cv);}
+  const ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
+  const cols=['#f5c842','#ffffff','#22c55e'];
+  const P=Array.from({length:11},()=>({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6-2,g:.26,c:cols[Math.random()*cols.length|0],s:2+Math.random()*2.5,a:1}));
+  (function a(){ctx.clearRect(0,0,cv.width,cv.height);let alive=false;P.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.a-=.05;if(p.a>0){alive=true;ctx.globalAlpha=p.a;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,7);ctx.fill();}});if(alive)requestAnimationFrame(a);else ctx.clearRect(0,0,cv.width,cv.height);})();
+}
+// Combo meter for quick consecutive marks
+function comboHit(){
+  if(reduceMotion())return;
+  _combo++;clearTimeout(_comboT);
+  let e=document.getElementById('combo');if(!e){e=document.createElement('div');e.id='combo';document.body.appendChild(e);}
+  if(_combo>=3){e.textContent=' Combo x'+_combo;e.classList.remove('show');void e.offsetWidth;e.classList.add('show');
+    if(_combo===5||_combo===10||_combo===20||_combo===40){maybeConfetti('mini');buzz(30);}}
+  _comboT=setTimeout(()=>{e.classList.remove('show');_combo=0;},9000); // generous window - peeling/sticking a real card takes several seconds
+}
+
+/* ── TRADE ENGINE ── */
+function activeSwap(p){return p&&(p.status==='proposed'||p.status==='accepted');}
+function openSwaps(){return swapItems.filter(activeSwap);}
+function promisedOutgoingIds(name,excludeId){
+  const out={};
+  openSwaps().forEach(p=>{
+    if(p.id===excludeId)return;
+    const ids=p.from===name?(p.give||[]):(p.to===name?(p.get||[]):[]);
+    ids.forEach(id=>out[id]=(out[id]||0)+1);
+  });
+  return out;
+}
+function promisedCount(name,id,excludeId){return promisedOutgoingIds(name,excludeId)[id]||0;}
+function availableSparesFor(name,id,excludeId){return Math.max(0,sparesOf((allData[name]||{})[id])-promisedCount(name,id,excludeId));}
+function promiseIssuesFor(name,ids,excludeId){
+  const seen={},bad=[];
+  (ids||[]).forEach(id=>{seen[id]=(seen[id]||0)+1;if(seen[id]>availableSparesFor(name,id,excludeId))bad.push(id);});
+  return [...new Set(bad)];
+}
+function outgoingFor(p,name=me){return p.from===name?(p.give||[]):(p.to===name?(p.get||[]):[]);}
+function incomingFor(p,name=me){return p.from===name?(p.get||[]):(p.to===name?(p.give||[]):[]);}
+function otherFor(p){return p.from===me?p.to:p.from;}
+function myDoneFor(p){return p.from===me?!!p.fromDone:!!p.toDone;}
+function otherDoneFor(p){return p.from===me?!!p.toDone:!!p.fromDone;}
+function myAppliedFor(p){return p.from===me?!!p.fromApplied:!!p.toApplied;}
+function myAppliedFieldFor(p){return p.from===me?'fromApplied':'toApplied';}
+function tradeWarningHTML(p){
+  const bad=promiseIssuesFor(me,outgoingFor(p),p.id);
+  if(!bad.length)return'';
+  return`<div class="trade-warn"><b>This spare is no longer available:</b> ${fmtIds(bad.slice(0,6))}${bad.length>6?'...':''}</div>`;
+}
+// What me and `other` could swap. give = ids I hand over; get = ids I receive.
+function tradeBetween(other,reserved={}){
+  const mine=getMine(),s=allData[other]||{},give=[],get=[];
+  swapIds().forEach(id=>{
+    if((availableSparesFor(me,id)-(reserved[id]||0))>0&&activeNeed(other,id))give.push(id);
+    if(!haveId(mine,id)&&availableSparesFor(other,id)>0)get.push(id);
+  });
+  give.sort((a,b)=>(wishedBy(other,b)?1:0)-(wishedBy(other,a)?1:0)); // give them what they wishlisted first
+  get.sort((a,b)=>(isWish(b)?1:0)-(isWish(a)?1:0));                  // your wishlisted first
+  return{give,get};
+}
+function partnersRanked(){
+  return getNames().filter(n=>n!==me).map(u=>{const t=tradeBetween(u);const fin=teamsCompletedBy(t.get).length;const w=t.get.filter(isWish).length;const tw=t.give.filter(id=>wishedBy(u,id)).length;return{u,give:t.give.length,get:t.get.length,total:t.give.length+t.get.length,fin,w,tw};})
+    .filter(p=>p.total>0).sort((a,b)=>(b.fin-a.fin)||((b.w+b.tw)-(a.w+a.tw))||(b.total-a.total));
+}
+/* Shared wishlist (/wish node) + team-completion detection */
+let wishData={};
+function isWish(id){return!!(wishData[me]&&wishData[me][id]);}
+function wishedBy(name,id){return!!(wishData[name]&&wishData[name][id]);}
+window.toggleWish=function(id){
+  if(!me||(!db&&!DEMO_MODE))return;const on=isWish(id);
+  wishData[me]=wishData[me]||{};
+  if(on){delete wishData[me][id];if(db)remove(gref(`wish/${me}/${id}`));}
+  else{wishData[me][id]=true;if(db)set(gref(`wish/${me}/${id}`),true);}
+  persistDemo();
+  toast(on?'Removed from wishlist':'Added to wishlist * - the group can see it');renderSwaps();
+};
+// one-time migration of any old per-device wishlist into the shared node
+function migrateWish(){try{const old=JSON.parse(localStorage.getItem(groupKey('wish_'+me))||'[]');if(old.length&&db&&currentGroup){old.forEach(id=>set(gref(`wish/${me}/${id}`),true));localStorage.removeItem(groupKey('wish_'+me));}}catch(e){}}
+
+// Propose every viable swap in one tap (skips partners with an open swap)
+window.proposeAll=function(){
+  const todo=partnersRanked().filter(p=>!openSwaps().some(x=>((x.from===me&&x.to===p.u)||(x.from===p.u&&x.to===me))));
+  if(!todo.length)return toast('No new swaps to propose right now');
+  if(!confirm(`Send swap proposals to ${todo.length} ${todo.length===1?'person':'people'}?`))return;
+  const reserved={};let n=0,skipped=0;
+  todo.forEach(p=>{
+    const t=tradeBetween(p.u,reserved);
+    if(t.give.length||t.get.length){
+      const item=makeSwapItem(p.u,t.give,t.get);
+      if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now()+'-'+n,...item});persistDemo();}
+      else push(gref('swaps'),item);
+      t.give.forEach(id=>reserved[id]=(reserved[id]||0)+1);
+      n++;
+    }else skipped++;
+  });
+  maybeConfetti('mini');toast(`Sent ${n} swap proposal${n!==1?'s':''}${skipped?` · ${skipped} skipped`:''}`);
+};
+
+// 3-way swap loops: A->B->C->A, each handing the next a sticker they need
+function threeWayLoops(){
+  const active=groupStandings().filter(s=>s.own>0).map(s=>s.n);
+  if(active.length<3)return[];
+  const data={};active.forEach(n=>data[n]=allData[n]||{});
+  const edge=(a,b)=>{for(const id of swapIds()){if(availableSparesFor(a,id)>0&&activeNeed(b,id))return id;}return null;};
+  const loops=[],seen=new Set();
+  for(let i=0;i<active.length;i++)for(let j=0;j<active.length;j++)for(let k=0;k<active.length;k++){
+    if(i===j||j===k||i===k)continue;
+    const a=active[i],b=active[j],c=active[k];
+    const sorted=[a,b,c].slice().sort()[0];const rot=[a,b,c];const st=rot.indexOf(sorted);
+    const canon=rot.slice(st).concat(rot.slice(0,st)).join('>');
+    if(seen.has(canon))continue;seen.add(canon);
+    const e1=edge(a,b),e2=edge(b,c),e3=edge(c,a);
+    if(e1&&e2&&e3)loops.push({a,b,c,e1,e2,e3,mine:a===me||b===me||c===me});
+  }
+  loops.sort((x,y)=>(y.mine?1:0)-(x.mine?1:0));
+  return loops;
+}
+function teamsCompletedBy(ids){const mine=getMine();const set=ids instanceof Set?ids:new Set(ids);const out=[];ALL.forEach(t=>{const miss=[];for(let i=0;i<t.players.length;i++){const id=`${t.code}-${i+1}`;if(!haveId(mine,id))miss.push(id);}if(miss.length&&miss.every(id=>set.has(id)))out.push(t);});return out;}
+function swapHistoryHTML(){
+  const done=swapItems.filter(x=>x.status==='done'&&(x.from===me||x.to===me)).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,8);
+  if(!done.length)return'';
+  return`<div class="pairs-t">Recent swaps Recent swaps</div>`+done.map(p=>{const other=p.from===me?p.to:p.from;const n=(p.give||[]).length+(p.get||[]).length;return`<div class="hist-row"><span class="hist-w">You <-> ${esc(displayName(other))}</span><span class="hist-n">${n}</span><span class="hist-t">${p.ts?timeAgo(p.ts):''}</span></div>`;}).join('');
+}
+function closedSwapsHTML(){
+  const closed=swapItems.filter(x=>(x.from===me||x.to===me)&&(x.status==='declined'||x.status==='cancelled')).sort((a,b)=>(b.updatedAt||b.ts||0)-(a.updatedAt||a.ts||0)).slice(0,3);
+  if(!closed.length)return'';
+  return`<div class="pairs-t">Closed offers</div>`+closed.map(p=>`<div class="hist-row"><span class="hist-w">${p.status==='declined'?'Declined':'Cancelled'} with ${esc(displayName(otherFor(p)))}</span><span class="hist-n">${(p.give||[]).length+(p.get||[]).length}</span><span class="hist-t">${timeAgo(p.updatedAt||p.ts||Date.now())}</span></div>`).join('');
+}
+function nobodyOwns(){const names=getNames();return allIds().filter(id=>!names.some(u=>haveId(allData[u]||{},id)));}
+function closestTeams(max){
+  const mine=getMine(),out=[];
+  ALL.forEach(t=>{let own=0;t.players.forEach((_,i)=>{if(haveId(mine,`${t.code}-${i+1}`))own++;});const left=t.players.length-own;if(left>0&&own>0)out.push({code:t.code,name:t.name,mark:t.mark,left});});
+  return out.sort((a,b)=>a.left-b.left).slice(0,max||3);
+}
+function balanceLabel(g,r){if(!g||!r)return'';return Math.abs(g-r)<=1?'Even trade':(g>r?'You give more':'You get more');}
+
+/* ── OFFER DISPLAY HELPERS ── */
+function fmtIds(ids){return ids.map(id=>id.replace('-',' ')).join(', ');}
+window.nudge=function(name){if(name===me)return;pushFeed(`gave ${displayName(name)} a nudge to get swapping `);buzz(18);toast('Nudge sent to '+displayName(name)+' ');};
+function daysToKickoff(){return 0;}
+
+/* ── SHARED SWAP PROPOSALS (/swaps node - coordination only; books still self-written) ── */
+// Merge-only application to MY OWN node: gain +1 each, give -1 spare each.
+const _swapBusy=new Set();
+function swapLock(key){if(_swapBusy.has(key)){toast('Already updating...');return false;}_swapBusy.add(key);setTimeout(()=>_swapBusy.delete(key),7000);return true;}
+function swapUnlock(key){_swapBusy.delete(key);}
+function makeSwapItem(to,give,get){return{from:me,to,fromUid:me,toUid:to,fromName:displayName(me),toName:displayName(to),give,get,status:'proposed',createdAt:Date.now(),updatedAt:Date.now(),ts:Date.now()};}
+function swapWritePayload(p,extra={}){
+  const out={fromUid:p.fromUid||p.from,toUid:p.toUid||p.to,fromName:p.fromName||displayName(p.from),toName:p.toName||displayName(p.to),give:p.give||[],get:p.get||[],status:p.status,createdAt:p.createdAt||p.ts||Date.now(),updatedAt:p.updatedAt||Date.now()};
+  if(p.acceptedTs)out.acceptedTs=p.acceptedTs;
+  if(p.fromDone)out.fromDone=true;
+  if(p.toDone)out.toDone=true;
+  if(p.fromApplied)out.fromApplied=true;
+  if(p.toApplied)out.toApplied=true;
+  return Object.assign(out,extra);
+}
+function appliedKey(id){return groupKey('applied_swap_'+id+'_'+me);}
+function buildCollectionPatch(gain,give){
+  const mine={...getMine()},patch={},bad=[];
+  gain.forEach(id=>{const nv=Math.min(MAX_COPIES,copiesOf(mine[id])+1);mine[id]=nv;patch[id]=nv;});
+  give.forEach(id=>{
+    const c=copiesOf(mine[id]);
+    if(c>1){const nv=c-1;mine[id]=nv;patch[id]=nv;}
+    else bad.push(id);
+  });
+  return{mine,patch,bad:[...new Set(bad)]};
+}
+function applyCompletedSwapToMine(p){
+  if(!p||p.status!=='done'||(p.from!==me&&p.to!==me)||myAppliedFor(p)||localStorage.getItem(appliedKey(p.id)))return false;
+  const gain=incomingFor(p),give=outgoingFor(p),delta=buildCollectionPatch(gain,give);
+  if(delta.bad.length){toast('This spare is no longer available');return false;}
+  const before=snapshotProgress();
+  allData[me]=delta.mine;
+  localStorage.setItem(appliedKey(p.id),'1');
+  const appliedField=myAppliedFieldFor(p);
+  if(DEMO_MODE){
+    Object.assign(p,{[appliedField]:true});
+    persistDemo();
+  }else{
+    const updates={};
+    Object.entries(delta.patch).forEach(([id,v])=>updates[`collections/${me}/${id}`]=v);
+    updates[`swaps/${p.id}`]=swapWritePayload(p,{[appliedField]:true,updatedAt:Date.now()});
+    update(gref(),updates).catch(()=>localStorage.removeItem(appliedKey(p.id)));
+  }
+  refresh();showSaved();celebrate(before);checkAchievements();
+  toast('Swap complete');
+  return true;
+}
+function applyDoneSwaps(){
+  if(!me)return;
+  swapItems.filter(p=>p.status==='done'&&(p.from===me||p.to===me)).forEach(applyCompletedSwapToMine);
+}
+window.proposeSwap=function(u){
+  const t=tradeBetween(u);
+  if(!t.give.length&&!t.get.length)return toast('Nothing to swap with '+displayName(u));
+  if(openSwaps().some(x=>((x.from===me&&x.to===u)||(x.from===u&&x.to===me))))return toast('A swap with '+displayName(u)+' is already open');
+  const bad=promiseIssuesFor(me,t.give);
+  if(bad.length)return toast('Some spares are already promised');
+  try{
+    const item=makeSwapItem(u,t.give,t.get);
+    if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now(),...item});persistDemo();}
+    else push(gref('swaps'),item);
+    toast('Swap proposed to '+displayName(u)+' Send');renderSwaps();
+  }catch(e){toast('Could not send');}
+};
+window.requestSticker=function(id){
+  const holder=userEntries().filter(([u])=>u!==me&&availableSparesFor(u,id)>0)
+    .map(([u])=>({u,offer:swapIds().filter(x=>availableSparesFor(me,x)>0&&activeNeed(u,x)).slice(0,3)}))
+    .sort((a,b)=>b.offer.length-a.offer.length)[0];
+  if(!holder)return toast('No one has that spare right now');
+  if(openSwaps().some(x=>((x.from===me&&x.to===holder.u)||(x.from===holder.u&&x.to===me))))return toast('You already have an open offer with '+displayName(holder.u));
+  try{
+    const item=makeSwapItem(holder.u,holder.offer,[id]);
+    if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now(),...item});persistDemo();}
+    else push(gref('swaps'),item);
+    toast('Request sent to '+displayName(holder.u)+' Send');renderSwaps();
+  }catch(e){toast('Could not send request');}
+};
+window.acceptSwap=function(id){
+  const key='accept:'+id;if(!swapLock(key))return;
+  try{
+    const p=swapItems.find(x=>x.id===id);if(!p||p.to!==me||p.status!=='proposed')return swapUnlock(key);
+    const bad=promiseIssuesFor(me,p.get||[],p.id);
+    if(bad.length){toast('Review needed - spare already promised');return;}
+    if(DEMO_MODE){Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});persistDemo();}
+    else update(gref('swaps/'+id),{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});
+    queuePop({kicker:'Swap locked in',title:'Swap in person, then confirm',bg:'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(`${displayName(p.from)} accepted - swap in person, then confirm`);renderSwaps();
+  }finally{setTimeout(()=>swapUnlock(key),1200);}
+};
+window.confirmSwap=function(id){
+  const key='confirm:'+id;if(!swapLock(key))return;
+  try{
+    const p=swapItems.find(x=>x.id===id);if(!p||p.status!=='accepted'||(p.from!==me&&p.to!==me))return swapUnlock(key);
+    if(myDoneFor(p)){toast('Your side is already marked done');return;}
+    const give=outgoingFor(p),bad=promiseIssuesFor(me,give,p.id);
+    if(bad.length){toast('Review needed - spare no longer available');return;}
+    const patch=p.from===me?{fromDone:true,updatedAt:Date.now()}:{toDone:true,updatedAt:Date.now()};
+    if(otherDoneFor(p))patch.status='done';
+    if(DEMO_MODE){Object.assign(p,patch);persistDemo();if(p.status==='done')applyCompletedSwapToMine(p);}
+    else update(gref('swaps/'+id),patch).then(()=>{if(patch.status==='done')applyCompletedSwapToMine({...p,...patch});});
+    if(otherDoneFor(p))pushFeed(`completed a queued swap with ${displayName(otherFor(p))} Swap`);
+    queuePop({kicker:otherDoneFor(p)?'Swap complete!':'Handover confirmed',title:otherDoneFor(p)?'Swap complete':`Waiting for ${displayName(otherFor(p))}`,big:otherDoneFor(p),bg:otherDoneFor(p)?'assets/milestone-clean.webp':'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(otherDoneFor(p)?'Swap complete':'You confirmed - waiting for '+displayName(otherFor(p)));renderSwaps();
+  }finally{setTimeout(()=>swapUnlock(key),1200);}
+};
+window.declineSwap=function(id){
+  try{
+    const p=swapItems.find(x=>x.id===id);if(!p)return;
+    const status=p.to===me&&p.status==='proposed'?'declined':'cancelled';
+    const patch={status,updatedAt:Date.now()};
+    if(DEMO_MODE){Object.assign(p,patch);persistDemo();}
+    else update(gref('swaps/'+id),patch);
+    toast(status==='declined'?'Offer declined':'Offer cancelled');
+  }catch(e){toast('Could not close offer');}
+  renderSwaps();
+};
+
+/* ── HEATMAP ── */
+// Album-style mini-map: one block per team/section (like album pages), grouped with gaps.
+function renderHeatmap(){
+  const cv=document.getElementById('heatmap');if(!cv)return;
+  const mine=getMine();
+  const W=Math.max(240,(cv.clientWidth||(document.getElementById('panel-collection').clientWidth-28)||340));
+  const inCols=5,inRows=4;            // each section drawn as a 5×4 page (≤20 stickers)
+  const cell=4,pad=2,gap=8;           // small cells; gap separates teams
+  const blockW=inCols*cell+pad*2, blockH=inRows*cell+pad*2;
+  const bpr=Math.max(4,Math.floor((W+gap)/(blockW+gap)));
+  const rows=Math.ceil(ALL.length/bpr);
+  const cssW=W, cssH=rows*blockH+(rows-1)*gap+2;
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  cv.style.width='100%';cv.style.height=cssH+'px';cv.width=Math.round(cssW*dpr);cv.height=Math.round(cssH*dpr);
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,cssW,cssH);
+  const layout=[];
+  ALL.forEach((t,bi)=>{
+    const bx=(bi%bpr)*(blockW+gap), by=Math.floor(bi/bpr)*(blockH+gap);
+    let own=0;
+    // faint page background per team
+    ctx.fillStyle='rgba(255,255,255,.04)';ctx.fillRect(bx,by,blockW,blockH);
+    for(let i=0;i<inCols*inRows;i++){
+      if(i>=t.players.length)break;
+      const cx=bx+pad+(i%inCols)*cell, cy=by+pad+Math.floor(i/inCols)*cell;
+      const c=copiesOf(mine[`${t.code}-${i+1}`]);if(c>=1)own++;
+      ctx.fillStyle=c>=2?'#f5c842':c>=1?'#22c55e':'rgba(255,255,255,.12)';
+      ctx.fillRect(cx,cy,cell-1,cell-1);
+    }
+    if(own===t.players.length){ctx.strokeStyle='rgba(245,200,66,.8)';ctx.lineWidth=1;ctx.strokeRect(bx+.5,by+.5,blockW-1,blockH-1);}
+    layout.push({code:t.code,x:bx,y:by,w:blockW,h:blockH});
+  });
+  cv.onclick=(e)=>{const r=cv.getBoundingClientRect();const px=(e.clientX-r.left)/r.width*cssW,py=(e.clientY-r.top)/r.height*cssH;const hit=layout.find(b=>px>=b.x&&px<=b.x+b.w&&py>=b.y&&py<=b.y+b.h);if(hit)jumpTeam(hit.code);};
+}
+
+/* ── PRESENCE + FEED ── */
+function stopPresence(){
+  if(_presenceTimer){clearInterval(_presenceTimer);_presenceTimer=null;}
+  if(_presenceRef){try{remove(_presenceRef);}catch(e){} _presenceRef=null;}
+}
+function startPresence(){
+  if(DEMO_MODE||!db||!me)return;
+  stopPresence();
+  try{
+    const r=gref('presence/'+me);_presenceRef=r;
+    set(r,Date.now());onDisconnect(r).remove();
+    _presenceTimer=setInterval(()=>{try{set(r,Date.now());}catch(e){}},45000);
+  }catch(e){}
+}
+function pushFeed(text){if(!me||!currentGroup)return;try{const item=DEMO_MODE?{u:me,t:text,ts:Date.now()}:{uid:me,displayName:displayName(me),text,ts:Date.now()};if(DEMO_MODE){feedItems.unshift(item);feedItems=feedItems.slice(0,20);persistDemo();}else if(db)push(gref('feed'),item);}catch(e){}}
+function isOnline(name){const t=presence[enc(name)]||presence[name];return t&&(Date.now()-t<90000);}
+
+/* ── TILT-TO-SHINE ── */
+window.enableTilt=function(){
+  if(reduceMotion())return toast('Motion is off in lite mode');
+  if(_tiltOn)return toast('Shiny mode already on ');
+  const go=()=>{if(_tiltOn)return;_tiltOn=true;document.body.classList.add('tilt');_tiltHandler=e=>{const g=Math.max(0,Math.min(100,((e.gamma||0)+45)/90*100));document.documentElement.style.setProperty('--shine',g+'%');};window.addEventListener('deviceorientation',_tiltHandler,{passive:true});toast('Shiny mode on');};
+  if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission){DeviceOrientationEvent.requestPermission().then(p=>{if(p==='granted')go();else toast('Motion access denied');}).catch(()=>toast('Not available'));}
+  else go();
+};
+
+/* ── BOOT ── */
+function ensureAnonAuth(){
+  return new Promise((resolve,reject)=>{
+    const unsub=onAuthStateChanged(auth,user=>{
+      if(user){unsub();currentUid=user.uid;resolve(user);return;}
+      signInAnonymously(auth).catch(reject);
+    },reject);
+  });
+}
+async function boot(){
+  if(DEMO_MODE){startDemo();return;}
+  const cfg=getCfg();
+  if(!cfg){ss('s-cfg');return;}
+  try{
+    const app=initializeApp(cfg);
+    db=getDatabase(app);
+    auth=getAuth(app);
+    if(wantsEmulator(cfg))connectLocalEmulators(cfg);
+    await ensureAnonAuth();
+    onValue(ref(db,'.info/connected'),snap=>{document.getElementById('offline').style.display=snap.val()?'none':'block';});
+    const fromUrl=normalizeGroup(new URL(location.href).searchParams.get('group')||'');
+    currentGroup=fromUrl||normalizeGroup(localStorage.getItem('group_code')||'');
+    if(currentGroup){enterGroup(currentGroup);}
+    else{ss('s-group');setTimeout(()=>document.getElementById('group-input')?.focus(),50);}
+  }catch(e){ss('s-cfg');}
+}
+function listenGroup(){
+  if(!db||!currentGroup||_groupListening)return;
+  _groupListening=true;dataLoaded=false;ss('s-load');
+  const loadTimer=setTimeout(()=>{
+    if(dataLoaded)return;
+    _groupListening=false;
+    const err=document.getElementById('group-err');
+    if(err){err.textContent='Could not load that group yet. Check the invite code or deploy the Firebase rules included with this project.';err.style.display='block';}
+    ss('s-group');
+  },8000);
+  onValue(gref('members'),snap=>{
+    clearTimeout(loadTimer);
+    const first=!dataLoaded;
+    memberProfiles=snap.val()||{};
+    dataLoaded=true;if(me)baselineAch();
+    setGroupNames(Object.keys(memberProfiles));
+    buildPersonFilter();
+    if(me)scheduleRefresh();
+    if(document.getElementById('s-user').classList.contains('vis'))renderUserScreen();
+    if(first)afterGroup();
+  },err=>{
+    clearTimeout(loadTimer);_groupListening=false;
+    const e=document.getElementById('group-err');
+    if(e){e.textContent='Could not load that group yet. Check the invite code or deploy the Firebase rules included with this project.';e.style.display='block';}
+    ss('s-group');
+  });
+  onValue(gref('collections'),snap=>{allData=snap.val()||{};applyDoneSwaps();if(me)scheduleRefresh();});
+  onValue(gref('feed'),snap=>{const v=snap.val()||{};feedItems=Object.values(v).filter(x=>x&&typeof x==='object'&&x.uid&&x.text&&typeof x.ts==='number').map(x=>({u:x.uid,t:x.text,ts:x.ts,displayName:x.displayName})).sort((a,b)=>b.ts-a.ts).slice(0,20);if(me&&curTab==='group')renderGroup();});
+  onValue(gref('presence'),snap=>{presence=snap.val()||{};if(me&&curTab==='group')renderGroup();});
+  onValue(gref('swaps'),snap=>{const v=snap.val()||{};swapItems=Object.entries(v).map(([id,x])=>x&&typeof x==='object'?{id,...x,from:x.fromUid||x.from,to:x.toUid||x.to,give:Array.isArray(x.give)?x.give:[],get:Array.isArray(x.get)?x.get:[]}:null).filter(x=>x&&x.from&&x.to&&x.status);applyDoneSwaps();updateBadge();if(me&&curTab==='swaps')renderSwaps();});
+  onValue(gref('wish'),snap=>{wishData=snap.val()||{};if(me&&curTab==='swaps')renderSwaps();});
+}
+function afterGroup(){
+  if(!DEMO_MODE){
+    me=currentUid;
+    localStorage.setItem(groupKey('me'),me);
+    launchApp();
+    return;
+  }
+  const saved=localStorage.getItem(groupKey('me'));
+  if(saved){me=saved;launchApp();}
+  else{renderUserScreen();ss('s-user');}
+}
+function inviteUrl(){
+  const url=new URL(location.href);
+  url.searchParams.set('group',currentGroup);
+  url.hash='';
+  return url.toString();
+}
+async function enterGroup(code,created=false){
+  const clean=normalizeGroup(code);
+  const err=document.getElementById('group-err');
+  if(!clean||clean.length<4){if(err){err.textContent='Enter a valid group code.';err.style.display='block';}return;}
+  currentGroup=clean;localStorage.setItem('group_code',clean);
+  const url=new URL(location.href);url.searchParams.set('group',clean);url.hash='';
+  history.replaceState(null,'',url.toString());
+  if(DEMO_MODE){listenGroup();return;}
+  ss('s-load');
+  try{
+    if(created)await set(gref('meta'),{code:clean,createdAt:Date.now(),createdBy:currentUid,joinOpen:true,albumId:'public-980'});
+    if(!created){
+      const metaSnap=await get(gref('meta'));
+      if(!metaSnap.exists()||metaSnap.child('joinOpen').val()!==true)throw new Error('group-not-open');
+    }
+    const snap=await get(gref(`members/${currentUid}`));
+    if(snap.exists()){
+      memberProfiles[currentUid]=snap.val()||{};
+      me=currentUid;
+      localStorage.setItem(groupKey('me'),me);
+      listenGroup();
+    }else{
+      me=currentUid;
+      dataLoaded=true;
+      renderUserScreen();
+      ss('s-user');
+    }
+  }catch(e){
+    _groupListening=false;
+    if(err){err.textContent='Could not open that group. Check the invite code and Firebase rules.';err.style.display='block';}
+    ss('s-group');
+  }
+}
+function randomGroup(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let out='';for(let i=0;i<6;i++)out+=chars[Math.random()*chars.length|0];return out;}
+window.createGroup=function(){enterGroup(randomGroup(),true);};
+window.joinGroup=function(){enterGroup(document.getElementById('group-input')?.value||'');};
+window.copyInvite=async function(){
+  if(!currentGroup)return toast('Create or join a group first');
+  const text=`Join my Sticker Swap group (${currentGroup}): ${inviteUrl()}`;
+  try{await navigator.clipboard.writeText(text);toast('Invite link copied');}
+  catch(e){prompt('Copy this invite link',text);}
+};
+window.leaveGroup=function(){
+  if(!confirm('Leave this group on this device? Your sticker data stays in the group.'))return;
+  stopPresence();localStorage.removeItem('group_code');localStorage.removeItem(groupKey('me'));location.href=location.pathname;
+};
+window.deleteMyData=function(){
+  if(!me||!currentGroup)return;
+  if(!confirm(`Delete ${displayName(me)}'s stickers, wishlist, and profile from this group?`))return;
+  const old=me;
+  try{
+    remove(gref(`collections/${old}`));remove(gref(`members/${old}`));remove(gref(`wish/${old}`));remove(gref('presence/'+enc(old)));
+    swapItems.filter(p=>p.from===old||p.to===old).forEach(p=>remove(gref('swaps/'+p.id)));
+    delete memberProfiles[old];delete allData[old];setGroupNames(getNames().filter(n=>n!==old));
+  }catch(e){}
+  me=currentUid;localStorage.removeItem(groupKey('me'));_achReady=false;document.getElementById('app').classList.remove('vis');renderUserScreen();ss('s-user');toast('Your group data was deleted');
+};
+window.resetDemo=function(){
+  if(!DEMO_MODE)return;
+  if(!confirm('Reset the demo sample data?'))return;
+  localStorage.removeItem('demo_state');localStorage.removeItem(groupKey('me'));location.reload();
+};
+
+/* ── USER SCREEN ── */
+function renderUserScreen(){
+  const names=getNames();
+  if(!DEMO_MODE){
+    const existing=memberProfiles[currentUid]?.displayName||'';
+    document.getElementById('u-grid').innerHTML='';
+    document.querySelector('#s-user .u-hero p').textContent=existing?'Update the name friends see in this group':'Add the name friends will see in this group';
+    const input=document.getElementById('new-name');
+    if(input&&!input.value)input.value=existing;
+    return;
+  }
+  document.getElementById('u-grid').innerHTML=names.length?names.map((n,i)=>{
+    const s=allData[n]||{};
+    let own=0,dbl=0;allIds().forEach(id=>{const c=copiesOf(s[id]);if(c>=1)own++;dbl+=Math.max(0,c-1);});
+    const portrait=USER_STICKERS[n]?`<img class="u-sticker" src="${USER_STICKERS[n]}" alt="${esc(n)} football sticker">`:`<div class="u-avi">${AVIS[i%AVIS.length]}</div>`;
+    return`<button class="u-btn" onclick="doSelect(decodeURIComponent('${enc(n)}'))">${portrait}${esc(n)}<div class="u-cnt">${own} in book · ${dbl} spare${dbl!==1?'s':''}</div></button>`;
+  }).join(''):`<div class="empty" style="grid-column:1/-1"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>Add the first nickname for group ${esc(currentGroup)}.</div>`;
+}
+window.doAddUser=function(){
+  const inp=document.getElementById('new-name');
+  const n=cleanName(inp.value);if(!n)return;
+  if(!DEMO_MODE){
+    if(!currentUid||!currentGroup)return toast('Still signing in');
+    const prior=memberProfiles[currentUid]||{};
+    const profile={displayName:n,avatar:prior.avatar||'',role:prior.role||'member',joinedAt:prior.joinedAt||Date.now(),lastSeenAt:Date.now()};
+    memberProfiles[currentUid]=profile;
+    me=currentUid;
+    setGroupNames([...new Set([...getNames(),currentUid])]);
+    localStorage.setItem(groupKey('me'),me);
+    update(gref(`members/${currentUid}`),profile).then(()=>{
+      document.getElementById('app').classList.remove('vis');
+      if(!_groupListening)listenGroup();
+      launchApp();
+    }).catch(()=>toast('Could not save profile yet'));
+    return;
+  }
+  const names=getNames();if(names.includes(n)){toast('Name already exists');return;}
+  names.push(n);saveNames(names);inp.value='';doSelect(n);
+};
+window.doSelect=function(name){if(!DEMO_MODE)return;me=name;localStorage.setItem(groupKey('me'),name);ss(null);launchApp();};
+window.doSwitch=function(){
+  if(!DEMO_MODE){document.getElementById('app').classList.remove('vis');renderUserScreen();ss('s-user');return;}
+  stopPresence();me=null;localStorage.removeItem(groupKey('me'));document.getElementById('app').classList.remove('vis');renderUserScreen();ss('s-user');
+};
+
+/* ── LAUNCH ── */
+function launchApp(){
+  ss(null);
+  if(me&&!getNames().includes(me))saveNames([...getNames(),me]);
+  const names=getNames();const i=names.indexOf(me);
+  document.getElementById('t-avi').innerHTML=userAvatarMarkup(me,i>=0?i:0,'pill-avatar');
+  document.getElementById('t-name').textContent=displayName(me);
+  document.getElementById('app').classList.add('vis');
+  applyTheme(localStorage.getItem('theme')||'dark');
+  migrateWish();buildFilters();buildPersonFilter();refresh();renderHeatmap();startPresence();
+  if(dataLoaded)baselineAch();
+}
+
+/* ── TABS ── */
+window.showTab=function(tab){
+  curTab=tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+  render(tab);
+};
+function refresh(){render(curTab);updateBadge();}
+function render(tab){if(tab==='collection')renderCollection();else if(tab==='swaps')renderSwaps();else if(tab==='group')renderGroup();}
+
+/* ── FILTERS ── */
+function buildFilters(){
+  const row=document.getElementById('frow');
+  row.innerHTML='<div class="chip active" onclick="setFilter(\'ALL\',this)">All Sections</div>'+
+    [...ALL,...EXTRAS].map(t=>`<div class="chip" onclick="setFilter('${t.code}',this)">${t.code}</div>`).join('');
+}
+window.setFilter=function(code,el){activeFilter=code;document.querySelectorAll('#frow .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');if(code!=='ALL')openTeams.add(code);renderCollection();};
+window.expandAll=function(open){const sections=activeFilter==='ALL'?[...ALL,...EXTRAS]:[...ALL,...EXTRAS].filter(t=>t.code===activeFilter);sections.forEach(t=>{if(open)openTeams.add(t.code);else openTeams.delete(t.code);});renderCollection();};
+window.setStatusFilter=function(v,el){statusFilter=v;document.querySelectorAll('.status-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderCollection();};
+window.onSearch=function(){document.getElementById('sbox')?.classList.toggle('has-text',!!document.getElementById('s-input')?.value);clearTimeout(_searchTimer);_searchTimer=setTimeout(renderCollection,80);};
+window.clearSearch=function(){const input=document.getElementById('s-input');if(!input)return;input.value='';document.getElementById('sbox')?.classList.remove('has-text');clearTimeout(_searchTimer);renderCollection();input.focus();};
+function stickerMatches(team,num,pname,q,teamMatch){
+  if(!q)return true;
+  const exact=q.match(/^([a-z0-9]{2,5})[- ]+0*(\d{1,2})$/i);
+  if(exact)return team.code.toLowerCase()===exact[1].toLowerCase()&&num===parseInt(exact[2]);
+  const code=`${team.code} ${num}`.toLowerCase(),dash=`${team.code}-${num}`.toLowerCase();
+  return code.includes(q)||dash.includes(q)||pname.toLowerCase().includes(q)||teamMatch;
+}
+
+function buildPersonFilter(){
+  const sel=document.getElementById('person-filter');if(!sel)return;
+  const names=getNames().filter(n=>n!==me);
+  const keep=names.includes(personFilter)?personFilter:'ALL';
+  personFilter=keep;
+  sel.innerHTML='<option value="ALL">Everyone in the group</option>'+names.map(n=>`<option value="${esc(n)}"${n===keep?' selected':''}>Only ${esc(displayName(n))}</option>`).join('');
+  sel.value=keep;
+}
+window.setPersonFilter=function(v){personFilter=v;renderSwaps();};
+window.setEntryMode=function(mode){
+  entryMode=mode;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('mode-'+mode)?.classList.add('active');
+  document.body.classList.toggle('clear-mode',mode==='clear');
+  const hint=document.getElementById('entry-hint');
+  if(hint)hint.textContent=mode==='clear'?'Remove mode: tapping a sticker removes it. Undo appears after each removal.':'Tap once = in your book. Tap again for each spare you have.';
+};
+
+/* ── COLLECTION ── */
+function buildBlock(team,q,isExtra){
+  const mine=getMine();
+  const teamMatch=!q||team.name.toLowerCase().includes(q)||team.code.toLowerCase().includes(q);
+  let tOwn=0,tDbl=0,hasMatch=false,matched=[];
+  team.players.forEach((_,i)=>{
+    const num=i+1,id=`${team.code}-${num}`;
+    const c=copiesOf(mine[id]);
+    const pname=team.players[i]||'';
+    if(c>=1)tOwn++;
+    if(c>=2)tDbl+=c-1;
+    const pm=stickerMatches(team,num,pname,q,teamMatch);
+    if(!pm)return;
+    if(statusFilter==='missing'&&c!==0)return;
+    if(statusFilter==='doubler'&&c<2)return;
+    hasMatch=true;matched.push({i,num,id,c,pname});
+  });
+  if(!hasMatch&&(statusFilter!=='all'||(q&&!teamMatch)))return'';
+  const tot=team.players.length,pct=Math.round((tOwn/tot)*100),open=openTeams.has(team.code)||activeFilter!=='ALL'||(q&&hasMatch)||(statusFilter!=='all'&&hasMatch);
+  let cards='';
+  if(open){
+    matched.forEach(({i,num,id,c,pname})=>{
+    const m=cardMeta(c);
+    const foil=!isExtra&&(num===1||team.code==='OPN'||team.code==='SPC'||team.code==='TBL');
+    const xtra=isExtra?(' xtra '+team.code.toLowerCase()):'';
+    const fx=foil?'<i class="foil-fx"></i>':(isExtra?`<i class="xtra-fx" style="--shine-delay:${((i%6)*-.75).toFixed(2)}s"></i>`:'');
+    const shine=(foil||isExtra)&&matched.length<=6?' shine-live':'';
+    cards+=`<div class="sc${m.cls?' '+m.cls:''}${foil?' foil':''}${xtra}${shine}" id="sc-${team.code}-${num}" onclick="tap('${team.code}',${num},event)">${fx}<div class="sc-state">${m.lbl}</div><div class="sc-badge">${m.badge}</div><div class="sc-n">${team.code}<br>${num}</div><div class="sc-i">${m.ico}</div><div class="sc-p">${esc(pname)}</div></div>`;
+    });
+  }
+  return`<div class="tblock${open?' open':''}${tOwn===tot?' complete':''}" id="tb-${team.code}">
+      <div class="thdr" onclick="toggleTeam('${team.code}')">
+        <div class="tleft"><span class="tmark" aria-hidden="true"></span><div><div class="tname">${team.name}</div><div class="tmeta" id="tm-${team.code}">${tOwn}/${tot} in book · ${tDbl} spare${tDbl!==1?'s':''}</div></div></div>
+        <div class="tright"><div class="team-actions"><button class="mark-team" onclick="markTeamState('${team.code}','owned',event)">Fill missing</button><button class="mark-team clear-team" onclick="markTeamState('${team.code}','missing',event)">Clear</button></div><span class="tpct" id="tp-${team.code}">${pct}%</span><div class="tmbar"><div class="tmfill" style="width:${pct}%"></div></div><span class="chev">▼</span></div>
+      </div>
+      <div class="sgrid">${cards}</div>
+    </div>`;
+}
+function renderCollection(){
+  const mine=getMine();
+  const q=document.getElementById('s-input').value.toLowerCase().trim();
+  let html='';
+  renderMatchdayTicker();
+  const base=activeFilter==='ALL'?ALL:ALL.filter(t=>t.code===activeFilter);
+  base.forEach(team=>{html+=buildBlock(team,q,false);});
+  const ex=activeFilter==='ALL'?EXTRAS:EXTRAS.filter(t=>t.code===activeFilter);
+  let exHtml='';ex.forEach(team=>{exHtml+=buildBlock(team,q,true);});
+  if(exHtml)html+=`<div class="extras-divider">🎟️ Extras - separate from the 980</div>`+exHtml;
+  document.getElementById('s-list').innerHTML=html+'<div class="list-end"></div>';
+  // headline = full base 980 (independent of any filter)
+  let own=0,sp=0;allIds().forEach(id=>{const c=copiesOf(mine[id]);if(c>=1)own++;sp+=Math.max(0,c-1);});
+  tweenNum(document.getElementById('p-count'),own,v=>`${v} / ${TOTAL_STICKERS}`);
+  document.getElementById('p-fill').style.width=((own/TOTAL_STICKERS)*100).toFixed(1)+'%';
+  tweenNum(document.getElementById('s-owned'),own);
+  tweenNum(document.getElementById('s-dbl'),sp);
+  tweenNum(document.getElementById('s-miss'),TOTAL_STICKERS-own);
+  updateExtrasProg();
+  const ct=closestTeams(3);
+  document.getElementById('closest').innerHTML=own===0?`<div class="empty"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>No stickers tracked yet.<br>Tap a sticker once for your book, then tap again when you have a spare.</div>`:(ct.length?`<div class="closest-h"> Almost there - finish these next</div><div class="closest-row">`+ct.map(t=>`<button class="closest-chip" onclick="jumpTeam('${t.code}')">${esc(t.name)} <b>${t.left} to go</b></button>`).join('')+`</div>`:'');
+  renderHeatmap();
+  renderSparkCard();
+}
+
+function renderMatchdayTicker(){
+  const el=document.getElementById('matchday-track');if(!el)return;
+  const names=getNames();
+  const items=names.map((n,i)=>{
+    const st=allData[n]||{};let own=0,sp=0;
+    allIds().forEach(id=>{const c=copiesOf(st[id]);if(c>=1)own++;sp+=Math.max(0,c-1);});
+    const face=userAvatarMarkup(n,i,'');
+    return`<span class="matchday-pill">${face}<span>${esc(displayName(n))} <b>${own}</b> in · <b>${sp}</b> spare${sp!==1?'s':''}</span></span>`;
+  });
+  const group=`<span class="matchday-pill kick"><img src="public/assets/motifs/swap-arrows.svg" alt=""><span>Group <b>${esc(currentGroup)}</b></span></span>`;
+  const fallback=`<span class="matchday-pill"><img src="public/assets/motifs/pack.svg" alt=""><span>Create your sticker group and start tracking</span></span>`;
+  const html=([group].concat(items.length?items:[fallback])).join('');
+  el.innerHTML=html+html;
+}
+
+function renderSparkCard(){
+  const t=document.getElementById('spark-title'),s=document.getElementById('spark-sub');if(!t||!s)return;
+  const mine=getMine();const others=userEntries().filter(([u])=>u!==me);
+  let swapHits=0,mySpares=0,groupSpares=0;
+  swapIds().forEach(id=>{
+    mySpares+=availableSparesFor(me,id);
+    let otherHas=false;
+    for(const [u] of others){const sp=availableSparesFor(u,id);if(sp>0){groupSpares+=sp;otherHas=true;}}
+    if(otherHas&&!haveId(mine,id))swapHits++;
+  });
+  if(swapHits>0){t.textContent=`${swapHits} swaps glowing`;s.textContent='The group has spares that can move your book forward.';return;}
+  if(mySpares>0){t.textContent=`${mySpares} spare${mySpares!==1?'s':''} loaded`;s.textContent='Your swap pile is ready for the next trade.';return;}
+  if(groupSpares>0){t.textContent=`${groupSpares} group spare${groupSpares!==1?'s':''}`;s.textContent='Start a section and the swap finder will light up.';return;}
+  const own=myOwnedTotal();
+  t.textContent=own?`${own} in the book`:'Table ready';
+  s.textContent=own?'Keep the run going and chase the next full section.':'Open your book and start the swap table.';
+}
+
+window.toggleTeam=function(code){
+  const was=openTeams.has(code);
+  if(was)openTeams.delete(code);else openTeams.add(code);
+  renderCollection();
+  const block=document.getElementById('tb-'+code);
+  if(block&&!was)setTimeout(()=>block.scrollIntoView({behavior:reduceMotion()?'auto':'smooth',block:'start'}),0);
+};
+window.markTeamState=function(code,state,event){
+  event?.stopPropagation();
+  const team=TEAM_BY_CODE[code];if(!team)return;
+  if(state==='missing'&&!confirm(`Clear all ${team.name} stickers for ${me}?`))return;
+  const before=snapshotProgress();
+  const prevMap={};
+  team.players.forEach((_,i)=>{const id=`${code}-${i+1}`;const v=getMine()[id];if(v!==undefined)prevMap[id]=v;});
+  const mine={...getMine()};
+  const updates={};
+  team.players.forEach((_,i)=>{
+    const id=`${code}-${i+1}`;const c=copiesOf(mine[id]);
+    if(state==='missing'){if(mine[id]!==undefined){delete mine[id];updates[id]=null;}}
+    else if(state==='owned'){if(c<1){mine[id]=1;updates[id]=1;}} // never downgrades existing copies/spares
+  });
+  allData[me]=mine;
+  // Merge-only write: touches just this team's keys, never the whole user node
+  if(Object.keys(updates).length){if(DEMO_MODE)persistDemo();else update(gref(`collections/${me}`),updates);}
+  renderCollection();updateBadge();showSaved();celebrate(before);checkAchievements();
+  if(state==='missing')toastAction(`${team.name} cleared`,'Undo',()=>{
+    const m={...getMine()},up={};
+    Object.entries(prevMap).forEach(([id,v])=>{m[id]=v;up[id]=v;});
+    allData[me]=m;if(Object.keys(up).length){if(DEMO_MODE)persistDemo();else update(gref(`collections/${me}`),up);}
+    renderCollection();updateBadge();toast('Restored');
+  });
+  else toast(`${team.name} marked as in book`);
+};
+
+/* ── TAP STICKER ── */
+// owned = sticker is in your album
+// doubler = sticker in album + spare copy to swap
+window.tap=function(code,num,event){
+  event?.stopPropagation();
+  openTeams.add(code);
+  const id=`${code}-${num}`;
+  if(entryMode==='clear'){clearSticker(id);}
+  else{addCopy(id);if(event&&event.clientX)sparkleAt(event.clientX,event.clientY);comboHit();}
+};
+
+function paintCard(id){
+  const [code,num]=id.split('-');
+  const card=document.getElementById(`sc-${code}-${num}`);
+  if(!card)return;
+  const m=cardMeta(copiesIn(getMine(),id));
+  const isExtra=EXTRAS.some(t=>t.code===code);
+  const isFoil=!isExtra&&(num==='1'||code==='OPN'||code==='SPC'||code==='TBL');
+  card.className=`sc${m.cls?' '+m.cls:''}${isFoil?' foil':''}${isExtra?' xtra '+code.toLowerCase():''}`;
+  card.querySelector('.sc-i').textContent=m.ico;
+  card.querySelector('.sc-state').textContent=m.lbl;
+  const b=card.querySelector('.sc-badge');if(b)b.textContent=m.badge;
+  card.classList.add('bump');if(m.cls)card.classList.add('flash');setTimeout(()=>card.classList.remove('bump','flash'),420);
+  if(m.cls&&(card.querySelector('.foil-fx')||card.querySelector('.xtra-fx')))shineCardOnce(card);
+}
+
+// Single-sticker write only: can NEVER overwrite the rest of the collection.
+function writeCount(id,n){
+  const code=id.split('-')[0];
+  const mine={...getMine()};
+  if(n<=0)delete mine[id];else mine[id]=n;
+  allData[me]=mine;
+  paintCard(id);
+  buzz(n<=0?20:12);
+  recalc();updateTeamMeta(code);updateBadge();showSaved();
+  if(DEMO_MODE)persistDemo();
+  else if(n<=0)remove(gref(`collections/${me}/${id}`));
+  else set(gref(`collections/${me}/${id}`),n);
+  checkAchievements();
+}
+
+function addCopy(id){
+  const before=snapshotProgress();
+  const next=Math.min(MAX_COPIES,copiesOf(getMine()[id])+1);
+  writeCount(id,next);
+  if(!celebrate(before))toast(next===1?'In book':`${next-1} spare${next-1!==1?'s':''}`);
+}
+
+function clearSticker(id){
+  const prev=getMine()[id];
+  if(prev===undefined){toast('Nothing to clear');return;}
+  writeCount(id,0);
+  toastAction('Cleared','Undo',()=>writeCount(id,copiesOf(prev)));
+}
+
+function recalc(){
+  const mine=getMine();let own=0,sp=0;
+  allIds().forEach(id=>{const c=copiesOf(mine[id]);if(c>=1)own++;sp+=Math.max(0,c-1);}); // base 980 only
+  tweenNum(document.getElementById('p-count'),own,v=>`${v} / ${TOTAL_STICKERS}`);
+  document.getElementById('p-fill').style.width=((own/TOTAL_STICKERS)*100).toFixed(1)+'%';
+  tweenNum(document.getElementById('s-owned'),own);
+  tweenNum(document.getElementById('s-dbl'),sp);
+  tweenNum(document.getElementById('s-miss'),TOTAL_STICKERS-own);
+  updateExtrasProg();
+  scheduleLight();
+}
+function updateExtrasProg(){const el=document.getElementById('extras-prog');if(!el)return;const tot=extrasTotal();const own=extrasOwned(getMine());el.innerHTML=tot?`🎟️ Extras <b>${own}/${tot}</b>`:'';}
+
+function updateTeamMeta(code){
+  const mine=getMine();const team=TEAM_BY_CODE[code];if(!team)return;
+  let own=0,sp=0;
+  team.players.forEach((_,i)=>{const c=copiesOf(mine[`${code}-${i+1}`]);if(c>=1)own++;sp+=Math.max(0,c-1);});
+  const tot=team.players.length,pct=Math.round((own/tot)*100);
+  const m=document.getElementById(`tm-${code}`);const p=document.getElementById(`tp-${code}`);
+  if(m)m.textContent=`${own}/${tot} in book · ${sp} spare${sp!==1?'s':''}`;
+  if(p)p.textContent=`${pct}%`;
+  const f=document.querySelector(`#tb-${code} .tmfill`);if(f)f.style.width=pct+'%';
+}
+
+/* ── SWAP BADGE ── */
+function updateBadge(){
+  const mine=getMine();const others=userEntries().filter(([u])=>u!==me);
+  let n=0;
+  swapIds().forEach(id=>{
+    if(haveId(mine,id))return;
+    for(const [u] of others){if(availableSparesFor(u,id)>0){n++;break;}}
+  });
+  const b=document.getElementById('sw-badge');
+  if(n>0){b.style.display='inline';b.textContent=n>99?'99+':n;}else b.style.display='none';
+  try{if(navigator.setAppBadge){n>0?navigator.setAppBadge(n):navigator.clearAppBadge();}}catch(e){}
+}
+
+/* ── SWAP PANEL ── */
+window.setSwapTab=function(tab){
+  swapTab=tab;
+  document.getElementById('sft-need').classList.toggle('active',tab==='need');
+  document.getElementById('sft-give').classList.toggle('active',tab==='give');
+  renderSwaps();
+};
+
+function swapRequestsHTML(){
+  const inc=swapItems.filter(x=>x.to===me&&x.status==='proposed');
+  const agreed=swapItems.filter(x=>(x.from===me||x.to===me)&&x.status==='accepted');
+  const out=swapItems.filter(x=>x.from===me&&x.status==='proposed');
+  let h='';
+  out.forEach(p=>{const g=outgoingFor(p),r=incomingFor(p);h+=`<div class="req-card pend"><div class="req-top">Waiting for ${esc(displayName(p.to))}</div><div class="req-line"><b>You give:</b> ${g.length?fmtIds(g):'-'}</div><div class="req-line"><b>You get:</b> ${r.length?fmtIds(r):'-'}</div>${tradeWarningHTML(p)}<div class="req-note"><b>Offer sent.</b> These spares are reserved while your friend decides. Nothing changes in either book yet.</div><div class="req-btns"><button class="req-no" onclick="declineSwap('${p.id}')">Cancel offer</button></div></div>`;});
+  inc.forEach(p=>{const g=incomingFor(p),r=outgoingFor(p);const bad=promiseIssuesFor(me,r,p.id);h+=`<div class="req-card"><div class="req-top">${esc(displayName(p.from))} sent an offer</div><div class="req-line"><b>You get:</b> ${g.length?fmtIds(g):'-'}</div><div class="req-line"><b>You give:</b> ${r.length?fmtIds(r):'-'}</div>${tradeWarningHTML(p)}<div class="req-note"><b>Accept means you agree to swap.</b> Swap in person, then both people confirm before any book updates.</div><div class="req-btns"><button class="req-yes" onclick="acceptSwap('${p.id}')"${bad.length?' disabled':''}>Accept offer</button><button class="req-no" onclick="declineSwap('${p.id}')">Decline</button></div></div>`;});
+  agreed.forEach(p=>{const g=outgoingFor(p),r=incomingFor(p),done=myDoneFor(p),bad=promiseIssuesFor(me,g,p.id);h+=`<div class="req-card ok"><div class="req-top"> ${esc(displayName(otherFor(p)))} accepted - ${done?'you confirmed':'awaiting handover'}</div><div class="req-line"><b>You get:</b> ${r.length?fmtIds(r):'-'}</div><div class="req-line"><b>You give:</b> ${g.length?fmtIds(g):'-'}</div>${tradeWarningHTML(p)}<div class="req-note"><b>Swap in person, then confirm.</b> Your book updates only after both people confirm the handover. ${done?`You confirmed - waiting for ${esc(displayName(otherFor(p)))}.`:''}</div><div class="req-btns">${done?'<button class="req-yes" disabled>You confirmed</button>':`<button class="req-yes" onclick="confirmSwap('${p.id}')"${bad.length?' disabled':''}>Confirm handover</button>`}<button class="req-no" onclick="declineSwap('${p.id}')">Cancel</button></div></div>`;});
+  return h;
+}
+function tradeSheetHTML(u){
+  const open=swapItems.find(x=>activeSwap(x)&&((x.from===me&&x.to===u)||(x.from===u&&x.to===me)));
+  const t=open?{give:outgoingFor(open),get:incomingFor(open)}:tradeBetween(u),bal=balanceLabel(t.give.length,t.get.length),idx=getNames().indexOf(u);
+  const fin=teamsCompletedBy(t.get);
+  let h=`<div class="trade-sheet"><div class="ts-top">${userAvatarMarkup(u,idx>=0?idx:0,'bm-face')}<span>You <-> ${esc(displayName(u))}</span>${isOnline(u)?'<span class="dot-on"></span>':''}</div>`;
+  if(fin.length)h+=`<div class="ts-fin">This swap finishes ${fin.map(x=>esc(x.name)).join(', ')}!</div>`;
+  h+=`<div class="ts-cols"><div class="ts-col"><div class="ts-h get">You get (${t.get.length})</div>${t.get.length?t.get.map(id=>`<div class="ts-id">${id.replace('-',' ')}<span class="wish-star${isWish(id)?' on':''}" onclick="event.stopPropagation();toggleWish('${id}')">★</span></div>`).join(''):'<div class="ts-none">-</div>'}</div><div class="ts-col"><div class="ts-h give">You give (${t.give.length})</div>${t.give.length?t.give.map(id=>`<div class="ts-id">${id.replace('-',' ')}${wishedBy(u,id)?'<span class="ts-want">*</span>':''}</div>`).join(''):'<div class="ts-none">-</div>'}</div></div>`;
+  if(bal)h+=`<div class="ts-bal">${bal}</div>`;
+  h+=`<div class="ts-note"><b>Send this as an offer.</b> Your friend can accept it in the app. Promised spares stay reserved until the offer is cancelled or the completed swap updates your book.</div>`;
+  h+=`<div class="ts-btns">`;
+  if(t.give.length||t.get.length){
+    h+= open?`<button class="ts-btn ghost" disabled>Offer pending...</button>`:`<button class="ts-btn" onclick="proposeSwap(decodeURIComponent('${enc(u)}'))">Send offer</button>`;
+  }else h+=`<div class="ts-none" style="padding:6px 2px">No swaps available with ${esc(displayName(u))} yet.</div>`;
+  return h+`</div></div>`;
+}
+function rankedPartnersHTML(){
+  const r=partnersRanked();if(!r.length)return'';
+  let h=`<div class="ranked"><div class="ranked-h">Best offers right now <button class="mini-action" onclick="proposeAll()">Send top offers</button></div>`;
+  r.slice(0,6).forEach(p=>{const idx=getNames().indexOf(p.u);h+=`<button class="ranked-row" onclick="setPersonFilter(decodeURIComponent('${enc(p.u)}'));var s=document.getElementById('person-filter');if(s)s.value=decodeURIComponent('${enc(p.u)}')">${userAvatarMarkup(p.u,idx>=0?idx:0,'rk-face')}<span class="rk-name">${esc(displayName(p.u))}</span>${isOnline(p.u)?'<span class="dot-on"></span>':''}${p.fin?`<span class="rk-fin">${p.fin}</span>`:''}${p.w?`<span class="rk-fin wish">*${p.w}</span>`:''}${p.tw?`<span class="rk-fin tw">Gift${p.tw}</span>`:''}<span class="rk-stat">get ${p.get} · give ${p.give}</span><span class="rk-tot">${p.total}</span></button>`;});
+  return h+`</div>`;
+}
+function bestSwapHTML(){
+  const best=partnersRanked()[0];
+  if(!best||!best.total)return'';
+  const t=tradeBetween(best.u);
+  const open=swapItems.find(x=>activeSwap(x)&&((x.from===me&&x.to===best.u)||(x.from===best.u&&x.to===me)));
+  const fin=teamsCompletedBy(t.get);
+  const wish=t.get.filter(isWish).length;
+  const idx=getNames().indexOf(best.u);
+  return`<div class="best-move">
+    <div class="bm-top">Best move</div>
+    <div class="bm-name">${userAvatarMarkup(best.u,idx>=0?idx:0,'bm-face')}<span>You <-> ${esc(displayName(best.u))}</span>${isOnline(best.u)?'<span class="dot-on"></span>':''}</div>
+    <div class="bm-sub">You get <b>${t.get.length}</b>, give <b>${t.give.length}</b>${fin.length?` · finishes <b>${fin.map(x=>esc(x.name)).join(', ')}</b>`:''}${wish?` · <b>${wish}</b> wishlist`:''}</div>
+    <div class="meetup-note"><b>Best offer to send.</b> It reserves your promised spares. If ${esc(displayName(best.u))} accepts, swap in person and both confirm.</div>
+    <div class="bm-actions">${open?`<button class="bm-btn" disabled>Offer pending...</button>`:`<button class="bm-btn" onclick="proposeSwap(decodeURIComponent('${enc(best.u)}'))">Send offer</button>`}</div>
+  </div>`;
+}
+function renderSwaps(){
+  const mine=getMine();
+  const others=userEntries();
+  const friends=getNames().filter(n=>n!==me);
+  const requestHtml=swapRequestsHTML();
+  let html='';
+  if(!friends.length){
+    html+=requestHtml;
+    html+=`<div class="empty"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>Invite friends to find swaps.<br>Share your group code and their spares will light up here.</div>`;
+    html+=closedSwapsHTML()+swapHistoryHTML();
+    document.getElementById('sw-content').innerHTML=html;
+    return;
+  }
+  if(personFilter!=='ALL')html+=requestHtml+tradeSheetHTML(personFilter);
+  else{
+    const bestHtml=bestSwapHTML();
+    html+=bestHtml+requestHtml+rankedPartnersHTML();
+    if(bestHtml&&!requestHtml)html+=`<div class="tip-note"><b>No pending offers yet.</b> Send the Best Move when you are ready.</div>`;
+  }
+  const ids=swapIds();
+  if(swapTab==='need'){
+    const offers=[];
+    ids.forEach(id=>{if(haveId(mine,id))return;const whoHas=[];others.forEach(([u])=>{if(u===me)return;if(personFilter!=='ALL'&&u!==personFilter)return;if(availableSparesFor(u,id)>0)whoHas.push(u);});if(!whoHas.length)return;const code=id.split('-')[0],num=parseInt(id.split('-')[1]);const team=teamForAnySticker(id);if(!team)return;offers.push({id,code,num,tn:team.name,mark:team.mark,whoHas});});
+    offers.sort((a,b)=>(isWish(b.id)?1:0)-(isWish(a.id)?1:0));
+    if(!offers.length)html+=`<div class="empty"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>No matches yet.<br>Nobody has spares of stickers you're missing. Invite friends or add more stickers to wake up the swap finder.</div>`;
+    else{
+      html+=`<p class="sw-count">${offers.length} sticker${offers.length!==1?'s':''} you need - someone has a spare · tap ★ to wishlist</p><div class="tip-note"><b>Tip:</b> Request a single sticker, or send a balanced offer from Best offers.</div>`;
+      offers.forEach(s=>{html+=`<div class="sw-card"><div><div class="sw-id">${s.code} ${s.num} <span class="wish-star${isWish(s.id)?' on':''}" onclick="event.stopPropagation();toggleWish('${s.id}')">★</span></div><div class="sw-team">${esc(playerName(s.id))} · ${esc(s.tn)}</div></div><div class="sw-who"><div class="sw-wlbl">Has spare</div><div class="wtags">${s.whoHas.map(u=>personTag(u,'has')).join('')}</div><div class="sw-acts"><button class="swp-btn ask" onclick="requestSticker('${s.id}')">Request</button></div></div></div>`;});
+    }
+    const mustFind=ids.filter(id=>!haveId(mine,id)&&!others.some(([u])=>u!==me&&availableSparesFor(u,id)>0)).length;
+    if(mustFind)html+=`<div class="mustfind"> <b>${mustFind}</b> you still need that nobody has spare yet</div>`;
+  }else{
+    const gives=[];
+    ids.forEach(id=>{const sp=availableSparesFor(me,id);if(sp<=0)return;const whoNeeds=getNames().filter(n=>{if(n===me)return false;if(personFilter!=='ALL'&&n!==personFilter)return false;return activeNeed(n,id);});if(!whoNeeds.length)return;const code=id.split('-')[0],num=parseInt(id.split('-')[1]);const team=teamForAnySticker(id);if(!team)return;gives.push({id,code,num,tn:team.name,mark:team.mark,whoNeeds,sp});});
+    const mySpareCount=ids.filter(id=>availableSparesFor(me,id)>0).length;
+    if(!gives.length)html+=mySpareCount?`<div class="empty"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>No swaps from your spares yet.<br>Your spares are ready, but nobody in the group needs them right now.</div>`:`<div class="empty"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>No spares yet.<br>Tap a sticker again to add a spare.</div>`;
+    else{
+      html+=`<p class="sw-count">${gives.length} spare${gives.length!==1?'s':''} someone needs</p><div class="tip-note"><b>Tip:</b> Best offers will package these into useful swaps automatically.</div>`;
+      gives.forEach(s=>{html+=`<div class="sw-card"><div><div class="sw-id">${s.code} ${s.num}${s.sp>1?` <span class="sw-qty">×${s.sp}</span>`:''}</div><div class="sw-team">${esc(playerName(s.id))} · ${esc(s.tn)}</div></div><div class="sw-who"><div class="sw-wlbl">Needs it</div><div class="wtags">${s.whoNeeds.map(u=>personTag(u,'needs')).join('')}</div><button class="swp-btn ask" onclick="proposeSwap(decodeURIComponent('${enc(s.whoNeeds[0])}'))">Send offer</button></div></div>`;});
+    }
+  }
+  html+=closedSwapsHTML()+swapHistoryHTML();
+  document.getElementById('sw-content').innerHTML=html;
+}
+
+function stickerLabel(id){
+  const parts=id.split('-');const code=parts[0];const num=parseInt(parts.slice(1).join('-'));
+  const team=TEAM_BY_CODE[code];if(!team)return id.replace('-', ' ');
+  return `${code} ${num}`.trim();
+}
+function parseStickerCodes(text){
+  const out=new Set();
+  String(text).toUpperCase().match(/[A-Z0-9]{3,4}[\s-]*\d{1,2}/g)?.forEach(raw=>{
+    const m=raw.match(/^([A-Z0-9]{3,4})[\s-]*(\d{1,2})$/);if(!m)return;
+    const code=m[1],num=parseInt(m[2],10);
+    const team=TEAM_BY_CODE[code];
+    if(team&&num>=1&&num<=team.players.length)out.add(`${code}-${num}`);
+  });
+  return [...out];
+}
+window.importListAs=function(state){
+  const label=state==='doubler'?'spares':'in-book stickers';
+  const pasted=prompt(`Paste ${label}, e.g. S04 3, S18 17, SPC-5`);
+  if(!pasted)return;
+  const ids=parseStickerCodes(pasted);
+  if(!ids.length){toast('No valid sticker codes found');return;}
+  const before=snapshotProgress();
+  const mine={...getMine()};
+  const updates={};
+  const val=state==='doubler'?2:1;
+  ids.forEach(id=>{const nv=Math.max(copiesOf(mine[id]),val);mine[id]=nv;updates[id]=nv;}); // never downgrades
+  allData[me]=mine;
+  // Merge-only write: adds the pasted stickers without clearing anything else
+  if(DEMO_MODE)persistDemo();else update(gref(`collections/${me}`),updates);
+  refresh();showSaved();const popped=celebrate(before);checkAchievements();if(!popped)maybeConfetti('mini');
+  toast(`${ids.length} ${label} added`);
+};
+window.importDoublers=function(){
+  window.importListAs('doubler');
+};
+
+/* ── GROUP ── */
+function groupSettingsHTML(){
+  return`<details class="settings-card" open>
+    <summary><span>Group settings</span><small>${esc(currentGroup)}</small></summary>
+    <div class="settings-card-body">
+      <div class="settings-code">${esc(currentGroup)}</div>
+      <div class="settings-copy">${DEMO_MODE?'Demo data stays in this browser.':'Share this invite code with friends, then meet up to swap in person.'}</div>
+      <div class="share-row"><button class="share-btn" onclick="copyInvite()"> Invite link</button><button class="share-btn" onclick="doSwitch()">👤 Profile</button></div>
+      <div class="share-row"><button class="share-btn" onclick="leaveGroup()">Leave group</button><button class="share-btn danger" onclick="deleteMyData()">Delete my data</button>${DEMO_MODE?'<button class="share-btn" onclick="resetDemo()">Reset demo</button>':''}</div>
+      <div class="legal-note">Unofficial fan tool. Not affiliated with or endorsed by any sticker publisher, federation, or tournament.</div>
+    </div>
+  </details>`;
+}
+function renderGroup(){
+  const names=getNames();
+  const stats=names.map((n,i)=>{
+    const s=allData[n]||{};let own=0,sp=0;
+    allIds().forEach(id=>{const c=copiesOf(s[id]);if(c>=1)own++;sp+=Math.max(0,c-1);}); // base 980 only
+    return{n,own,sp,ex:extrasOwned(s),miss:TOTAL_STICKERS-own,pct:((own/TOTAL_STICKERS)*100).toFixed(1),started:own>0,av:AVIS[i%AVIS.length]};
+  }).sort((a,b)=>b.own-a.own);
+
+  const activeMembers=stats.filter(s=>s.started).length;
+  const enoughGroupData=names.length>1&&activeMembers>1;
+  let html=groupSettingsHTML();
+  if(names.length<=1){
+    html+=`<div class="empty"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>No group members yet.<br>Invite friends to find swaps and compare progress.</div>`;
+  }else if(activeMembers===0){
+    html+=`<div class="empty"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>No stickers tracked yet.<br>Once people add a few stickers, the group table and swap ideas will appear here.</div>`;
+  }else if(!enoughGroupData){
+    html+=`<div class="empty"><span class="emo"><img src="public/assets/motifs/album-slot.svg" alt=""></span>Waiting for more sticker data.<br>Group progress and swap plans unlock when at least two people have started tracking.</div>`;
+  }else{
+    html+=`<div class="race"><div class="race-line"></div>${stats.filter(s=>s.started).map(s=>{const left=Math.max(1,Math.min(95,parseFloat(s.pct)));return`<div class="runner" style="left:${left}%" title="${esc(displayName(s.n))} ${s.pct}%">${userStickerSrc(s.n)?`<img src="${userStickerSrc(s.n)}" alt="${esc(displayName(s.n))}">`:`<span>${s.av}</span>`}</div>`;}).join('')}<div class="race-finish" aria-hidden="true"></div></div>`;
+
+    const stc=groupStandings();const defs=[{t:'Leader Group Leader',k:'own',d:'most in book'},{t:' Spare King',k:'sp',d:'most spares'},{t:'Sections Section Machine',k:'full',d:'most full sections'}];
+    html+=`<div class="crowns">`+defs.map(c=>{const m=Math.max(0,...stc.map(x=>x[c.k]));const who=m>0?stc.filter(x=>x[c.k]===m).map(x=>x.n):[];const medal=badgeArtSrc(c.t);return`<div class="crown${who.includes(me)?' mine':''}">${medal?`<img class="crown-medal" src="${medal}" alt="">`:''}<div class="crown-t">${c.t}</div><div class="crown-h">${who.length?who.map(n=>esc(displayName(n))).join(', '):'-'}</div><div class="crown-d">${c.d}${m>0?' · '+m:''}</div></div>`;}).join('')+`</div>`;
+  }
+  // Activity feed
+  if(feedItems.length){
+    html+=`<div class="feed">${feedItems.slice(0,6).map(f=>`<div class="feed-item"><b>${esc(f.displayName||displayName(f.u))}</b> ${esc(f.t)} <i>${timeAgo(f.ts)}</i></div>`).join('')}</div>`;
+  }
+
+  // Group swap plan
+  let plan=null;
+  if(enoughGroupData){
+    plan=computePlan();const before=groupOwnedTotal();const cap=names.length*TOTAL_STICKERS;const after=before+plan.fill;
+    const bpc=cap?before/cap*100:0, apc=cap?after/cap*100:0;
+    html+=`<div class="plan-card"><div class="plan-h">Group swap plan</div><div class="plan-big">${plan.fill}</div><div class="plan-sub">books filled if everyone swaps their spares</div><div class="plan-bar"><div class="plan-have" style="width:${bpc.toFixed(1)}%"></div><div class="plan-gain" style="width:${Math.max(0,apc-bpc).toFixed(1)}%"></div></div><div class="plan-pcts">Group ${bpc.toFixed(0)}% -> <b>${apc.toFixed(0)}%</b></div></div>`;
+    const ho=Object.entries(plan.handoffs).map(([k,v])=>{const p=k.split('|');return{g:p[0],r:p[1],n:v.length};}).sort((a,b)=>b.n-a.n).slice(0,6);
+    if(ho.length){html+=`<div class="pairs-t">Top hand-offs</div>`+ho.map(h=>`<div class="pair"><div><div class="pair-n">${esc(displayName(h.g))} -> ${esc(displayName(h.r))}</div><div class="pair-s">hand over ${h.n} sticker${h.n!==1?'s':''}</div></div><div class="pair-c">${h.n}</div></div>`).join('');}
+    const loops=threeWayLoops();
+    if(loops.length){
+      html+=`<div class="pairs-t">Swap circles - useful 3-way trades</div>`+loops.slice(0,4).map(l=>`<div class="loop${l.mine?' mine':''}"><div class="loop-line">${esc(displayName(l.a))} -> ${esc(displayName(l.b))} -> ${esc(displayName(l.c))} -> ${esc(displayName(l.a))}</div><div class="loop-d">${esc(displayName(l.a))} gives ${l.e1.replace('-',' ')} · ${esc(displayName(l.b))} gives ${l.e2.replace('-',' ')} · ${esc(displayName(l.c))} gives ${l.e3.replace('-',' ')}</div></div>`).join('');
+    }
+  }
+
+  // Per-person cards
+  html+=`<div class="g-title2">YOUR GROUP</div>`;
+  stats.forEach(s=>{
+    const isMe=s.n===me;
+    const face=userStickerSrc(s.n)?`<img class="g-face" src="${userStickerSrc(s.n)}" alt="${esc(displayName(s.n))}">`:`<span class="g-face-fallback">${s.av}</span>`;
+    const badges=badgesFor(s.n),shownBadges=badges.slice(-3),hiddenBadges=badges.length-shownBadges.length;
+    html+=`<div class="g-card${isMe?' me':''}">
+      <div class="g-top"><div class="g-name">${face}<span>${esc(displayName(s.n))}</span>${isOnline(s.n)?'<span class="dot-on"></span>':''}${isMe?'<span class="g-you">YOU</span>':''}${!s.started?'<span class="g-new">not started</span>':''}</div><div class="g-right">${!isMe&&s.started?`<button class="nudge-btn" onclick="nudge(decodeURIComponent('${enc(s.n)}'))" title="Nudge to swap"></button>`:''}<div class="g-pct">${s.pct}%</div></div></div>
+      <div class="pbar"><div class="pfill" style="width:${s.pct}%"></div></div>
+      <div class="g-stats">
+        <div class="g-stat"><div class="g-sv o">${s.own}</div><div class="g-sl">In Book</div></div>
+        <div class="g-stat"><div class="g-sv d">${s.sp}</div><div class="g-sl">Spares</div></div>
+        <div class="g-stat"><div class="g-sv m">${s.miss}</div><div class="g-sl">Missing</div></div>
+      </div>
+      ${badges.length?`<div class="badges">${shownBadges.map(badgeMarkup).join('')}${hiddenBadges>0?`<span class="badge badge-more">+${hiddenBadges} more</span>`:''}</div>`:''}
+    </div>`;
+  });
+
+  // Hunt list (someone needs it, but no spares anywhere in the group)
+  const hunt=enoughGroupData?huntList().slice(0,18):[];
+  if(hunt.length){
+    html+=`<div class="pairs-t">Hunt list - needed, no spares in the group</div><div class="hunt">${hunt.map(h=>{const p=h.id.split('-');return`<span class="hunt-chip">${p[0]} ${p[1]}<i>${h.needers}</i></span>`;}).join('')}</div>`;
+  }
+  // Nobody in the group owns these at all
+  const nob=enoughGroupData?nobodyOwns():[];
+  if(nob.length){
+    html+=`<div class="pairs-t">Nobody has these yet · ${nob.length}</div><div class="hunt">${nob.slice(0,30).map(id=>{const p=id.split('-');return`<span class="hunt-chip ghost">${p[0]} ${p[1]}</span>`;}).join('')}${nob.length>30?`<span class="hunt-chip ghost">+${nob.length-30} more</span>`:''}</div>`;
+  }
+  document.getElementById('g-content').innerHTML=html;
+}
+window.jumpTeam=function(code){openTeams.add(code);activeFilter='ALL';renderCollection();const el=document.getElementById('tb-'+code);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
+function timeAgo(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return'just now';const m=Math.floor(s/60);if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
+
+applyTheme(localStorage.getItem('theme')||'dark');
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+boot();
+</script>
+</body>
+</html>
