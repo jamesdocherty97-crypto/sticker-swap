@@ -1,0 +1,178 @@
+[
+  {
+    "filename": "icon.svg",
+    "requiredDimensions": "Any SVG, square viewBox",
+    "currentPlaceholderPath": "icon.svg",
+    "finalDestinationPath": "icon.svg",
+    "textHandling": "No text",
+    "cropNotes": "Square app icon; cream sticker and foil arrows centered in safe zone."
+  },
+  {
+    "filename": "icon-180.png",
+    "requiredDimensions": "180x180 PNG",
+    "currentPlaceholderPath": "icon-180.png",
+    "finalDestinationPath": "icon-180.png",
+    "textHandling": "No text",
+    "cropNotes": "Apple touch icon crop, square."
+  },
+  {
+    "filename": "icon-192.png",
+    "requiredDimensions": "192x192 PNG",
+    "currentPlaceholderPath": "icon-192.png",
+    "finalDestinationPath": "icon-192.png",
+    "textHandling": "No text",
+    "cropNotes": "Manifest any-purpose icon, square."
+  },
+  {
+    "filename": "icon-512.png",
+    "requiredDimensions": "512x512 PNG",
+    "currentPlaceholderPath": "icon-512.png",
+    "finalDestinationPath": "icon-512.png",
+    "textHandling": "No text",
+    "cropNotes": "Manifest any-purpose icon, square."
+  },
+  {
+    "filename": "icon-maskable-512.png",
+    "requiredDimensions": "512x512 PNG with maskable safe zone",
+    "currentPlaceholderPath": "icon-maskable-512.png",
+    "finalDestinationPath": "icon-maskable-512.png",
+    "textHandling": "No text",
+    "cropNotes": "Artwork inset for adaptive icon safe area."
+  },
+  {
+    "filename": "app-icon.svg",
+    "requiredDimensions": "Any SVG, square viewBox",
+    "currentPlaceholderPath": "public/assets/brand/app-icon.svg",
+    "finalDestinationPath": "public/assets/brand/app-icon.svg",
+    "textHandling": "No text",
+    "cropNotes": "Public source mirror for root icon.svg."
+  },
+  {
+    "filename": "tokens.css",
+    "requiredDimensions": "N/A",
+    "currentPlaceholderPath": "public/assets/brand/tokens.css",
+    "finalDestinationPath": "public/assets/brand/tokens.css",
+    "textHandling": "CSS variables only",
+    "cropNotes": "Brand token file."
+  },
+  {
+    "filename": "sticker-edge.svg",
+    "requiredDimensions": "Vector motif",
+    "currentPlaceholderPath": "public/assets/motifs/sticker-edge.svg",
+    "finalDestinationPath": "public/assets/motifs/sticker-edge.svg",
+    "textHandling": "No text",
+    "cropNotes": "Cream sticker edge motif for profile/setup/empty states."
+  },
+  {
+    "filename": "foil-shine.svg",
+    "requiredDimensions": "Vector motif",
+    "currentPlaceholderPath": "public/assets/motifs/foil-shine.svg",
+    "finalDestinationPath": "public/assets/motifs/foil-shine.svg",
+    "textHandling": "No text",
+    "cropNotes": "Transparent shine sweep; overlay/crop freely."
+  },
+  {
+    "filename": "pack.svg",
+    "requiredDimensions": "Vector motif",
+    "currentPlaceholderPath": "public/assets/motifs/pack.svg",
+    "finalDestinationPath": "public/assets/motifs/pack.svg",
+    "textHandling": "No text",
+    "cropNotes": "Unopened pack motif, centered."
+  },
+  {
+    "filename": "album-slot.svg",
+    "requiredDimensions": "Vector motif",
+    "currentPlaceholderPath": "public/assets/motifs/album-slot.svg",
+    "finalDestinationPath": "public/assets/motifs/album-slot.svg",
+    "textHandling": "No text",
+    "cropNotes": "Album slot motif, landscape."
+  },
+  {
+    "filename": "swap-arrows.svg",
+    "requiredDimensions": "Vector motif",
+    "currentPlaceholderPath": "public/assets/motifs/swap-arrows.svg",
+    "finalDestinationPath": "public/assets/motifs/swap-arrows.svg",
+    "textHandling": "No text",
+    "cropNotes": "Swap motion motif, landscape."
+  },
+  {
+    "filename": "02_pwa_splash_background.webp",
+    "requiredDimensions": "Responsive background, WebP",
+    "currentPlaceholderPath": "assets/02_pwa_splash_background.webp",
+    "finalDestinationPath": "public/assets/artwork/pwa-splash-background.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Keep center dark enough for loading lockup; floodlight glow only at edges."
+  },
+  {
+    "filename": "06_collection_empty_state.webp",
+    "requiredDimensions": "Responsive card background, WebP/AVIF-ready",
+    "currentPlaceholderPath": "assets/06_collection_empty_state.webp",
+    "finalDestinationPath": "public/assets/artwork/collection-empty-state.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Must frame album slots and cream paper; no official album/checklist styling."
+  },
+  {
+    "filename": "07_spares_empty_state.webp",
+    "requiredDimensions": "Responsive card background, WebP/AVIF-ready",
+    "currentPlaceholderPath": "assets/07_spares_empty_state.webp",
+    "finalDestinationPath": "public/assets/artwork/spares-empty-state.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Pack/spare pile mood; leave left side clear for HTML text."
+  },
+  {
+    "filename": "09_best_move_card_art.webp",
+    "requiredDimensions": "Responsive card background, WebP/AVIF-ready",
+    "currentPlaceholderPath": "assets/09_best_move_card_art.webp",
+    "finalDestinationPath": "public/assets/artwork/best-move-card-art.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Physical table swap; no faces, kits, clubs, flags, badges, or official balls."
+  },
+  {
+    "filename": "11_confirm_handover_art.webp",
+    "requiredDimensions": "Responsive card/modal background, WebP/AVIF-ready",
+    "currentPlaceholderPath": "assets/11_confirm_handover_art.webp",
+    "finalDestinationPath": "public/assets/artwork/confirm-handover-art.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Hands/cards only; preserve right-center crop for trade sheet."
+  },
+  {
+    "filename": "12_group_progress_art.webp",
+    "requiredDimensions": "Responsive card background, WebP/AVIF-ready",
+    "currentPlaceholderPath": "assets/12_group_progress_art.webp",
+    "finalDestinationPath": "public/assets/artwork/group-progress-art.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Group table / progress surface; no team or tournament signals."
+  },
+  {
+    "filename": "empty-calm-state.webp",
+    "requiredDimensions": "Responsive empty-state background, WebP/AVIF-ready",
+    "currentPlaceholderPath": "assets/empty-calm-state.webp",
+    "finalDestinationPath": "public/assets/artwork/empty-calm-state.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Subtle and dark enough for HTML text overlay."
+  },
+  {
+    "filename": "milestone-clean.webp",
+    "requiredDimensions": "Responsive modal background, WebP/AVIF-ready",
+    "currentPlaceholderPath": "assets/milestone-clean.webp",
+    "finalDestinationPath": "public/assets/artwork/milestone-clean.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Foil reward mood, centered; no trophy shapes."
+  },
+  {
+    "filename": "onboard-portrait.webp",
+    "requiredDimensions": "Portrait onboarding background, WebP/AVIF-ready",
+    "currentPlaceholderPath": "assets/onboard-portrait.webp",
+    "finalDestinationPath": "public/assets/artwork/onboard-portrait.webp",
+    "textHandling": "No text expected",
+    "cropNotes": "Portrait crop; top should stay calm behind setup copy."
+  },
+  {
+    "filename": "og-share.png",
+    "requiredDimensions": "1200x630 PNG/JPG for social preview",
+    "currentPlaceholderPath": "og-share.png",
+    "finalDestinationPath": "public/assets/artwork/og-share-final.png",
+    "textHandling": "Currently baked text; replace with HTML/CSS-composited or final exported raster after legal review",
+    "cropNotes": "Current asset is not reset-final. Handoff fixture provides an HTML/CSS placeholder preview."
+  }
+]
