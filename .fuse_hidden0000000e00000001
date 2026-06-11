@@ -1,0 +1,25 @@
+[debug] [2026-06-10T21:19:59.181Z] ----------------------------------------------------------------------
+[debug] [2026-06-10T21:19:59.183Z] Command:       /usr/bin/node /sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/.bin/firebase deploy --only database
+[debug] [2026-06-10T21:19:59.183Z] CLI Version:   15.19.1
+[debug] [2026-06-10T21:19:59.183Z] Platform:      linux
+[debug] [2026-06-10T21:19:59.183Z] Node Version:  v22.22.3
+[debug] [2026-06-10T21:19:59.183Z] Time:          Wed Jun 10 2026 21:19:59 GMT+0000 (Coordinated Universal Time)
+[debug] [2026-06-10T21:19:59.183Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-10T21:19:59.185Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2026-06-10T21:19:59.848Z] No OAuth tokens found
+[debug] [2026-06-10T21:19:59.849Z] No OAuth tokens found
+[debug] [2026-06-10T21:19:59.851Z] Unable to refresh auth: not yet authenticated.
+[debug] [2026-06-10T21:19:59.852Z] FirebaseError: Failed to get Firebase project undefined. Please make sure the project exists and your account has permission to access it.
+    at getFirebaseProject (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/management/projects.js:384:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getDefaultDatabaseInstance (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/getDefaultDatabaseInstance.js:6:28)
+    at async requireDatabaseInstance (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/requireDatabaseInstance.js:15:20)
+    at async Object.fn (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/commands/deploy.js:116:9)
+    at async /sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/command.js:278:17
+[error] 
+[error] Error: Failed to get details for project: undefined.
+[debug] [2026-06-10T21:19:59.858Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 403
+[debug] [2026-06-10T21:19:59.858Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json "Connection blocked by network allowlist"
+[warn] ⚠  Unable to fetch the CLI MOTD and remote config. This is not a fatal error, but may indicate an issue with your network connection. 
+[debug] [2026-06-10T21:19:59.858Z] Failed to fetch MOTD FirebaseError: Unable to parse JSON: SyntaxError: Unexpected token 'C', "Connection"... is not valid JSON

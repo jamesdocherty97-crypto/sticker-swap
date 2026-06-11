@@ -1,0 +1,115 @@
+From c304b16ca240c1048f4912e0c06eb6b58e4faa89 Mon Sep 17 00:00:00 2001
+From: James Docherty <jamesdocherty97@gmail.com>
+Date: Wed, 10 Jun 2026 10:51:23 +0000
+Subject: [PATCH 5/6] Demo: partners auto-respond + one-tap demo from the
+ config screen
+
+- In demo mode, offers you send are accepted by the sample friend after a
+  few seconds, and after you confirm a handover (or accept an offer) the
+  partner confirms their side too - so a single device experiences the
+  full loop: send offer, friend accepts, both confirm, books update.
+  Production behaviour is untouched (all hooks are DEMO_MODE-only).
+- 'App not configured' screen now has a real 'Try the demo' button
+  instead of telling users to open quick-test.html by hand.
+---
+ index.html | 42 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 36 insertions(+), 6 deletions(-)
+
+diff --git a/index.html b/index.html
+index 0f18d10..aa89566 100644
+--- a/index.html
++++ b/index.html
+@@ -512,7 +512,8 @@ body.perf-lite .foil-fx:before,body.perf-lite .xtra-fx:before{animation:none!imp
+     <div class="cfg-sub">Sticker Swap is not connected yet. The owner needs to finish setup before live groups can be used.</div>
+     <div class="cfg-box">
+       <div class="cfg-num">Demo is still available</div>
+-      <p>You can test the interface with sample data by opening <code>quick-test.html</code>. No database is needed for demo mode.</p>
++      <p>You can try the full interface with a sample group right now. No database is needed for demo mode.</p>
++      <a class="btn-p" style="display:block;text-align:center;text-decoration:none" href="index.html?demo=1">Try the demo</a>
+     </div>
+     <div class="cfg-box">
+       <div class="cfg-num">Live groups are paused</div>
+@@ -848,6 +849,35 @@ function demoTradeSlice(a,b,n){
+   }
+   return{give,get};
+ }
++// Demo partners respond on their own, so one device can experience the whole
++// loop: send offer → friend accepts → both confirm → books update.
++function demoAutoAccept(id,ms){
++  if(!DEMO_MODE)return;
++  setTimeout(()=>{
++    const p=swapItems.find(x=>x.id===id);
++    if(!p||p.status!=='proposed'||p.from!==me)return;
++    Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});
++    persistDemo();
++    queuePop({kicker:'Offer accepted',title:`${displayName(p.to)} said yes!`,sub:'Swap in person, then confirm',bg:'assets/10_incoming_offer_art.webp'});
++    toast(`${displayName(p.to)} accepted - swap in person, then confirm`);
++    updateBadge();if(curTab==='swaps')renderSwaps();
++  },ms||7000);
++}
++function demoPartnerConfirm(id,ms){
++  if(!DEMO_MODE)return;
++  setTimeout(()=>{
++    const p=swapItems.find(x=>x.id===id);
++    if(!p||p.status!=='accepted'||(p.from!==me&&p.to!==me))return;
++    const otherField=p.from===me?'toDone':'fromDone';
++    if(p[otherField])return;
++    p[otherField]=true;p.updatedAt=Date.now();
++    if(myDoneFor(p))p.status='done';
++    persistDemo();
++    if(p.status==='done')applyCompletedSwapToMine(p);
++    else toast(`${displayName(otherFor(p))} confirmed - your confirmation finishes the swap`);
++    if(curTab==='swaps')renderSwaps();
++  },ms||6000);
++}
+ function seedDemoSwaps(){
+   try{
+     const now=Date.now();
+@@ -1170,7 +1200,7 @@ window.proposeAll=function(){
+     const t=tradeBetween(p.u,reserved);
+     if(t.give.length||t.get.length){
+       const item=makeSwapItem(p.u,t.give,t.get);
+-      if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now()+'-'+n,...item});persistDemo();}
++      if(DEMO_MODE){const sid='demo-'+Date.now()+'-'+n;swapItems.push({id:sid,...item});persistDemo();if(n===0)demoAutoAccept(sid,8000);}
+       else push(gref('swaps'),item);
+       t.give.forEach(id=>reserved[id]=(reserved[id]||0)+1);
+       n++;
+@@ -1281,7 +1311,7 @@ window.proposeSwap=function(u){
+   if(bad.length)return toast('Some spares are already promised');
+   try{
+     const item=makeSwapItem(u,t.give,t.get);
+-    if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now(),...item});persistDemo();}
++    if(DEMO_MODE){const id='demo-'+Date.now();swapItems.push({id,...item});persistDemo();demoAutoAccept(id);}
+     else push(gref('swaps'),item);
+     toast('Swap proposed to '+displayName(u)+' 📨');renderSwaps();
+   }catch(e){toast('Could not send');}
+@@ -1294,7 +1324,7 @@ window.requestSticker=function(id){
+   if(openSwaps().some(x=>((x.from===me&&x.to===holder.u)||(x.from===holder.u&&x.to===me))))return toast('You already have an open offer with '+displayName(holder.u));
+   try{
+     const item=makeSwapItem(holder.u,holder.offer,[id]);
+-    if(DEMO_MODE){swapItems.push({id:'demo-'+Date.now(),...item});persistDemo();}
++    if(DEMO_MODE){const sid='demo-'+Date.now();swapItems.push({id:sid,...item});persistDemo();demoAutoAccept(sid);}
+     else push(gref('swaps'),item);
+     toast('Request sent to '+displayName(holder.u)+' 📨');renderSwaps();
+   }catch(e){toast('Could not send request');}
+@@ -1305,7 +1335,7 @@ window.acceptSwap=function(id){
+     const p=swapItems.find(x=>x.id===id);if(!p||p.to!==me||p.status!=='proposed')return swapUnlock(key);
+     const bad=promiseIssuesFor(me,p.get||[],p.id);
+     if(bad.length){toast('Review needed - spare already promised');return;}
+-    if(DEMO_MODE){Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});persistDemo();}
++    if(DEMO_MODE){Object.assign(p,{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});persistDemo();demoPartnerConfirm(id,9000);}
+     else update(gref('swaps/'+id),{status:'accepted',acceptedTs:Date.now(),updatedAt:Date.now()});
+     queuePop({kicker:'Swap locked in',title:'Swap in person, then confirm',bg:'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(`You accepted ${displayName(p.from)}'s offer - swap in person, then confirm`);renderSwaps();
+   }finally{setTimeout(()=>swapUnlock(key),1200);}
+@@ -1319,7 +1349,7 @@ window.confirmSwap=function(id){
+     if(bad.length){toast('Review needed - spare no longer available');return;}
+     const patch=p.from===me?{fromDone:true,updatedAt:Date.now()}:{toDone:true,updatedAt:Date.now()};
+     if(otherDoneFor(p))patch.status='done';
+-    if(DEMO_MODE){Object.assign(p,patch);persistDemo();if(p.status==='done')applyCompletedSwapToMine(p);}
++    if(DEMO_MODE){Object.assign(p,patch);persistDemo();if(p.status==='done')applyCompletedSwapToMine(p);else demoPartnerConfirm(id,6000);}
+     else update(gref('swaps/'+id),patch).then(()=>{if(patch.status==='done')applyCompletedSwapToMine({...p,...patch});});
+     if(otherDoneFor(p))pushFeed(`completed a queued swap with ${displayName(otherFor(p))} 🤝`);
+     queuePop({kicker:otherDoneFor(p)?'Swap complete!':'Handover confirmed',title:otherDoneFor(p)?'Swap complete':`Waiting for ${displayName(otherFor(p))}`,big:otherDoneFor(p),bg:otherDoneFor(p)?'assets/milestone-clean.webp':'assets/11_confirm_handover_art.webp'});buzz([10,30,10]);toast(otherDoneFor(p)?'Swap complete':'You confirmed - waiting for '+displayName(otherFor(p)));renderSwaps();
+-- 
+2.34.1
+

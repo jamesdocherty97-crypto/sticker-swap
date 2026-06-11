@@ -1,0 +1,81 @@
+From b38130a92dd9150d51ac193ac775330541b67fbb Mon Sep 17 00:00:00 2001
+From: James Docherty <jiddle@Jamess-MacBook-Pro.local>
+Date: Wed, 10 Jun 2026 13:06:34 +0100
+Subject: [PATCH 5/9] codex: improve light theme contrast
+
+---
+ CODEX-REPORT.md |  1 +
+ index.html      | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/CODEX-REPORT.md b/CODEX-REPORT.md
+index 455367a..28e23f1 100644
+--- a/CODEX-REPORT.md
++++ b/CODEX-REPORT.md
+@@ -6,3 +6,4 @@
+ | 2 - og-share.png rebuild | `og-share.png`, `sw.js`, `CODEX-REPORT.md` | PASS - `node scripts/qa-check.js` | Rebuilt 1200x630 OG image with gold headline, white subline, right-side sticker-card art, and muted disclaimer. Output is about 136 KB. Bumped service-worker cache from v6 to v7 because `og-share.png` is in `APP_SHELL`. |
+ | 3 - Favicon set | `favicon.ico`, `index.html`, `sw.js`, `CODEX-REPORT.md` | PASS - `node scripts/qa-check.js` | Added 16/32/48 favicon, inserted ICO link before SVG icon link, added favicon to `APP_SHELL`, and bumped cache from v7 to v8. SVG raster tooling was unavailable, so ICO was generated from the matching 512px PNG mark. |
+ | 4 - Store screenshots | `store/01_track_your_album.png`, `store/02_find_the_best_trade.png`, `store/03_offers_not_accidents.png`, `store/04_confirm_the_handover_together.png`, `store/05_finish_the_album_together.png`, `CODEX-REPORT.md` | PASS - `node scripts/qa-check.js` | Captured real `index.html?demo=1` screens at 390x844 in the in-app browser, scaled them 3x, and framed them on `assets/15_store_screenshot_background.webp` at 1290x2796. No app-shell changes were needed because store screenshots are not cached. |
++| 5 - Light-theme contrast sweep | `index.html`, `CODEX-REPORT.md` | PASS - `node scripts/qa-check.js` | Added light-only contrast overrides for app chrome, progress cards, open team/sticker surfaces, and swap cards. Before/after screenshots captured at `/private/tmp/sticker-swap-light-before.png` and `/private/tmp/sticker-swap-light-after.png`. |
+diff --git a/index.html b/index.html
+index dcf316d..d52a185 100644
+--- a/index.html
++++ b/index.html
+@@ -84,6 +84,7 @@ body:after{content:'';position:fixed;inset:0;pointer-events:none;background:line
+ #app.vis{display:flex}
+ .topbar{flex-shrink:0;background:linear-gradient(90deg,rgba(6,19,38,.97),rgba(12,32,61,.92)),url('assets/02_pwa_splash_background.webp') center 44%/cover;backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,200,66,.14);padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
+ body.light .topbar{background:rgba(246,247,251,.96)}
++body.light .u-pill,body.light .icon-btn{background:#fff;box-shadow:0 4px 14px rgba(17,24,39,.08)}
+ .t-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);letter-spacing:2px;text-shadow:0 1px 12px rgba(245,200,66,.22)}
+ .demo-pill{display:none;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:1px;background:var(--accent);color:#fff;border-radius:8px;padding:2px 7px;vertical-align:2px;margin-left:6px}
+ .t-right{display:flex;align-items:center;gap:6px}
+@@ -97,6 +98,7 @@ body.light .topbar{background:rgba(246,247,251,.96)}
+ .icon-btn:hover{color:var(--white)}
+ /* TABS */
+ .tabs{order:2;flex-shrink:0;display:flex;background:linear-gradient(180deg,rgba(6,19,38,.88),rgba(6,19,38,.98));border-top:1px solid var(--border);padding:6px 8px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -12px 28px rgba(0,0,0,.24)}
++body.light .tabs{background:rgba(255,255,255,.96);box-shadow:0 -12px 28px rgba(17,24,39,.12)}
+ .tab{flex:1;min-height:54px;padding:8px 4px 7px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;border-radius:12px;transition:background .18s,color .18s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+ .tab svg{width:18px;height:18px;opacity:.5;transition:opacity .18s}
+ .tab.active{color:var(--white);background:rgba(14,165,233,.16)}
+@@ -117,6 +119,8 @@ body.light .topbar{background:rgba(246,247,251,.96)}
+ .match-title{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;line-height:.95;letter-spacing:2px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+ .match-sub{font-size:.75rem;color:#d8e9ff;margin-top:4px;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+ .prog-card{background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(15,103,200,.12)),rgba(12,32,61,.88);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 14px 32px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(10px)}
++body.light .prog-card,body.light .g-card,body.light .plan-card,body.light .feed,body.light .swap-guide,body.light .sw-card,body.light .req-card,body.light .trade-sheet,body.light .ranked-row,body.light .settings-card,body.light .more-tools,body.light .hint{background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(245,200,66,.05)),#fff;border-color:rgba(17,24,39,.12);box-shadow:0 10px 24px rgba(17,24,39,.08)}
++body.light .stat{background:#f6f8fc}
+ .spark-card{position:relative;overflow:hidden;border:1px solid rgba(245,200,66,.22);border-radius:var(--r);padding:14px;margin:-2px 0 12px;min-height:96px;background:radial-gradient(circle at 88% 20%,rgba(245,200,66,.18),transparent 24%),linear-gradient(115deg,rgba(6,19,38,.92),rgba(15,103,200,.34)),url('assets/07_spares_empty_state.webp') right center/cover,var(--card);box-shadow:0 16px 34px rgba(0,0,0,.22)}
+ .spark-card:before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 36%,rgba(255,255,255,.16) 46%,transparent 58%);opacity:.45;animation:sparkSweep 5.8s ease-in-out infinite;pointer-events:none}
+ @keyframes sparkSweep{0%,50%{transform:translateX(-85%)}100%{transform:translateX(85%)}}
+@@ -165,6 +169,7 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
+ /* TEAM BLOCK */
+ .tblock{margin-bottom:9px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.1)}
+ .thdr{display:flex;align-items:center;justify-content:space-between;padding:12px;background:linear-gradient(90deg,rgba(12,32,61,.98),rgba(15,103,200,.16));cursor:pointer;user-select:none;-webkit-user-select:none}
++body.light .thdr{background:linear-gradient(90deg,rgba(255,255,255,.98),rgba(14,165,233,.10))}
+ .thdr:active{background:var(--navy3)}
+ .tleft{display:flex;align-items:center;gap:9px}
+ .tflag{font-size:1.45rem;line-height:1;filter:drop-shadow(0 2px 5px rgba(0,0,0,.24))}
+@@ -177,9 +182,11 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
+ .chev{font-size:.68rem;color:var(--muted);transition:transform .2s;margin-left:3px}
+ .tblock.open .chev{transform:rotate(180deg)}
+ .sgrid{display:none;padding:9px;background:linear-gradient(180deg,rgba(6,19,38,.96),rgba(11,29,56,.98));grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
++body.light .sgrid{background:#eef3fb}
+ .tblock.open .sgrid{display:grid}
+ /* STICKER CARD */
+ .sc{height:112px;border-radius:9px;padding:17px 5px 8px;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.08),transparent 42%),linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01)),var(--card);border:1.5px solid var(--border);cursor:pointer;text-align:center;user-select:none;-webkit-user-select:none;transition:transform .1s,border-color .15s,background .15s,box-shadow .15s;-webkit-touch-callout:none;position:relative;display:grid;grid-template-rows:auto 18px 32px;align-content:center;justify-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 5px 14px rgba(0,0,0,.16)}
++body.light .sc{background:radial-gradient(circle at 50% 0,rgba(14,165,233,.10),transparent 42%),#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 5px 14px rgba(17,24,39,.08)}
+ .sc:active{transform:scale(.88)}
+ .sc.bump{animation:bump .22s ease}
+ @keyframes bump{0%,100%{transform:scale(1)}45%{transform:scale(.9) rotate(-1.5deg)}75%{transform:scale(1.04) rotate(1.5deg)}}
+@@ -206,6 +213,9 @@ body.light .entry-card{background:rgba(255,255,255,.92)}
+ .toast-undo{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:4px 12px;margin-left:10px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer}
+ /* SWAPS */
+ .sw-hero{background:linear-gradient(135deg,rgba(6,19,38,.50),rgba(14,165,233,.24)),url('assets/09_best_move_card_art.webp') center/cover;border:1px solid rgba(242,247,255,.18);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 14px 30px rgba(0,0,0,.2)}
++body.light .sw-hero,body.light .best-move{background-image:linear-gradient(135deg,rgba(6,19,38,.76),rgba(14,165,233,.34)),url('assets/09_best_move_card_art.webp');color:#fff}
++body.light .sw-hero p,body.light .best-move .bm-sub,body.light .best-move .sw-count,body.light .meetup-note,body.light .req-note,body.light .ts-note,body.light .tip-note,body.light .guide-copy{color:#d8e9ff}
++body.light .best-move .bm-sub b,body.light .guide-step b{color:#fff}
+ .sw-hero h2{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:2px;margin-bottom:3px}
+ .sw-hero p{color:var(--muted);font-size:.82rem;line-height:1.5}
+ .sw-tabs{display:flex;gap:6px;margin-bottom:12px}
+-- 
+2.50.1 (Apple Git-155)
+

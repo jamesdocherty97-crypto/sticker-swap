@@ -1,0 +1,26 @@
+[debug] [2026-06-10T21:20:16.935Z] ----------------------------------------------------------------------
+[debug] [2026-06-10T21:20:16.937Z] Command:       /usr/bin/node /sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/.bin/firebase deploy --only database --project stickerswap-1
+[debug] [2026-06-10T21:20:16.937Z] CLI Version:   15.19.1
+[debug] [2026-06-10T21:20:16.937Z] Platform:      linux
+[debug] [2026-06-10T21:20:16.937Z] Node Version:  v22.22.3
+[debug] [2026-06-10T21:20:16.937Z] Time:          Wed Jun 10 2026 21:20:16 GMT+0000 (Coordinated Universal Time)
+[debug] [2026-06-10T21:20:16.937Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-10T21:20:16.939Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2026-06-10T21:20:17.563Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-06-10T21:20:17.575Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 403
+[debug] [2026-06-10T21:20:17.576Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json "Connection blocked by network allowlist"
+[warn] ⚠  Unable to fetch the CLI MOTD and remote config. This is not a fatal error, but may indicate an issue with your network connection. 
+[debug] [2026-06-10T21:20:17.576Z] Failed to fetch MOTD FirebaseError: Unable to parse JSON: SyntaxError: Unexpected token 'C', "Connection"... is not valid JSON
+[debug] [2026-06-10T21:20:17.578Z] Error: Could not load the default credentials. Browse to https://cloud.google.com/docs/authentication/getting-started for more information.
+    at GoogleAuth.getApplicationDefaultAsync (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/google-auth-library/build/src/auth/googleauth.js:287:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async GoogleAuth._GoogleAuth_determineClient (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/google-auth-library/build/src/auth/googleauth.js:834:32)
+    at async GoogleAuth.getClient (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/google-auth-library/build/src/auth/googleauth.js:698:20)
+    at async GoogleAuth.getAccessToken (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/google-auth-library/build/src/auth/googleauth.js:722:24)
+    at async autoAuth (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/requireAuth.js:28:19)
+    at async requireAuth (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/requireAuth.js:90:20)
+    at async requirePermissions (/sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/requirePermissions.js:17:5)
+    at async /sessions/focused-compassionate-ramanujan/.npm/_npx/ba4f1959e38407b5/node_modules/firebase-tools/lib/command.js:278:17
+[error] 
+[error] Error: Failed to authenticate, have you run firebase login?

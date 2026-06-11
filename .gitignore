@@ -1,0 +1,5 @@
+# Keep real local Firebase web config out of shared source control.
+# The web config is not an admin secret, but it is project-specific.
+firebase-config.js
+.firebase/
+.firebaserc

@@ -1,0 +1,24 @@
+From 3fcfd2dedc69bc9bcc91de2e2b7dd06ee91e5276 Mon Sep 17 00:00:00 2001
+From: James Docherty <jiddle@Jamess-MacBook-Pro.local>
+Date: Wed, 10 Jun 2026 12:42:16 +0100
+Subject: [PATCH 1/9] codex: record image regeneration triage
+
+---
+ CODEX-REPORT.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+ create mode 100644 CODEX-REPORT.md
+
+diff --git a/CODEX-REPORT.md b/CODEX-REPORT.md
+new file mode 100644
+index 0000000..ed9fab1
+--- /dev/null
++++ b/CODEX-REPORT.md
+@@ -0,0 +1,5 @@
++# CODEX-REPORT
++
++| Task | Files touched | QA result | Notes |
++| --- | --- | --- | --- |
++| 1 - Image regeneration pass | `CODEX-REPORT.md` | PASS - `node scripts/qa-check.js pwa`; PASS - `node scripts/qa-check.js` | Reviewed asset contact sheet at `/private/tmp/sticker-swap-assets-task1.jpg`. Existing 18 WebP assets are visually consistent at mobile size, under 150 KB each, and contain no baked-in text, so no regeneration was needed. `npm` is unavailable in this shell, so the equivalent underlying Node QA command was run directly. |
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,49 @@
+From c7f45b3ab35c73f175854e1ed3770c811f589828 Mon Sep 17 00:00:00 2001
+From: James Docherty <jamesdocherty97@gmail.com>
+Date: Wed, 10 Jun 2026 10:45:50 +0000
+Subject: [PATCH 4/6] Track the safe null firebase-config.js placeholder
+
+index.html and sw.js both reference firebase-config.js, so a fresh clone
+failed the PWA/asset QA checks without it. The committed file is the
+inert placeholder (window.STICKER_SWAP_FIREBASE_CONFIG = null) - never a
+real project config and never a service-account credential. .gitignore
+comment updated to warn owners not to commit real values.
+---
+ .gitignore         | 8 +++++---
+ firebase-config.js | 9 +++++++++
+ 2 files changed, 14 insertions(+), 3 deletions(-)
+ create mode 100644 firebase-config.js
+
+diff --git a/.gitignore b/.gitignore
+index bc15a22..9c97e58 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,5 +1,7 @@
+-# Keep real local Firebase web config out of shared source control.
+-# The web config is not an admin secret, but it is project-specific.
+-firebase-config.js
++# firebase-config.js IS tracked, but only as the safe null placeholder
++# (window.STICKER_SWAP_FIREBASE_CONFIG = null). The Firebase web config is
++# not an admin secret, but keep your real project values out of shared
++# source control until you intentionally deploy: if you paste a real
++# config locally, don't commit that change.
+ .firebase/
+ .firebaserc
+diff --git a/firebase-config.js b/firebase-config.js
+new file mode 100644
+index 0000000..0efb112
+--- /dev/null
++++ b/firebase-config.js
+@@ -0,0 +1,9 @@
++// Sticker Swap Firebase web config placeholder.
++//
++// This is not a Firebase Admin credential and must never contain service
++// account keys. The Firebase web config is safe to serve in a public web app,
++// but it is project-specific, so keep real local values out of shared template
++// copies until you intentionally deploy this MVP.
++//
++// Demo mode at index.html?demo=1 does not read this file.
++window.STICKER_SWAP_FIREBASE_CONFIG = null;
+-- 
+2.34.1
+
