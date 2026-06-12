@@ -12,7 +12,8 @@ window.STICKER_SWAP_FIREBASE_CONFIG = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
   databaseURL: "https://YOUR_PROJECT-default-rtdb.REGION.firebasedatabase.app",
-  projectId: "YOUR_PROJECT_ID"
+  projectId: "YOUR_PROJECT_ID",
+  measurementId: "G-XXXXXXXXXX"
 };
 
 // For local Firebase Emulator Suite testing, copy

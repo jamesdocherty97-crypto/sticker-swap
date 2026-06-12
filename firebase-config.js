@@ -13,5 +13,6 @@ window.STICKER_SWAP_FIREBASE_CONFIG = {
   projectId: "stickerswap-1",
   storageBucket: "stickerswap-1.firebasestorage.app",
   messagingSenderId: "197938821755",
-  appId: "1:197938821755:web:749e3eaed966a6457740de"
+  appId: "1:197938821755:web:749e3eaed966a6457740de",
+  // Add measurementId: "G-XXXXXXXXXX" here after creating a GA4 web stream.
 };

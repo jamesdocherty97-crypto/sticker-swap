@@ -97,6 +97,33 @@ add('forbidden quick-complete labels absent', () => {
   const hits = forbidden.filter(term => html.includes(term));
   if (hits.length) fail('forbidden quick-complete/export label(s): ' + hits.join(', '));
 });
+add('swap need matching includes joined collectors', () => {
+  const html = read('index.html');
+  const match = html.match(/function activeNeed\(user,id\)\{([\s\S]*?)\n\}/);
+  if (!match) fail('activeNeed function not found');
+  const body = match[1];
+  if (!body.includes('getNames().includes(user)')) {
+    fail('activeNeed must treat joined collectors without a sticker as needing it');
+  }
+  if (body.includes('teamStarted(')) {
+    fail('activeNeed must not require a collector to have already started that team');
+  }
+  if (!html.includes('availableSparesFor(me,id)-(reserved[id]||0)') || !html.includes('whoNeeds=getNames().filter(n=>n!==me&&activeNeed(n,id))')) {
+    fail('swap planner or spare sorter no longer uses available unpromised spares with activeNeed');
+  }
+  const activeNeed = new Function(
+    'allData',
+    'getNames',
+    'haveId',
+    match[0] + '; return activeNeed;'
+  )(
+    { alice: { 'ARG-10': 2 }, bob: {}, charlie: { 'ARG-10': 1 } },
+    () => ['alice', 'bob', 'charlie'],
+    (st, id) => Math.floor(Number((st || {})[id]) || 0) >= 1
+  );
+  if (!activeNeed('bob', 'ARG-10')) fail('blank joined collector should need a sticker they do not own');
+  if (activeNeed('charlie', 'ARG-10')) fail('collector who owns a sticker must not need it');
+});
 add('rules are not open by group code alone', () => {
   const rules = read('database.rules.json');
   if (!rules.includes('".read": false') || !rules.includes('".write": false')) fail('root read/write denial not found');
@@ -111,7 +138,7 @@ const groups = {
   rules: ['database.rules.json parses', 'rules are not open by group code alone'],
   syntax: ['manifest.webmanifest parses', 'index.html module script parses'],
   stale: ['no stale nickname-keyed production writes'],
-  swaps: ['forbidden quick-complete labels absent'],
+  swaps: ['forbidden quick-complete labels absent', 'swap need matching includes joined collectors'],
   pwa: ['manifest.webmanifest parses', 'service worker cached assets exist', 'all referenced local assets exist'],
   demo: ['quick-test opens demo mode', 'demo boot returns before Firebase config', 'production not-configured state exists']
 };

@@ -1,4 +1,5 @@
-const CACHE_NAME = 'sticker-swap-public-v7';
+const APP_VERSION = '2026.06.12.0024';
+const CACHE_NAME = `sticker-swap-public-${APP_VERSION}`;
 
 // App shell. index.html is fetched network-first (see below), so a redeploy
 // always reaches phones without needing this version string bumped.
@@ -19,6 +20,11 @@ const APP_SHELL = [
   './public/assets/artwork/pwa-splash-background.webp',
   './public/assets/artwork/group-progress-artwork.webp',
   './public/assets/artwork/store-screenshot-background.webp',
+  './public/assets/artwork/hero-banner.webp',
+  './public/assets/artwork/strip-banner.webp',
+  './public/assets/artwork/achievement-trophy-burst.png',
+  './public/assets/artwork/achievement-medal-podium.png',
+  './public/assets/artwork/achievement-winner-shield.png',
   './public/assets/README.md',
   './public/assets/brand/tokens.css',
   './public/assets/brand/app-icon.svg',

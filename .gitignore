@@ -4,3 +4,12 @@ firebase-config.js
 .firebase/
 .firebaserc
 _preview.html
+
+# macOS filesystem noise
+.DS_Store
+.fuse_hidden*
+
+# Archives and local build artefacts
+*.zip
+node_modules/
+_archive/
