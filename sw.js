@@ -1,4 +1,4 @@
-const APP_VERSION = '2026.06.12.0024';
+const APP_VERSION = '2026.06.12.0025';
 const CACHE_NAME = `sticker-swap-public-${APP_VERSION}`;
 
 // App shell. index.html is fetched network-first (see below), so a redeploy
