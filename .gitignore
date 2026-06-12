@@ -13,3 +13,11 @@ _preview.html
 *.zip
 node_modules/
 _archive/
+
+# Netlify deploy staging folders (root is the publish directory via netlify.toml)
+sticker-swap-netlify-deploy/
+sticker-swap-netlify-deploy-latest/
+
+# Stale Codex worktree clones
+codex-github-work-2/
+codex-invite-landing-work/
