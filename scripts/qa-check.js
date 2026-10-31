@@ -85,6 +85,21 @@ add('no stale nickname-keyed production writes', () => {
   ].filter(re => re.test(html));
   if (bad.length) fail('possible stale nickname-keyed production write path found');
 });
+add('accept toast credits the recipient', () => {
+  const html = read('index.html');
+  const match = html.match(/window\.acceptSwap=function\(id\)\{([\s\S]*?)\n\};/);
+  if (!match) fail('acceptSwap function not found');
+  const body = match[1];
+  if (body.includes('${displayName(p.from)} accepted')) {
+    fail('accept toast attributes the accept to the sender');
+  }
+  if (!body.includes("You accepted ${displayName(p.from)}'s offer")) {
+    fail('accept toast must say the current user accepted the sender\'s offer');
+  }
+  if (!html.includes("const acceptedLine=p.to===me?`You accepted ${esc(displayName(p.from))}'s offer`:`${esc(displayName(p.to))} accepted`")) {
+    fail('accepted offer card must credit the recipient, not the other person');
+  }
+});
 add('forbidden quick-complete labels absent', () => {
   const html = read('index.html');
   const forbidden = [
@@ -138,7 +153,7 @@ const groups = {
   rules: ['database.rules.json parses', 'rules are not open by group code alone'],
   syntax: ['manifest.webmanifest parses', 'index.html module script parses'],
   stale: ['no stale nickname-keyed production writes'],
-  swaps: ['forbidden quick-complete labels absent', 'swap need matching includes joined collectors'],
+  swaps: ['forbidden quick-complete labels absent', 'swap need matching includes joined collectors', 'accept toast credits the recipient'],
   pwa: ['manifest.webmanifest parses', 'service worker cached assets exist', 'all referenced local assets exist'],
   demo: ['quick-test opens demo mode', 'demo boot returns before Firebase config', 'production not-configured state exists']
 };
